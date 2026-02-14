@@ -138,6 +138,65 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+    /* Garganta Visuals (Admin Panel Icon) */
+    .admin-void-crack-svg .void-crack-open {
+        opacity: 0.6; /* More open by default */
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform: scaleY(0.5); /* Wider idle state */
+        transform-origin: center;
+        filter: url(#voidWarpIdle) drop-shadow(0 0 5px white);
+    }
+    .admin-void-crack-svg .reishi-particle {
+        opacity: 0;
+        transition: all 0.5s ease;
+    }
+    @keyframes reishiEscape {
+        0% { transform: translate(0, 0); opacity: 1; }
+        100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
+    }
+    .admin-void-crack-svg .void-crack-reveal {
+        opacity: 0;
+        transform: scale(0.6) translateY(5px);
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .nav-icon:hover .admin-void-crack-svg .void-crack-open {
+        opacity: 1;
+        transform: scaleY(1.5); /* Even wider on hover */
+        filter: url(#voidWarpActive) drop-shadow(0 0 15px white);
+        animation: riftJitter 0.15s infinite;
+    }
+    @keyframes riftJitter {
+        0% { transform: scaleY(1.4) translateX(0); }
+        50% { transform: scaleY(1.42) translateX(1px); }
+        100% { transform: scaleY(1.4) translateX(0); }
+    }
+    .nav-icon:hover .admin-void-crack-svg .reishi-particle {
+        animation: reishiEscape 1.5s infinite linear;
+    }
+    .nav-icon:hover .admin-void-crack-svg .void-crack-reveal {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    .admin-void-crack-svg .void-crack-closed {
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+        filter: url(#voidWarpIdle);
+    }
+    .nav-icon:hover .admin-void-crack-svg .void-crack-closed {
+        opacity: 0;
+    }
+
+    .admin-void-crack-svg {
+        transform: translateY(4px); /* Vertical adjustment */
+        transition: all 0.3s ease;
+    }
+
+    /* Standardized Icon Wrapper */
+    .nav-icons {
+        display: flex;
+        align-items: center;
+        gap: 15px; 
+    }
 
     /* Collections Mega Menu Overlay */
     .collections-overlay {
@@ -287,7 +346,7 @@
 
             <!-- RIGHT: Icons (Always Visible) -->
             <div class="nav-right">
-                <div class="d-flex align-items-center gap-2 me-3">
+                <div class="nav-icons me-3">
                     <!-- Search -->
                     <div class="dropdown">
                         <a class="nav-icon" href="#" role="button" data-bs-toggle="dropdown" data-tooltip="Search">
@@ -334,6 +393,39 @@
                     </a>
 
                     @auth
+                        @if(auth()->user()->role == 'admin')
+                            <a class="nav-icon" href="{{ route('admin.dashboard') }}" data-tooltip="Admin Panel">
+                                <svg viewBox="0 0 100 100" class="admin-void-crack-svg" style="overflow: visible;">
+                                    <defs>
+                                        <filter id="voidWarpIdle">
+                                            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="noise">
+                                                <animate attributeName="baseFrequency" values="0.05;0.06;0.05" dur="3s" repeatCount="indefinite" />
+                                            </feTurbulence>
+                                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
+                                        </filter>
+                                        <filter id="voidWarpActive">
+                                            <feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="3" result="noise">
+                                                <animate attributeName="baseFrequency" values="0.1;0.15;0.1" dur="0.5s" repeatCount="indefinite" />
+                                            </feTurbulence>
+                                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" />
+                                        </filter>
+                                    </defs>
+                                    <rect class="reishi-particle" x="50" y="50" width="1.5" height="1.5" fill="white" style="--tx: -30px; --ty: -40px; animation-delay: 0s;"/>
+                                    <rect class="reishi-particle" x="50" y="50" width="2" height="2" fill="white" style="--tx: 25px; --ty: -35px; animation-delay: 0.3s;"/>
+                                    <rect class="reishi-particle" x="50" y="50" width="1" height="1" fill="white" style="--tx: -20px; --ty: 40px; animation-delay: 0.7s;"/>
+                                    <path class="void-crack-open" d="M2 50 L10 32 L20 52 L30 25 L40 55 L50 20 L60 58 L70 28 L80 65 L90 35 L98 50 L88 65 L78 45 L68 75 L58 45 L48 80 L38 45 L28 75 L18 42 L10 65 Z" fill="white"/>
+                                    <g class="void-crack-reveal">
+                                        <path d="M35 50 L50 35 L65 50 L50 65 Z" fill="crimson" opacity="0.4"/> 
+                                        <path d="M40 50 L60 50" stroke="white" stroke-width="3" stroke-linecap="round" style="filter: blur(1px);"/>
+                                        <circle cx="50" cy="50" r="18" fill="none" stroke="crimson" stroke-width="0.5" opacity="0.3"/>
+                                    </g>
+                                    <rect class="void-crack-glow" x="5" y="49.5" width="90" height="1" fill="crimson" opacity="0.8">
+                                        <animate attributeName="opacity" values="0.6;1;0.6" dur="1s" repeatCount="indefinite" />
+                                    </rect>
+                                    <path class="void-crack-closed" d="M2 50 L15 45 L35 55 L55 42 L75 58 L98 50" fill="none" stroke="white" stroke-width="2" style="filter: drop-shadow(0 0 3px white);"/>
+                                </svg>
+                            </a>
+                        @endif
                         <a class="nav-icon" href="{{ route('profile.edit') }}" data-tooltip="Profile">
                              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>

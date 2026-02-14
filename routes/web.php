@@ -29,8 +29,9 @@ Route::get('/', function () {
     $heroBanner = \App\Models\Banner::where('type', 'hero')->where('is_active', true)->first();
     $promoBanner = \App\Models\Banner::where('type', 'promo')->where('is_active', true)->first();
     $categoryBanners = \App\Models\Banner::where('type', 'category')->where('is_active', true)->orderBy('order')->take(3)->get();
+    $introBanners = \App\Models\Banner::where('type', 'intro')->where('is_active', true)->orderBy('order')->get();
 
-    return view('welcome', compact('newArrivals', 'bestSellers', 'featured', 'otakuChoice', 'heroBanner', 'promoBanner', 'categoryBanners'));
+    return view('welcome', compact('newArrivals', 'bestSellers', 'featured', 'otakuChoice', 'heroBanner', 'promoBanner', 'categoryBanners', 'introBanners'));
 });
 
 Route::get('/about', function () {
@@ -59,10 +60,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-Route::middleware(['auth', 'verified', 'admin'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
+    
+    // Product Management
+    Route::resource('products', App\Http\Controllers\Admin\AdminProductController::class);
+    
+    // Banner Management
+    Route::resource('banners', App\Http\Controllers\Admin\AdminBannerController::class);
+
+    // Order Management
+    Route::get('/orders', [App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('orders.index');
+    Route::patch('/orders/{order}/status', [App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 });
 
 Route::middleware('auth')->group(function () {

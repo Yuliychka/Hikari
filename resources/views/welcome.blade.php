@@ -29,7 +29,7 @@
             cursor: url('https://cdn.custom-cursor.com/db/cursor/32/katana_cursor.png'), auto !important;
         }
 
-        /* Marvel-Style Manga Intro */
+        /* Marvel-Style Manga Intro - Redesigned */
         #preloader {
             position: fixed;
             top: 0;
@@ -42,14 +42,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            transition: opacity 0.5s ease-out;
-            /* Fail-safe: Auto-hide after 5s even if JS crashes */
-            animation: preloaderFailsafe 0.5s ease-out 5s forwards;
-            pointer-events: all;
-        }
-        @keyframes preloaderFailsafe {
-            99% { opacity: 1; visibility: visible; }
-            100% { opacity: 0; visibility: hidden; pointer-events: none; }
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .manga-panel {
@@ -57,38 +50,42 @@
             background-size: cover;
             background-position: center;
             opacity: 0;
-            filter: grayscale(100%) contrast(1.2);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-            border: 2px solid #fff;
-            animation: flashPanel 0.15s linear;
+            filter: grayscale(100%) contrast(1.5) brightness(0.8);
+            border: 2px solid #000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            z-index: 10;
         }
 
-        /* Random Positions for Panels (Simulated via js or predetermined classes) */
-        /* We will use JS to generate these for randomness */
-
-        .loading-text-marvel {
-            position: absolute;
-            bottom: 20%;
-            font-family: 'Kaushan Script', cursive;
-            font-size: 4rem;
-            color: crimson;
-            text-transform: uppercase;
-            letter-spacing: 10px;
-            font-weight: 900;
-            z-index: 100;
-            text-shadow: 2px 2px 0 #fff;
-            opacity: 0;
-            animation: fadeInText 0.5s ease-out forwards 1.5s;
+        .manga-panel.flash {
+            animation: flashPanel 0.08s steps(1) forwards;
         }
 
         @keyframes flashPanel {
-            0% { opacity: 0; transform: scale(1.1); }
+            0% { opacity: 0; transform: scale(1.05); }
             50% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1); }
         }
 
-        @keyframes fadeInText {
-            to { opacity: 1; transform: scale(1.1); }
+        #manga-flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            opacity: 0;
+            z-index: 99998;
+            pointer-events: none;
+        }
+
+        #manga-flash-overlay.active {
+            animation: bigFlash 0.3s ease-out;
+        }
+
+        @keyframes bigFlash {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
         /* CustomScrollbar */
@@ -334,11 +331,11 @@
     </style>
 </head>
 
-    <!-- Marvel-Style Manga Intro -->
+    <!-- Marvel-Style Manga Intro (Refined) -->
     <div id="preloader">
-        <div id="manga-container"></div>
-        <div class="loading-text-marvel">HIKARI</div>
+        <div id="manga-container" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
     </div>
+    <div id="manga-flash-overlay"></div>
 
     <div class="sakura-container"></div>
 
@@ -552,68 +549,78 @@
     <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Snappy Manga Intro Logic
+        // Marvel-Style Manga Intro Logic
         document.addEventListener("DOMContentLoaded", function() {
             const container = document.getElementById('manga-container');
             const preloader = document.getElementById('preloader');
+            const flashOverlay = document.getElementById('manga-flash-overlay');
             
-            const patterns = [
-                'radial-gradient(circle, #000 30%, transparent 30%)', 
-                'linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%)',
-                'repeating-linear-gradient(0deg, transparent, transparent 15px, #000 15px, #000 18px)',
-                'conic-gradient(from 0deg, #000 0deg 90deg, transparent 90deg)',
-                'url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMCcgaGVpZ2h0PScxMCc+CiAgPHBhdGggZD0nTSAwIDEwIEwgMTAgMCcgc3Ryb2tlPSdibGFjaycgc3Ryb2tlLXdpZHRoPSIzJy8+Cjwvc3ZnPg==")'
-            ];
-            
-            let count = 0;
-            const maxFlashes = 6; // Very few flashes for "instant" feel
-            const speed = 60; // Very fast speed
+            // Get intro images from PHP
+            const dbImages = @json($introBanners->pluck('image_path')->map(function($path) {
+                return Str::startsWith($path, 'http') ? $path : asset($path);
+            }));
 
-            function createPanel() {
-                if (count >= maxFlashes) {
+            // Fallback high-quality manga/anime images if none in DB
+            const fallbackImages = [
+                'https://images.unsplash.com/photo-1620336655055-088d06e7675a?q=80&w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1578632738981-43c945b69f7a?q=80&w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800&auto=format&fit=crop'
+            ];
+
+            const images = dbImages.length > 0 ? dbImages : fallbackImages;
+            
+            let flashCount = 0;
+            const totalFlashes = 35; // Slightly more for better visibility since logo is gone
+            const flashSpeed = 50; // A bit faster for more intensity
+
+            function createFlash() {
+                if (flashCount >= totalFlashes) {
                     finishPreloader();
                     return;
                 }
 
                 const panel = document.createElement('div');
-                panel.classList.add('manga-panel');
+                panel.classList.add('manga-panel', 'flash');
                 
-                const width = Math.random() * 60 + 40; 
-                const height = Math.random() * 60 + 40; 
-                const top = Math.random() * 40;
-                const left = Math.random() * 40;
+                const layouts = [
+                    { w: 100, h: 100, t: 0, l: 0 },
+                    { w: 50, h: 100, t: 0, l: 0 }, { w: 50, h: 100, t: 0, l: 50 },
+                    { w: 100, h: 50, t: 0, l: 0 }, { w: 100, h: 50, t: 50, l: 0 },
+                    { w: 50, h: 50, t: 0, l: 0 }, { w: 50, h: 50, t: 0, l: 50 },
+                    { w: 50, h: 50, t: 50, l: 0 }, { w: 50, h: 50, t: 50, l: 50 }
+                ];
+
+                const layout = layouts[Math.floor(Math.random() * layouts.length)];
                 
-                panel.style.width = width + '%';
-                panel.style.height = height + '%';
-                panel.style.top = top + '%';
-                panel.style.left = left + '%';
-                panel.style.background = patterns[Math.floor(Math.random() * patterns.length)];
-                panel.style.backgroundSize = '40px 40px';
-                panel.style.backgroundColor = '#fff';
+                panel.style.width = layout.w + '%';
+                panel.style.height = layout.h + '%';
+                panel.style.top = layout.t + '%';
+                panel.style.left = layout.l + '%';
+                panel.style.backgroundImage = `url('${images[Math.floor(Math.random() * images.length)]}')`;
                 
                 container.appendChild(panel);
-                
                 setTimeout(() => { panel.remove(); }, 80);
 
-                count++;
-                setTimeout(createPanel, speed);
+                flashCount++;
+                setTimeout(createFlash, flashSpeed);
             }
 
             function finishPreloader() {
-                if (preloader.classList.contains('done')) return;
-                preloader.classList.add('done');
-
+                flashOverlay.classList.add('active');
+                
                 setTimeout(() => {
                     preloader.style.opacity = '0';
                     setTimeout(() => {
                         preloader.style.display = 'none';
-                        AOS.init({ once: true, mirror: false });
-                    }, 300);
-                }, 300); 
+                        AOS.init({ once: true, mirror: false, duration: 800 });
+                    }, 600);
+                }, 150);
             }
 
-            setTimeout(createPanel, 50);
-            setTimeout(finishPreloader, 2000); // Fail-safe 2s now
+            setTimeout(createFlash, 100);
         });
 
         // Sakura Falling Effect
