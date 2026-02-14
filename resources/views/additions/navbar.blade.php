@@ -2,30 +2,156 @@
 <style>
     /* Navbar Container */
     .glass-nav {
+        position: fixed;
         background: rgba(0, 0, 0, 0.95);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border-bottom: 2px solid crimson;
+        border: 2px solid crimson; /* full border for pill */
         box-shadow: 0 5px 20px rgba(220, 20, 60, 0.3);
-        transition: all 0.3s ease;
-        height: 70px; /* Reduced height for sleekness */
-        padding: 0 2rem;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        height: 65px;
+        padding: 0;
+        width: 95%;
+        max-width: 1400px;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 20px; /* Floating from top */
+        border-radius: 50px;
+        margin: 0 auto;
+        z-index: 100000;
     }
 
-    /* Flex Layout - Perfect Centering */
-    .nav-left, .nav-right {
-        flex: 1;
-        display: flex;
-        align-items: center;
+    /* Scrolled State - Full Width Bar */
+    .glass-nav.scrolled {
+        width: 100% !important;
+        max-width: 100% !important;
+        top: 0 !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+        border-bottom: 2px solid crimson;
+        box-shadow: 0 2px 10px rgba(220, 20, 60, 0.4);
     }
-    .nav-left { justify-content: flex-start; }
-    .nav-right { 
-        justify-content: flex-end;
+
+    /* Mobile Responsive Fix - Restoration of Transformation */
+    @media (max-width: 768px) {
+        .glass-nav {
+            width: 90% !important; /* Pill state on mobile */
+            max-width: calc(100vw - 20px) !important; /* Prevent overflow */
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            top: 15px !important;
+            border-radius: 40px !important;
+            height: 55px !important;
+        }
+        
+        .glass-nav.scrolled {
+            width: 100% !important;
+            max-width: 100vw !important;
+            left: 0 !important;
+            transform: none !important;
+            top: 0 !important;
+            border-radius: 0 !important;
+            height: 60px !important;
+        }
+
+        /* 2-Column Grid for Burger Menu - Minimalist */
+        .mobile-menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            max-width: 400px;
+            gap: 15px;
+            padding: 0 25px;
+        }
+
+        .mobile-menu-grid .collection-item {
+            font-size: 1.1rem !important;
+            margin: 0 !important;
+            padding: 12px 5px;
+            background: none !important; /* No more box */
+            border: none !important; /* No more border */
+            border-bottom: 1px solid rgba(220, 20, 60, 0.1) !important; /* Subtle separator */
+            border-radius: 0 !important;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-grid .collection-item:hover {
+            color: crimson !important;
+            border-bottom-color: crimson !important;
+            text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+        }
+
+        .mobile-menu-grid .collection-item span {
+            font-size: 0.55rem !important;
+            margin-top: 1px !important;
+            opacity: 0.6;
+        }
+
+        #mobileMenuOverlay .d-flex.flex-column {
+            padding-top: 15px !important; /* Further reduced */
+            gap: 8px !important; /* Further reduced */
+        }
+        
+        /* Reduce search bar size */
+        #mobileMenuOverlay .search-bar-container {
+            margin-top: 3px !important;
+            margin-bottom: 3px !important;
+        }
+        
+        #mobileMenuOverlay .search-bar-container input {
+            font-size: 0.75rem !important;
+            padding: 0.4rem !important;
+        }
+        
+        #mobileMenuOverlay .search-bar-container button {
+            font-size: 0.65rem !important;
+            padding: 0.4rem 0.6rem !important;
+        }
+        
+        /* Reduce social icons spacing */
+        #mobileMenuOverlay .d-flex.gap-4 {
+            gap: 0.8rem !important;
+            margin-top: 0.3rem !important;
+            margin-bottom: 0.8rem !important;
+        }
+    }
+
+    /* Flex Layout - Precision Alignment */
+    .nav-content-grid {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .nav-left { 
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 5px;
     }
     .nav-center {
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative !important; /* Move away from absolute if using grid */
+        transform: none !important;
+        left: 0 !important;
+    }
+    .nav-right { 
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 5px;
+    }
+
+    /* Target right icons except Search/Sharingan */
+    .nav-right .nav-icon:not(.sharingan-parent),
+    .nav-right .btn-outline-danger {
+        transform: translateY(-4px);
     }
 
     /* Custom Tooltip */
@@ -110,11 +236,73 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0; /* Remove padding to rely on flex centering */
-        width: 45px; /* Fixed width */
-        height: 45px; /* Fixed height */
+        padding: 0;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         position: relative;
+    }
+
+    /* Profile Dropdown Styling */
+    .profile-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .profile-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        border: 2px solid crimson;
+        border-radius: 0;
+        min-width: 180px;
+        display: none;
+        z-index: 100001;
+        padding: 10px 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        margin-top: 10px;
+    }
+
+    .profile-menu::before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        right: 15px;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid crimson;
+    }
+
+    .profile-menu.show {
+        display: block;
+    }
+
+    /* Suppress Tooltip when Menu is Open */
+    .profile-dropdown.active .nav-icon::after {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transform: translateX(-50%) translateY(10px) !important;
+    }
+
+    .profile-item {
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        border-left: 3px solid transparent;
+    }
+
+    .profile-item:hover {
+        background: rgba(220, 20, 60, 0.1);
+        color: crimson;
+        border-left: 3px solid crimson;
     }
     .nav-icon svg {
         width: 24px; /* Standardize SVG size */
@@ -198,6 +386,122 @@
         gap: 15px; 
     }
 
+    /* --- EXTREME SOCIAL & PORTAL OVERHAUL --- */
+    .social-orb {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent; /* Minimalist floating */
+        border: 1px solid rgba(220, 20, 60, 0.2);
+        border-radius: 50%;
+        color: rgba(255, 255, 255, 0.6);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5),
+                    0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .social-orb::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(220, 20, 60, 0.2) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .social-orb:hover {
+        color: #fff;
+        transform: translateY(-5px) scale(1.1);
+        border-color: crimson;
+        box-shadow: 0 0 20px rgba(220, 20, 60, 0.4),
+                    inset 0 0 5px rgba(220, 20, 60, 0.5);
+    }
+
+    .social-orb:hover::before {
+        opacity: 1;
+    }
+
+    .social-orb svg {
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+    }
+
+    /* Garganta Portal (Admin) */
+    .garganta-portal {
+        width: 55px;
+        height: 55px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 2px solid crimson;
+        box-shadow: 0 0 25px rgba(220, 20, 60, 0.4);
+        border-radius: 50%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: portalFloat 3s infinite ease-in-out;
+    }
+
+    @keyframes portalFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .garganta-portal::after {
+        content: '';
+        position: absolute;
+        width: 120%;
+        height: 120%;
+        border: 1px dashed crimson;
+        border-radius: 50%;
+        opacity: 0.3;
+        animation: portalRotate 10s infinite linear;
+    }
+
+    @keyframes portalRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .garganta-portal .reishi-ring {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        box-shadow: 0 0 10px crimson;
+        opacity: 0.5;
+        animation: portalPulse 2s infinite alternate;
+    }
+
+    @keyframes portalPulse {
+        from { transform: scale(0.9); opacity: 0.3; }
+        to { transform: scale(1.1); opacity: 0.7; }
+    }
+
+    .garganta-portal:hover {
+        transform: scale(1.2) rotate(5deg);
+        box-shadow: 0 0 50px crimson, inset 0 0 20px white;
+    }
+
+    .garganta-portal svg {
+        width: 30px;
+        height: 30px;
+        filter: drop-shadow(0 0 8px white);
+        transition: all 0.3s;
+    }
+
+    .garganta-portal:hover svg {
+        transform: scale(1.2);
+    }
+
     /* Collections Mega Menu Overlay */
     .collections-overlay {
         position: fixed;
@@ -206,7 +510,7 @@
         width: 100%;
         height: 0;
         background: rgba(10, 10, 10, 0.98);
-        z-index: 999; /* Below navbar (1030) but covering content */
+        z-index: 99999; /* Just below navbar */
         overflow: hidden;
         transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
         opacity: 0;
@@ -218,7 +522,7 @@
     .collections-overlay.active {
         height: 100vh;
         opacity: 1;
-        z-index: 2000; /* On top of everything */
+        z-index: 100001; /* On top of everything */
     }
     
     .collection-item {
@@ -312,15 +616,13 @@
     }
 </style>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg fixed-top glass-nav navbar-dark">
-    <div class="container-fluid px-0 h-100">
-        
-        <!-- Navbar Layout Wrapper -->
-        <div class="d-flex w-100 align-items-center h-100">
+<!-- PC Navbar (Desktop Only) -->
+<nav class="navbar navbar-expand-lg fixed-top glass-nav navbar-dark d-none d-lg-block">
+    <div class="w-100 h-100 px-4">
+        <div class="nav-content-grid">
             <!-- LEFT: Links -->
-            <div class="nav-left d-none d-lg-flex">
-                <ul class="navbar-nav gap-3 ms-3">
+            <div class="nav-left">
+                <ul class="navbar-nav gap-3 ms-0">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Store</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" onclick="toggleCollections(event)">Collections</a></li>
@@ -328,28 +630,19 @@
                 </ul>
             </div>
 
-            <!-- Mobile Toggler (Left on Mobile) -->
-            <button class="navbar-toggler manga-toggler ms-3 d-lg-none collapsed" type="button" onclick="toggleMobileMenu()">
-                 <svg width="35" height="35" viewBox="0 0 40 40">
-                    <path class="manga-line line-top" d="M 2 10 L 38 10" />
-                    <path class="manga-line line-mid" d="M 10 20 L 30 20" />
-                    <path class="manga-line line-bot" d="M 5 30 L 35 30" />
-                </svg>
-            </button>
-
-            <!-- CENTER: Logo (Absolute centered) -->
-            <div class="nav-center position-absolute start-50 translate-middle-x">
+            <!-- CENTER: Logo -->
+            <div class="nav-center">
                 <a class="navbar-brand m-0" href="/">
                     <img src="{{ asset('Images/Logo.png') }}" alt="Hikari" class="brand-logo">
                 </a>
             </div>
 
-            <!-- RIGHT: Icons (Always Visible) -->
+            <!-- RIGHT: Icons -->
             <div class="nav-right">
-                <div class="nav-icons me-3">
+                <div class="nav-icons me-0">
                     <!-- Search -->
                     <div class="dropdown">
-                        <a class="nav-icon" href="#" role="button" data-bs-toggle="dropdown" data-tooltip="Search">
+                        <a class="nav-icon sharingan-parent" href="#" role="button" data-bs-toggle="dropdown" data-tooltip="Search">
                              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 100 100" class="sharingan-icon">
                                 <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="6"/>
                                 <circle cx="50" cy="50" r="10" fill="currentColor"/>
@@ -426,12 +719,24 @@
                                 </svg>
                             </a>
                         @endif
-                        <a class="nav-icon" href="{{ route('profile.edit') }}" data-tooltip="Profile">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
-                            </svg>
-                        </a>
+                        <div class="profile-dropdown">
+                            <a class="nav-icon" href="javascript:void(0)" onclick="toggleProfileDropdown(event)" data-tooltip="Profile">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                                </svg>
+                            </a>
+                            <div class="profile-menu">
+                                <a href="{{ route('profile.edit') }}" class="profile-item">Account Profile</a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <a href="{{ route('logout') }}" class="profile-item" 
+                                       onclick="event.preventDefault(); this.closest('form').submit();">
+                                        Logout Session
+                                    </a>
+                                </form>
+                            </div>
+                        </div>
                     @else
                         <a class="btn btn-outline-danger rounded-0 px-2 btn-sm fw-bold border-2" href="{{ route('login') }}" style="font-size: 0.7rem;">
                             JOIN
@@ -443,14 +748,152 @@
     </div>
 </nav>
 
+<!-- Mobile Navbar (Mobile Only) -->
+<nav class="navbar fixed-top glass-nav navbar-dark d-flex d-lg-none">
+    <div class="w-100 h-100 px-4">
+        <div class="nav-content-grid">
+            <!-- LEFT: Toggler -->
+            <div class="nav-left">
+                <button class="navbar-toggler manga-toggler collapsed" type="button" onclick="toggleMobileMenu()">
+                     <svg width="30" height="30" viewBox="0 0 40 40">
+                        <path class="manga-line line-top" d="M 2 10 L 38 10" />
+                        <path class="manga-line line-mid" d="M 10 20 L 30 20" />
+                        <path class="manga-line line-bot" d="M 5 30 L 35 30" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- CENTER: Logo -->
+            <div class="nav-center">
+                <a class="navbar-brand m-0" href="/">
+                    <img src="{{ asset('Images/Logo.png') }}" alt="Hikari" class="brand-logo" style="height: 32px;">
+                </a>
+            </div>
+
+            <!-- RIGHT: Basic Icons -->
+            <div class="nav-right">
+                <div class="nav-icons" style="gap: 12px;">
+                    <!-- Simple Cart -->
+                    <a class="nav-icon text-center text-decoration-none" href="{{ route('cart.index') }}" data-tooltip="Cart" style="width: auto; height: auto;">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M2 12 L12 7 L22 12" stroke="currentColor" stroke-width="2" fill="none"/>
+                          <rect x="4" y="12" width="16" height="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                          <circle cx="20" cy="14" r="2" fill="crimson"/>
+                          <circle cx="6" cy="21" r="2" fill="currentColor"/>
+                          <circle cx="18" cy="21" r="2" fill="currentColor"/>
+                          <path d="M5 12 V15 M9 12 V15 M15 12 V15 M19 12 V15" stroke="currentColor" stroke-width="1"/>
+                        </svg>
+                    </a>
+                    
+                    @auth
+                    <div class="profile-dropdown">
+                        <a class="nav-icon text-center text-decoration-none" href="javascript:void(0)" onclick="toggleProfileDropdown(event)" data-tooltip="Profile" style="width: auto; height: auto;">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                            </svg>
+                        </a>
+                        <div class="profile-menu">
+                            <a href="{{ route('profile.edit') }}" class="profile-item">Account Profile</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <a href="{{ route('logout') }}" class="profile-item" 
+                                   onclick="event.preventDefault(); this.closest('form').submit();">
+                                    Logout Session
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                    @else
+                    <a class="btn btn-outline-danger border-2 p-1" href="{{ route('login') }}" style="font-size: 0.6rem; font-weight: 800; line-height: 1;">JOIN</a>
+                    @endauth
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
 <!-- Mobile Menu Overlay (New) -->
 <div id="mobileMenuOverlay" class="collections-overlay">
     <div class="close-btn" onclick="toggleMobileMenu()">&times;</div>
-    <div class="d-flex flex-column justify-content-center align-items-center h-100 gap-4">
-        <a href="/" class="collection-item" style="transition-delay: 0.1s;">Home</a>
-        <a href="{{ route('products.index') }}" class="collection-item" style="transition-delay: 0.2s;">Store</a>
-        <a href="#" onclick="toggleCollections(event); toggleMobileMenu();" class="collection-item" style="transition-delay: 0.3s;">Collections</a>
-        <a href="{{ route('about') }}" class="collection-item" style="transition-delay: 0.4s;">About</a>
+    <div class="d-flex flex-column align-items-center h-100 gap-2" style="padding-top: 40px; overflow-y: auto;">
+        <div class="mobile-menu-grid">
+            <a href="/" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.1s;">
+                Home
+                <span>ホーム</span>
+            </a>
+            <a href="{{ route('products.index') }}" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.2s;">
+                Store
+                <span>商店</span>
+            </a>
+            <a href="#" onclick="toggleCollections(event); toggleMobileMenu();" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.3s;">
+                Collections
+                <span>コレクション</span>
+            </a>
+            <a href="{{ route('about') }}" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.4s;">
+                About
+                <span>について</span>
+            </a>
+
+            @auth
+            <a href="{{ route('profile.edit') }}" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.5s;">
+                Profile
+                <span>プロフィール</span>
+            </a>
+            <form method="POST" action="{{ route('logout') }}" class="w-100">
+                @csrf
+                <a href="{{ route('logout') }}" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.6s;"
+                   onclick="event.preventDefault(); this.closest('form').submit();">
+                    Logout
+                    <span>ログアウト</span>
+                </a>
+            </form>
+            @else
+            <a href="{{ route('login') }}" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.5s;">
+                Login
+                <span>ログイン</span>
+            </a>
+            @endauth
+        </div>
+
+        <!-- Search Bar Relocated Here -->
+        <div class="search-bar-container w-100 mb-1" style="max-width: 320px; margin-top: 5px;">
+            <form action="{{ route('products.index') }}" method="GET" class="d-flex shadow-sm" style="border: 1px solid rgba(220, 20, 60, 0.3); padding: 2px;">
+                <input class="form-control bg-transparent text-white border-0 rounded-0 p-1" type="search" name="search" placeholder="Search Hikari..." style="box-shadow: none; font-size: 0.8rem;">
+                <button class="btn btn-danger rounded-0 px-3 py-1 fw-bold" type="submit" style="font-size: 0.7rem;">GO</button>
+            </form>
+        </div>
+
+        <!-- Drawer Footer Row (Minimalist Redesign) -->
+        <div class="d-flex align-items-center justify-content-center gap-4 mt-1 mb-3 w-100" style="background: none; border: none; box-shadow: none;">
+             
+             <!-- Instagram -->
+             <a href="{{ \App\Models\Setting::get('instagram_url', '#') }}" target="_blank" class="social-orb text-decoration-none">
+                <svg width="18" height="18" fill="currentColor"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.844.047 1.097.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/></svg>
+             </a>
+
+             <!-- Discord -->
+             <a href="{{ \App\Models\Setting::get('discord_url', '#') }}" target="_blank" class="social-orb text-decoration-none">
+                <svg width="20" height="20" fill="currentColor"><path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025 13.259 13.259 0 0 0-3.257 1.011.051.051 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.724 1.438 1.613 0 .888-.631 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.724 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/></svg>
+             </a>
+
+             <!-- Facebook -->
+             <a href="{{ \App\Models\Setting::get('facebook_url', '#') }}" target="_blank" class="social-orb text-decoration-none">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/></svg>
+             </a>
+
+             <!-- Admin Portal (Final Piece) -->
+             @auth
+                @if(auth()->user()->role == 'admin')
+                     <a class="garganta-portal text-decoration-none" href="{{ route('admin.dashboard') }}">
+                        <div class="reishi-ring"></div>
+                        <svg viewBox="0 0 100 100" class="admin-void-crack-svg" style="overflow: visible;">
+                            <path class="void-crack-open" d="M2 50 L10 32 L20 52 L30 25 L40 55 L50 20 L60 58 L70 28 L80 65 L90 35 L98 50 L88 65 L78 45 L68 75 L58 45 L48 80 L38 45 L28 75 L18 42 L10 65 Z" fill="#fff"/>
+                        </svg>
+                    </a>
+                @endif
+             @endauth
+        </div>
     </div>
 </div>
 
@@ -510,4 +953,41 @@
         if(overlay) overlay.classList.toggle('active');
         if(toggler) toggler.classList.toggle('collapsed');
     }
+
+    // Toggle Profile Dropdown
+    function toggleProfileDropdown(event) {
+        event.stopPropagation();
+        const icon = event.currentTarget;
+        const menu = icon.nextElementSibling;
+        const parent = icon.closest('.profile-dropdown');
+        const allMenus = document.querySelectorAll('.profile-menu');
+        const allParents = document.querySelectorAll('.profile-dropdown');
+        
+        // Close others
+        allMenus.forEach(m => {
+            if (m !== menu) m.classList.remove('show');
+        });
+        allParents.forEach(p => {
+            if (p !== parent) p.classList.remove('active');
+        });
+        
+        const isShowing = menu.classList.toggle('show');
+        if (parent) parent.classList.toggle('active', isShowing);
+    }
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.profile-menu').forEach(m => m.classList.remove('show'));
+        document.querySelectorAll('.profile-dropdown').forEach(p => p.classList.remove('active'));
+    });
+
+    // Scroll Transformation Logic
+    window.addEventListener('scroll', function() {
+        const navs = document.querySelectorAll('.glass-nav');
+        if (window.scrollY > 50) {
+            navs.forEach(nav => nav.classList.add('scrolled'));
+        } else {
+            navs.forEach(nav => nav.classList.remove('scrolled'));
+        }
+    });
 </script>

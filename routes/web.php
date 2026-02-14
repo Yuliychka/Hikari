@@ -31,7 +31,7 @@ Route::get('/', function () {
     $categoryBanners = \App\Models\Banner::where('type', 'category')->where('is_active', true)->orderBy('order')->take(3)->get();
     $introBanners = \App\Models\Banner::where('type', 'intro')->where('is_active', true)->orderBy('order')->get();
 
-    return view('welcome', compact('newArrivals', 'bestSellers', 'featured', 'otakuChoice', 'heroBanner', 'promoBanner', 'categoryBanners', 'introBanners'));
+    return view('index', compact('newArrivals', 'bestSellers', 'featured', 'otakuChoice', 'heroBanner', 'promoBanner', 'categoryBanners', 'introBanners'));
 });
 
 Route::get('/about', function () {
@@ -66,12 +66,23 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     // Product Management
     Route::resource('products', App\Http\Controllers\Admin\AdminProductController::class);
     
-    // Banner Management
+    
+    // Banner Management - Separated by Type
+    Route::resource('hero-banners', App\Http\Controllers\Admin\AdminHeroBannerController::class);
+    Route::resource('category-banners', App\Http\Controllers\Admin\AdminCategoryBannerController::class);
+    Route::resource('intro-panels', App\Http\Controllers\Admin\AdminIntroPanelController::class);
+    Route::resource('promo-banners', App\Http\Controllers\Admin\AdminPromoBannerController::class);
+    
+    // Keep old route for backward compatibility (optional)
     Route::resource('banners', App\Http\Controllers\Admin\AdminBannerController::class);
 
     // Order Management
     Route::get('/orders', [App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('orders.index');
     Route::patch('/orders/{order}/status', [App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+    // Site Settings
+    Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
 });
 
 Route::middleware('auth')->group(function () {

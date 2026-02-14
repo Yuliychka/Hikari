@@ -24,12 +24,18 @@ class AdminBannerController extends Controller
     {
         $data = $request->validate([
             'title' => 'nullable|string|max:255',
-            'image_path' => 'required|string', // Support URL or file upload later if needed
+            'image_path' => 'nullable|string',
+            'image_file' => 'nullable|image|max:5120', // Max 5MB
             'type' => 'required|string|in:hero,promo,category,intro',
             'link' => 'nullable|string',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('banners', 'public');
+            $data['image_path'] = $path;
+        }
 
         Banner::create($data);
 
@@ -38,19 +44,29 @@ class AdminBannerController extends Controller
 
     public function edit(Banner $banner)
     {
-        return view('admin.banners.edit', compact('banner'));
+        return view('admin.banners.create', compact('banner')); // Reuse create view
     }
 
     public function update(Request $request, Banner $banner)
     {
         $data = $request->validate([
             'title' => 'nullable|string|max:255',
-            'image_path' => 'required|string',
+            'image_path' => 'nullable|string',
+            'image_file' => 'nullable|image|max:5120',
             'type' => 'required|string|in:hero,promo,category,intro',
             'link' => 'nullable|string',
             'is_active' => 'required|in:0,1',
             'order' => 'required|integer',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            // Delete old file if exists
+            if (!filter_var($banner->image_path, FILTER_VALIDATE_URL) && Storage::disk('public')->exists($banner->image_path)) {
+                Storage::disk('public')->delete($banner->image_path);
+            }
+            $path = $request->file('image_file')->store('banners', 'public');
+            $data['image_path'] = $path;
+        }
 
         $banner->update($data);
 

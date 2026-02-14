@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="glass-card">
-            <form action="{{ isset($banner) ? route('admin.banners.update', $banner->id) : route('admin.banners.store') }}" method="POST">
+            <form action="{{ isset($banner) ? route('admin.banners.update', $banner->id) : route('admin.banners.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if(isset($banner)) @method('PUT') @endif
 
@@ -17,10 +17,17 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Image URL</label>
-                    <input type="text" name="image_path" class="form-control bg-dark text-white border-secondary @error('image_path') is-invalid @enderror" value="{{ old('image_path', $banner->image_path ?? '') }}" required placeholder="https://...">
+                    <label class="form-label">Image Link (URL)</label>
+                    <input type="text" name="image_path" class="form-control bg-dark text-white border-secondary @error('image_path') is-invalid @enderror" value="{{ old('image_path', $banner->image_path ?? '') }}" placeholder="https://...">
                     @error('image_path') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     <small class="text-secondary">Provide a direct link to the image</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-danger">OR Upload Image File</label>
+                    <input type="file" name="image_file" class="form-control bg-dark text-white border-secondary @error('image_file') is-invalid @enderror">
+                    @error('image_file') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <small class="text-secondary">Max size: 5MB</small>
                 </div>
 
                 <div class="row">

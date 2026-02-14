@@ -24,7 +24,7 @@ class ProductController extends Controller
 
         $products = $query->paginate(12);
 
-        return view('index', ['products' => $products]);
+        return view('products.product', ['products' => $products]);
     }
 
     function getProductById($id)
