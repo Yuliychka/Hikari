@@ -7,12 +7,21 @@ use App\Models\Banner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use App\Models\Setting;
+
 class AdminIntroPanelController extends Controller
 {
     public function index()
     {
         $banners = Banner::where('type', 'intro')->orderBy('order')->get();
-        return view('admin.intro-panels.index', compact('banners'));
+        $introActive = Setting::where('key', 'intro_active')->value('value') ?? '1';
+        return view('admin.intro-panels.index', compact('banners', 'introActive'));
+    }
+
+    public function updateSettings(Request $request)
+    {
+        Setting::updateOrCreate(['key' => 'intro_active'], ['value' => $request->has('intro_active') ? '1' : '0']);
+        return redirect()->back()->with('success', 'Intro settings updated successfully.');
     }
 
     public function create()

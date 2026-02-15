@@ -26,12 +26,15 @@ Route::get('/', function () {
     $otakuChoice = \App\Models\Product::inRandomOrder()->first();
 
     // Fetch Banners
-    $heroBanner = \App\Models\Banner::where('type', 'hero')->where('is_active', true)->first();
+    $heroBanners = \App\Models\Banner::where('type', 'hero')->where('is_active', true)->orderBy('order')->get();
+    $heroCarousel = \App\Models\Setting::where('key', 'hero_carousel')->value('value') ?? '0';
+    $heroEffect = \App\Models\Setting::where('key', 'hero_effect')->value('value') ?? 'none';
     $promoBanner = \App\Models\Banner::where('type', 'promo')->where('is_active', true)->first();
     $categoryBanners = \App\Models\Banner::where('type', 'category')->where('is_active', true)->orderBy('order')->take(3)->get();
     $introBanners = \App\Models\Banner::where('type', 'intro')->where('is_active', true)->orderBy('order')->get();
+    $introActive = \App\Models\Setting::where('key', 'intro_active')->value('value') ?? '1'; // Default on
 
-    return view('index', compact('newArrivals', 'bestSellers', 'featured', 'otakuChoice', 'heroBanner', 'promoBanner', 'categoryBanners', 'introBanners'));
+    return view('index', compact('newArrivals', 'bestSellers', 'featured', 'otakuChoice', 'heroBanners', 'heroCarousel', 'heroEffect', 'promoBanner', 'categoryBanners', 'introBanners', 'introActive'));
 });
 
 Route::get('/about', function () {
@@ -68,9 +71,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     
     
     // Banner Management - Separated by Type
+    Route::post('hero-banners/update-settings', [App\Http\Controllers\Admin\AdminHeroBannerController::class, 'updateSettings'])->name('hero-banners.update-settings');
+    Route::post('hero-banners/{heroBanner}/toggle', [App\Http\Controllers\Admin\AdminHeroBannerController::class, 'toggleStatus'])->name('hero-banners.toggle');
     Route::resource('hero-banners', App\Http\Controllers\Admin\AdminHeroBannerController::class);
     Route::resource('category-banners', App\Http\Controllers\Admin\AdminCategoryBannerController::class);
     Route::resource('intro-panels', App\Http\Controllers\Admin\AdminIntroPanelController::class);
+    Route::post('intro-panels/update-settings', [App\Http\Controllers\Admin\AdminIntroPanelController::class, 'updateSettings'])->name('intro-panels.update-settings');
     Route::resource('promo-banners', App\Http\Controllers\Admin\AdminPromoBannerController::class);
     
     // Keep old route for backward compatibility (optional)

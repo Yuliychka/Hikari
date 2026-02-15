@@ -10,25 +10,70 @@
                 @csrf
                 @if(isset($heroBanner)) @method('PUT') @endif
 
-                <div class="mb-3">
-                    <label class="form-label">Banner Title (Internal use)</label>
-                    <input type="text" name="title" class="form-control bg-dark text-white border-secondary @error('title') is-invalid @enderror" value="{{ old('title', $heroBanner->title ?? '') }}">
-                    @error('title') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Banner Title (Headline)</label>
+                        <input type="text" name="title" class="form-control bg-dark text-white border-secondary" value="{{ old('title', $heroBanner->title ?? '') }}" placeholder="e.g. KATANA COLLECTION">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Subtitle</label>
+                        <input type="text" name="subtitle" class="form-control bg-dark text-white border-secondary" value="{{ old('subtitle', $heroBanner->subtitle ?? '') }}" placeholder="e.g. Sharpness meets Art">
+                    </div>
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label">Description (Main Text)</label>
+                    <textarea name="description" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="e.g. Discover our premium hand-forged katanas...">{{ old('description', $heroBanner->description ?? '') }}</textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Button Text</label>
+                        <input type="text" name="btn_text" class="form-control bg-dark text-white border-secondary" value="{{ old('btn_text', $heroBanner->btn_text ?? '') }}" placeholder="e.g. SHOP NOW">
+                    </div>
+                </div>
+
+                <div class="mb-3 border-top border-secondary pt-3">
                     <label class="form-label">Image Link (URL)</label>
-                    <input type="text" name="image_path" class="form-control bg-dark text-white border-secondary @error('image_path') is-invalid @enderror" value="{{ old('image_path', $heroBanner->image_path ?? '') }}" placeholder="https://...">
-                    @error('image_path') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    <small class="text-secondary">Provide a direct link to the image</small>
+                    <input type="text" name="image_path" id="imagePath" class="form-control bg-dark text-white border-secondary" value="{{ old('image_path', $heroBanner->image_path ?? '') }}" placeholder="https://..." oninput="toggleImageInputs()">
+                    <small class="text-secondary d-block mt-1">Provide a direct link to the image</small>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-danger">OR Upload Image File</label>
-                    <input type="file" name="image_file" class="form-control bg-dark text-white border-secondary @error('image_file') is-invalid @enderror">
-                    @error('image_file') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <input type="file" name="image_file" id="imageFile" class="form-control bg-dark text-white border-secondary" onchange="toggleImageInputs()">
                     <small class="text-secondary">Max size: 5MB | Recommended: 1920x1080px</small>
                 </div>
+
+                <script>
+                    function toggleImageInputs() {
+                        const fileInput = document.getElementById('imageFile');
+                        const urlInput = document.getElementById('imagePath');
+
+                        // If file is selected
+                        if (fileInput.files.length > 0) {
+                            urlInput.disabled = true;
+                            urlInput.style.opacity = '0.5';
+                            urlInput.value = ''; // clear url if file selected
+                        } else {
+                            urlInput.disabled = false;
+                            urlInput.style.opacity = '1';
+                        }
+
+                        // If url is typed
+                        if (urlInput.value.length > 0) {
+                            fileInput.disabled = true;
+                            fileInput.style.opacity = '0.5';
+                            fileInput.value = ''; // clear file if url typed
+                        } else {
+                            fileInput.disabled = false;
+                            fileInput.style.opacity = '1';
+                        }
+                    }
+                    
+                    // Run on load to set initial state
+                    document.addEventListener('DOMContentLoaded', toggleImageInputs);
+                </script>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -42,11 +87,6 @@
                             <option value="0" {{ old('is_active', $heroBanner->is_active ?? 1) == 0 ? 'selected' : '' }}>Hidden (Disabled)</option>
                         </select>
                     </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label">Link/Redirect URL (Optional)</label>
-                    <input type="text" name="link" class="form-control bg-dark text-white border-secondary" value="{{ old('link', $heroBanner->link ?? '') }}" placeholder="/products/...">
                 </div>
 
                 <div class="d-flex gap-2">

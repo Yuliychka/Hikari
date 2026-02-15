@@ -44,7 +44,7 @@
             width: 100%;
             height: 100%;
             background: #000;
-            z-index: 99999;
+            z-index: 99999999;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -117,12 +117,20 @@
             pointer-events: none;
             z-index: 9999;
             overflow: hidden;
+            transition: opacity 2s ease-out; /* Smooth Fade Support */
         }
         .sakura {
             position: absolute;
             background: rgba(255, 183, 197, 0.6);
             border-radius: 100% 0 100% 0;
             animation: fall linear infinite;
+        }
+
+       /* ... existing styles ... */
+
+        /* Lightning Effect Container */
+        #lightning-container {
+             transition: opacity 2s ease-out; /* Smooth Fade Support */
         }
         @keyframes fall {
             0% { opacity: 0; top: -10%; transform: translateX(0) rotate(0deg); }
@@ -336,12 +344,58 @@
             to { box-shadow: 0 0 15px #ffcc00, 0 0 5px #fff; }
         }
     </style>
+    <style>
+        /* New Robust Fade Classes */
+        .effect-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50; /* Below Navbar */
+            opacity: 1;
+            transition: opacity 2.5s ease-out; /* Smooth 2.5s fade */
+        }
+        .effect-container.fade-out {
+            opacity: 0 !important;
+        }
+        
+        /* Ensure Preloader beats everything */
+        #preloader {
+            z-index: 99999;
+            transition: opacity 0.5s ease;
+        }
+
+        /* EMERGENCY VISIBILITY FIXES */
+        .carousel-item.active {
+            opacity: 1 !important;
+            display: block !important;
+            z-index: 1 !important;
+        }
+        .carousel-caption {
+            z-index: 10 !important;
+            opacity: 1 !important; /* Force visible */
+        }
+        /* Ensure content is above overly */
+        .hero-content {
+            z-index: 20 !important;
+            position: absolute;
+        }
+    </style>
+    <noscript>
+        <style>
+            [data-aos] { opacity: 1 !important; transform: none !important; }
+            #preloader { display: none !important; }
+        </style>
+    </noscript>
 </head>
 <body>
     @include('additions.navbar')
+    <!-- Removed Debug Bar -->
 
     <!-- Marvel-Style Manga Intro (Refined) -->
-    <div id="preloader">
+    <div id="preloader" style="{{ $introActive == '0' ? 'display:none !important;' : '' }}">
         <div id="manga-container" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
     </div>
     <div id="manga-flash-overlay"></div>
@@ -349,26 +403,69 @@
     <div class="sakura-container"></div>
 
 
-    <!-- Samurai Hero Section (Restored) -->
-    <section class="hero">
-        <div class="hero-bg-container">
-            @if(isset($heroBanner) && $heroBanner)
-                <img src="{{ Str::startsWith($heroBanner->image_path, 'http') ? $heroBanner->image_path : asset($heroBanner->image_path) }}" class="hero-bg m-img" alt="{{ $heroBanner->title }}">
-            @else
-                <img src="{{ asset('images/Q.gif') }}" class="hero-bg m-img" alt="Anime Background">
-            @endif
-            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);"></div>
-        </div>
-
-        <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
-            <h1 class="japanese-c hero-title glitch" data-text="{{ isset($heroBanner) ? $heroBanner->title : 'Konnichiwa!' }}">{{ isset($heroBanner) ? $heroBanner->title : 'Konnichiwa!' }}</h1>
-            <h2 class="japanese-p hero-subtitle">Explore the spirit of Japan through anime</h2>
-            <p class="japanese-w hero-description">Mangas, Katanas, Hoodies, Mugs and more <br> bring the anime spirit home</p>
-            <a href="{{ route('products.index') }}" class="hero-btn-link">
-                <button type="button" class="btn btn-outline-danger hero-btn">
-                    <b>参 しませ (Shop Now)</b>
+    <!-- Samurai Hero Section (Restored & Enhanced) -->
+    <section class="hero position-relative">
+        @if($heroCarousel == '1' && $heroBanners->count() > 0)
+            <!-- Carousel Mode -->
+            <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false">
+                <div class="carousel-inner h-100">
+                    @foreach($heroBanners as $index => $banner)
+                    <div class="carousel-item h-100 {{ $index == 0 ? 'active' : '' }}">
+                        <div class="hero-bg-container">
+                            <img src="{{ Str::startsWith($banner->image_path, 'http') ? $banner->image_path : asset('storage/' . $banner->image_path) }}" class="hero-bg m-img d-block w-100 h-100 object-fit-cover" alt="{{ $banner->title }}">
+                            <!-- Reduced overlay opacity for better image quality -->
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));"></div>
+                        </div>
+                        <div class="hero-content position-absolute top-50 start-50 translate-middle text-center w-100" data-aos="fade-up" data-aos-duration="1500">
+                            <h1 class="japanese-c hero-title glitch" data-text="{{ $banner->title }}">{{ $banner->title }}</h1>
+                            @if($banner->subtitle)<h2 class="japanese-p hero-subtitle">{{ $banner->subtitle }}</h2>@endif
+                            @if($banner->description)<p class="japanese-w hero-description">{{ $banner->description }}</p>@endif
+                            
+                            <a href="#new-arrivals" class="hero-btn-link">
+                                <button type="button" class="btn btn-outline-danger hero-btn">
+                                    <b>{{ $banner->btn_text ?? 'Shop Now' }}</b>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                <!-- Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 </button>
-            </a>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+        @else
+            <!-- Single Banner Mode -->
+            @php $singleBanner = $heroBanners->first(); @endphp
+            <div class="hero-bg-container" id="singleHero">
+                @if($singleBanner)
+                    <img src="{{ Str::startsWith($singleBanner->image_path, 'http') ? $singleBanner->image_path : asset('storage/' . $singleBanner->image_path) }}" class="hero-bg m-img" alt="{{ $singleBanner->title }}">
+                @else
+                    <img src="{{ asset('images/Q.gif') }}" class="hero-bg m-img" alt="Anime Background">
+                @endif
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));"></div>
+            </div>
+
+            <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
+                <h1 class="japanese-c hero-title glitch" data-text="{{ $singleBanner ? $singleBanner->title : 'Konnichiwa!' }}">{{ $singleBanner ? $singleBanner->title : 'Konnichiwa!' }}</h1>
+                @if($singleBanner && $singleBanner->subtitle)<h2 class="japanese-p hero-subtitle">{{ $singleBanner->subtitle }}</h2>@endif
+                @if($singleBanner && $singleBanner->description)<p class="japanese-w hero-description">{{ $singleBanner->description }}</p>@endif
+                
+                <a href="#new-arrivals" class="hero-btn-link">
+                    <button type="button" class="btn btn-outline-danger hero-btn">
+                         <b>{{ $singleBanner->btn_text ?? 'Shop Now' }}</b>
+                    </button>
+                </a>
+            </div>
+        @endif
+        
+        <!-- Lightning Effect Container -->
+        <div id="lightning-container" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:50; display:none; overflow: hidden;">
+            <div class="flash-overlay" style="background:#fff; opacity:0; width:100%; height:100%; transition: opacity 0.1s ease-out;"></div>
         </div>
     </section>
 
@@ -380,7 +477,7 @@
     <!-- Featured Products (Renamed to New Arrivals for logic, or keep as Featured) -->
     <!-- Let's use the fetched $newArrivals for a "New Arrivals" section and $featured for the main grid -->
 
-    <section class="container py-5">
+    <section class="container py-5" id="new-arrivals">
         <h2 class="section-header" data-aos="zoom-in">New Arrivals</h2>
         <div class="row g-4">
             @if(isset($newArrivals) && count($newArrivals) > 0)
@@ -557,152 +654,222 @@
     <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Marvel-Style Manga Intro Logic
-        document.addEventListener("DOMContentLoaded", function() {
-            const container = document.getElementById('manga-container');
-            const preloader = document.getElementById('preloader');
-            const flashOverlay = document.getElementById('manga-flash-overlay');
-            
-            // Get intro images from PHP
-            const dbImages = @json($introBanners->pluck('image_path')->map(function($path) {
-                return Str::startsWith($path, 'http') ? $path : asset($path);
-            }));
+        /**
+         * HIKARI INTRO & EFFECTS ENGINE (REWRITE v28)
+         * - State Machine Logic: Init -> Intro -> Reveal -> Effects
+         * - Guarantees sequential execution and visibility.
+         */
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. CONFIGURATION
+            const config = {
+                introActive: "{{ $introActive }}" === "1",
+                effect: "{{ $heroEffect }}", // 'sakura', 'lightning', 'none'
+                hasImages: {{ $introBanners->count() > 0 ? 'true' : 'false' }} 
+            };
 
-            // Fallback high-quality manga/anime images if none in DB
-            const fallbackImages = [
-                'https://images.unsplash.com/photo-1620336655055-088d06e7675a?q=80&w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1578632738981-43c945b69f7a?q=80&w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800&auto=format&fit=crop'
-            ];
+            const DOM = {
+                preloader: document.getElementById('preloader'),
+                container: document.getElementById('manga-container'),
+                flashOverlay: document.getElementById('manga-flash-overlay'),
+                sakura: document.querySelector('.sakura-container'),
+                lightning: document.getElementById('lightning-container'),
+                carousel: document.getElementById('heroCarousel')
+            };
 
-            const images = dbImages;
-            
-            // If no intro images, skip preloader immediately
-            if (images.length === 0) {
-                preloader.style.display = 'none';
-                AOS.init({ once: true, mirror: false, duration: 800 });
-                return;
+            // Global Intervals
+            let sakuraInterval, lightningInterval;
+
+            // 2. MASTER CONTROLLER
+            async function init() {
+                console.log("Hikari Engine Starting...", config);
+
+                if (config.introActive && config.hasImages) {
+                    await playIntro();
+                } else {
+                    hidePreloaderImmediate();
+                }
+                
+                // Site logic starts strictly AFTER intro
+                revealSite(); 
             }
 
-            let flashCount = 0;
-            const totalFlashes = 35; 
-            const flashSpeed = 50; // A bit faster for more intensity
+            // 3. INTRO LOGIC
+            function playIntro() {
+                return new Promise(resolve => {
+                    // Get intro images from PHP (Inline Safe)
+                    const dbImages = @json($introBanners->pluck('image_path')->map(function($path) {
+                        return Str::startsWith($path, 'http') ? $path : asset('storage/' . $path);
+                    }));
 
-            function createFlash() {
-                if (flashCount >= totalFlashes) {
-                    finishPreloader();
-                    return;
+                     // Fallback high-quality manga/anime images if none in DB (Just in case count > 0 but array empty?)
+                    const fallbackImages = [
+                        'https://images.unsplash.com/photo-1620336655055-088d06e7675a?q=80&w=800&auto=format&fit=crop',
+                        'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=800&auto=format&fit=crop'
+                    ];
+                    const images = dbImages.length > 0 ? dbImages : fallbackImages;
+
+                    let flashCount = 0;
+                    const totalFlashes = 35; 
+                    const flashSpeed = 50;
+
+                    function createFlash() {
+                         if (flashCount >= totalFlashes) {
+                             // End Sequence
+                             if(DOM.flashOverlay) DOM.flashOverlay.classList.add('active');
+                             setTimeout(resolve, 300); // Resolve after flash
+                             return;
+                         }
+
+                         const panel = document.createElement('div');
+                         panel.classList.add('manga-panel', 'flash');
+                         const w = Math.random() > 0.5 ? 50 : 100;
+                         const h = Math.random() > 0.5 ? 50 : 100;
+                         panel.style.width = w + '%';
+                         panel.style.height = h + '%';
+                         panel.style.top = (Math.random() * (100-h)) + '%';
+                         panel.style.left = (Math.random() * (100-w)) + '%';
+                         panel.style.backgroundImage = `url('${images[Math.floor(Math.random() * images.length)]}')`;
+                         
+                         if(DOM.container) DOM.container.appendChild(panel);
+                         setTimeout(() => { panel.remove(); }, 80);
+
+                         flashCount++;
+                         setTimeout(createFlash, flashSpeed);
+                    }
+
+                    // Start Loop
+                    createFlash();
+                });
+            }
+
+            function hidePreloaderImmediate() {
+                if(DOM.preloader) DOM.preloader.style.display = 'none';
+            }
+
+            // 4. SITE REVEAL (The Fix for Hero)
+            function revealSite() {
+                console.log("Revealing Site...");
+                if(DOM.preloader) {
+                    DOM.preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        DOM.preloader.style.display = 'none';
+                    }, 600);
                 }
 
-                const panel = document.createElement('div');
-                panel.classList.add('manga-panel', 'flash');
+                // AOS Init triggering NOW ensures content is visible
+                AOS.init({ 
+                    once: true, 
+                    duration: 800,
+                    offset: 50 // Trigger sooner
+                }); 
                 
-                const layouts = [
-                    { w: 100, h: 100, t: 0, l: 0 },
-                    { w: 50, h: 100, t: 0, l: 0 }, { w: 50, h: 100, t: 0, l: 50 },
-                    { w: 100, h: 50, t: 0, l: 0 }, { w: 100, h: 50, t: 50, l: 0 },
-                    { w: 50, h: 50, t: 0, l: 0 }, { w: 50, h: 50, t: 0, l: 50 },
-                    { w: 50, h: 50, t: 50, l: 0 }, { w: 50, h: 50, t: 50, l: 50 }
-                ];
+                // Manual refresh for Carousel Text
+                if(DOM.carousel) {
+                    // Force refresh AOS on slide
+                    DOM.carousel.addEventListener('slid.bs.carousel', () => {
+                        AOS.refresh(); 
+                    });
+                }
 
-                const layout = layouts[Math.floor(Math.random() * layouts.length)];
-                
-                panel.style.width = layout.w + '%';
-                panel.style.height = layout.h + '%';
-                panel.style.top = layout.t + '%';
-                panel.style.left = layout.l + '%';
-                panel.style.backgroundImage = `url('${images[Math.floor(Math.random() * images.length)]}')`;
-                
-                container.appendChild(panel);
-                setTimeout(() => { panel.remove(); }, 80);
-
-                flashCount++;
-                setTimeout(createFlash, flashSpeed);
+                startEffects();
             }
 
-            function finishPreloader() {
-                flashOverlay.classList.add('active');
+            // 5. EFFECTS LOGIC (With Scroll Trigger)
+            function startEffects() {
+                if (config.effect === 'none') return;
+                console.log("Starting Effect:", config.effect);
+
+                if (config.effect === 'sakura') startSakura();
+                if (config.effect === 'lightning') startLightning();
                 
-                setTimeout(() => {
-                    preloader.style.opacity = '0';
-                    setTimeout(() => {
-                        preloader.style.display = 'none';
-                        AOS.init({ once: true, mirror: false, duration: 800 });
-                    }, 600);
-                }, 150);
+                // Disappear 7s after scroll instead of immediately
+                const handleScroll = () => {
+                    if (window.scrollY > 50) {
+                        console.log("Scroll detected: Effects will fade out in 7 seconds...");
+                        setTimeout(() => {
+                            stopAllEffectsSmoothly();
+                        }, 7000);
+                        window.removeEventListener('scroll', handleScroll);
+                    }
+                };
+                window.addEventListener('scroll', handleScroll);
             }
 
-            setTimeout(createFlash, 100);
-        });
+            function stopAllEffectsSmoothly() {
+                console.log("Stopping Effects...");
+                if (DOM.sakura) {
+                    DOM.sakura.classList.add('fade-out'); // Toggle class or style
+                    DOM.sakura.style.opacity = '0';
+                    setTimeout(() => { 
+                         if(sakuraInterval) clearInterval(sakuraInterval);
+                         DOM.sakura.style.display = 'none'; 
+                    }, 2500);
+                }
+                if (DOM.lightning) {
+                    DOM.lightning.style.opacity = '0';
+                    setTimeout(() => { 
+                         if(lightningInterval) clearInterval(lightningInterval);
+                         DOM.lightning.style.display = 'none'; 
+                    }, 2500);
+                }
+            }
 
-        // Sakura Falling Effect
+            function startSakura() {
+                 if(DOM.sakura) {
+                     DOM.sakura.style.display = 'block';
+                     void DOM.sakura.offsetWidth; 
+                     DOM.sakura.style.opacity = '1';
+                     
+                     if(!sakuraInterval) {
+                         const createSakura = () => {
+                            if (!DOM.sakura || DOM.sakura.style.opacity === '0') return;
+                            const sakura = document.createElement('div');
+                            sakura.classList.add('sakura');
+                            sakura.style.left = Math.random() * 100 + 'vw';
+                            sakura.style.animationDuration = Math.random() * 3 + 4 + 's';
+                            sakura.style.width = Math.random() * 15 + 10 + 'px';
+                            sakura.style.height = sakura.style.width;
+                            DOM.sakura.appendChild(sakura);
+                            setTimeout(() => { sakura.remove(); }, 8000);
+                         };
+                         sakuraInterval = setInterval(createSakura, 300);
+                     }
+                 }
+            }
 
-        // Sakura Falling Effect
-        const sakuraContainer = document.querySelector('.sakura-container');
-        let sakuraInterval;
+            function startLightning() {
+                if(!DOM.lightning) return;
+                DOM.lightning.style.display = 'block';
+                void DOM.lightning.offsetWidth;
+                DOM.lightning.style.opacity = '1';
 
-        const createSakura = () => {
-            const sakura = document.createElement('div');
-            sakura.classList.add('sakura');
-            sakura.style.left = Math.random() * 100 + 'vw';
-            sakura.style.animationDuration = Math.random() * 3 + 4 + 's';
-            sakura.style.width = Math.random() * 15 + 10 + 'px';
-            sakura.style.height = sakura.style.width;
-            
-            sakuraContainer.appendChild(sakura);
-            
+                if(!lightningInterval) {
+                    const triggerLightning = () => {
+                        if(DOM.lightning.style.opacity === '0') return;
+                        const flash = DOM.lightning.querySelector('.flash-overlay');
+                        if(!flash) return;
+
+                        let opacity = 0.5 + Math.random() * 0.4;
+                        flash.style.opacity = opacity;
+                        setTimeout(() => { flash.style.opacity = 0; }, 50 + Math.random() * 100);
+                    };
+                    lightningInterval = setInterval(triggerLightning, 3000); 
+                    triggerLightning();
+                }
+            }
+
+            // Failsafe: If somehow stuck for 5 seconds, force reveal
             setTimeout(() => {
-                sakura.remove();
-            }, 8000);
-        };
-        
-        // Start animation
-        sakuraInterval = setInterval(createSakura, 300);
+                const p = document.getElementById('preloader');
+                if(p && getComputedStyle(p).display !== 'none' && getComputedStyle(p).opacity !== '0') {
+                    console.warn("Failsafe Triggered");
+                    revealSite();
+                }
+            }, 5000);
 
-        // Stop animation after 10 seconds IF user scrolls
-        let canStopSakura = false;
-        
-        setTimeout(() => {
-            canStopSakura = true;
-            checkSakuraStop();
-        }, 10000);
-
-        function checkSakuraStop() {
-            if (canStopSakura && window.scrollY > 50) {
-                clearInterval(sakuraInterval);
-                // Optional: remove existing sakura for cleanliness
-                // document.querySelectorAll('.sakura').forEach(el => el.remove());
-                console.log("Sakura animation stopped.");
-            }
-        }
-
-        window.addEventListener('scroll', checkSakuraStop);
-
-        // Countdown Timer
-        function updateTimer() {
-            const now = new Date();
-            const target = new Date();
-            target.setHours(24, 0, 0, 0); // Midnight tonight
-            
-            let diff = target - now;
-            if (diff < 0) {
-                target.setDate(target.getDate() + 1);
-                diff = target - now;
-            }
-            
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
+            // Start Engine
+            init();
+        });
     </script>
 </body>
 </html>
