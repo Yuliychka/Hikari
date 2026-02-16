@@ -11,9 +11,24 @@
                 @if(isset($categoryBanner)) @method('PUT') @endif
 
                 <div class="mb-3">
-                    <label class="form-label">Category Title</label>
+                    <label class="form-label">Linked Category (Database)</label>
+                    <select name="category_id" class="form-select bg-dark text-white border-secondary @error('category_id') is-invalid @enderror">
+                        <option value="">-- Select Category --</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ (old('category_id', $categoryBanner->category_id ?? $selectedCategoryId ?? '') == $category->id) ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <small class="text-secondary">Linking to a database category ensures the banner syncs automatically.</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Override Title (Optional)</label>
                     <input type="text" name="title" class="form-control bg-dark text-white border-secondary @error('title') is-invalid @enderror" value="{{ old('title', $categoryBanner->title ?? '') }}" placeholder="e.g., Manga, Katanas, Hoodies">
                     @error('title') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <small class="text-secondary">If left blank, the category name will be used.</small>
                 </div>
 
                 <div class="mb-3">
@@ -27,7 +42,7 @@
                     <label class="form-label text-danger">OR Upload Image File</label>
                     <input type="file" name="image_file" class="form-control bg-dark text-white border-secondary @error('image_file') is-invalid @enderror">
                     @error('image_file') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    <small class="text-secondary">Max size: 5MB | Recommended: Square image (500x500px)</small>
+                    <small class="text-secondary">Max size: 20MB | Recommended: Square image (500x500px)</small>
                 </div>
 
                 <div class="mb-3">

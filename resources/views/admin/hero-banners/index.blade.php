@@ -20,7 +20,7 @@
             @csrf
             <div class="row g-3 align-items-end">
                 <!-- Carousel Toggle -->
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label class="fw-bold mb-2 text-uppercase small" for="hero_carousel">
                         <i class="fas fa-images me-2"></i> Carousel Mode
                     </label>
@@ -30,7 +30,7 @@
                     </select>
                 </div>
                 
-                <div class="col-md-5">
+                <div class="col-md-4">
                      <label class="form-label text-black fw-bold small text-uppercase" for="hero_effect">
                          <i class="fas fa-magic me-2"></i> Hero Effect
                      </label>
@@ -41,9 +41,27 @@
                      </select>
                 </div>
 
+                <!-- Global Hero Text Fields -->
+                <div class="col-md-6">
+                    <label class="fw-bold mb-2 text-uppercase small" for="hero_title">Hero Title</label>
+                    <input type="text" name="hero_title" class="form-control bg-white text-dark border-secondary rounded-0" value="{{ $heroTitle }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="fw-bold mb-2 text-uppercase small" for="hero_subtitle">Hero Subtitle</label>
+                    <input type="text" name="hero_subtitle" class="form-control bg-white text-dark border-secondary rounded-0" value="{{ $heroSubtitle }}">
+                </div>
+                <div class="col-md-10">
+                    <label class="fw-bold mb-2 text-uppercase small" for="hero_description">Hero Description</label>
+                    <textarea name="hero_description" class="form-control bg-white text-dark border-secondary rounded-0" rows="2">{{ $heroDescription }}</textarea>
+                </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-dark w-100 rounded-0 border-2 border-dark fw-bold text-uppercase" style="background: #000; color: #fff;">
-                        <i class="fas fa-save me-2"></i> SAVE
+                    <label class="fw-bold mb-2 text-uppercase small" for="hero_btn_text">Button Text</label>
+                    <input type="text" name="hero_btn_text" class="form-control bg-white text-dark border-secondary rounded-0" value="{{ $heroBtnText }}">
+                </div>
+
+                <div class="col-md-12 text-end mt-3">
+                    <button type="submit" class="btn btn-dark rounded-0 border-2 border-dark fw-bold text-uppercase px-5" style="background: #000; color: #fff;">
+                        <i class="fas fa-save me-2"></i> SAVE CONFIGURATION
                     </button>
                 </div>
             </div>
@@ -65,7 +83,6 @@
             <thead>
                 <tr class="text-uppercase small font-monospace text-black fw-bold border-bottom border-dark">
                     <th>Preview</th>
-                    <th>Details</th>
                     <th>Order</th>
                     <th>Status</th>
                     <th class="text-end">Actions</th>
@@ -78,12 +95,6 @@
                         <img src="{{ Str::startsWith($banner->image_path, 'http') ? $banner->image_path : asset('storage/' . $banner->image_path) }}" 
                              alt="{{ $banner->title }}" 
                              style="width: 100px; height: 60px; object-fit: cover; border: 1px solid #000; filter: grayscale(100%) contrast(1.2);">
-                    </td>
-                    <td>
-                        <div class="fw-bold text-uppercase">{{ $banner->title }}</div>
-                        @if($banner->btn_text)
-                            <span class="badge bg-light text-dark border border-dark rounded-0 mt-1">{{ $banner->btn_text }}</span>
-                        @endif
                     </td>
                     <td><span class="font-monospace">{{ $banner->order }}</span></td>
                     <td>

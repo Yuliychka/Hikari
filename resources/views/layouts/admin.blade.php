@@ -418,20 +418,20 @@
             <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                 <span class="nav-text">Dashboard</span>
             </a>
+            <a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">
+                <span class="nav-text">Categories</span>
+            </a>
             <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
                 <span class="nav-text">Products</span>
             </a>
             
             <!-- Collapsible Banners & Media Menu -->
-            <div class="nav-link nav-parent {{ request()->routeIs('admin.hero-banners.*') || request()->routeIs('admin.category-banners.*') || request()->routeIs('admin.intro-panels.*') || request()->routeIs('admin.promo-banners.*') ? 'open' : '' }}" onclick="toggleBannerMenu()">
+            <div class="nav-link nav-parent {{ request()->routeIs('admin.hero-banners.*') || request()->routeIs('admin.intro-panels.*') || request()->routeIs('admin.promo-banners.*') ? 'open' : '' }}" onclick="toggleBannerMenu()">
                 <span class="nav-text">Media</span>
             </div>
-            <div class="nav-children {{ request()->routeIs('admin.hero-banners.*') || request()->routeIs('admin.category-banners.*') || request()->routeIs('admin.intro-panels.*') || request()->routeIs('admin.promo-banners.*') ? 'open' : '' }}" id="bannerMenu">
+            <div class="nav-children {{ request()->routeIs('admin.hero-banners.*') || request()->routeIs('admin.intro-panels.*') || request()->routeIs('admin.promo-banners.*') ? 'open' : '' }}" id="bannerMenu">
                 <a class="nav-child {{ request()->routeIs('admin.hero-banners.*') ? 'active' : '' }}" href="{{ route('admin.hero-banners.index') }}">
                     Hero Banners
-                </a>
-                <a class="nav-child {{ request()->routeIs('admin.category-banners.*') ? 'active' : '' }}" href="{{ route('admin.category-banners.index') }}">
-                    Category Banners
                 </a>
                 <a class="nav-child {{ request()->routeIs('admin.intro-panels.*') ? 'active' : '' }}" href="{{ route('admin.intro-panels.index') }}">
                     Intro Panels
@@ -482,6 +482,7 @@
         @yield('content')
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleBannerMenu() {

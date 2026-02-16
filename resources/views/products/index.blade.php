@@ -98,8 +98,17 @@
                 <div class="card manga-card">
                     <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-uppercase">{{ $product->name }}</h5>
-                        <p class="card-text small text-truncate fw-bold text-secondary">{{ $product->description }}</p>
+                        <div class="mb-2">
+                            @if($product->category)
+                                <small class="text-danger fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">{{ $product->category->name }}</small>
+                                @if($product->subcategory)
+                                    <span class="text-secondary opacity-50 mx-1">/</span>
+                                    <small class="text-dark fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">{{ $product->subcategory->name }}</small>
+                                @endif
+                            @endif
+                        </div>
+                        <h5 class="card-title fw-bold text-uppercase mb-1" style="font-size: 1rem;">{{ $product->name }}</h5>
+                        <p class="card-text small text-truncate fw-bold text-secondary mb-3">{{ $product->description }}</p>
                         <div class="mt-auto d-flex justify-content-between align-items-center">
                             <span class="fs-5 fw-bold" style="background: #000; color: #fff; padding: 2px 8px;">${{ $product->price }}</span>
                             <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-outline-dark border-2 fw-bold rounded-0">VIEW</a>

@@ -29,8 +29,25 @@ class ProductController extends Controller
 
     function getProductById($id)
     {
-        $item = Product::findOrFail($id);
+        $item = Product::with(['category', 'subcategory', 'reviews.user', 'images'])->findOrFail($id);
+        
+        // Similar products in the same category
+        $similarProducts = Product::where('category_id', $item->category_id)
+            ->where('id', '!=', $item->id)
+            ->where('status', 1)
+            ->limit(4)
+            ->get();
 
-        return view("product-details", compact("item"));
+        // Check if current user has purchased this product and order is completed
+        $hasPurchased = false;
+        if (\Illuminate\Support\Facades\Auth::check()) {
+            $hasPurchased = \App\Models\Order::where('user_id', \Illuminate\Support\Facades\Auth::id())
+                ->where('status', 'completed')
+                ->whereHas('items', function($query) use ($id) {
+                    $query->where('product_id', $id);
+                })->exists();
+        }
+
+        return view("product-details", compact("item", "similarProducts", "hasPurchased"));
     }
 }

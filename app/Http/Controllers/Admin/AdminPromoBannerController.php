@@ -25,7 +25,7 @@ class AdminPromoBannerController extends Controller
         $data = $request->validate([
             'title' => 'nullable|string|max:255',
             'image_path' => 'nullable|string',
-            'image_file' => 'nullable|image|max:5120',
+            'image_file' => 'nullable|image|max:20480',
             'link' => 'nullable|string',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',
@@ -53,7 +53,7 @@ class AdminPromoBannerController extends Controller
         $data = $request->validate([
             'title' => 'nullable|string|max:255',
             'image_path' => 'nullable|string',
-            'image_file' => 'nullable|image|max:5120',
+            'image_file' => 'nullable|image|max:20480',
             'link' => 'nullable|string',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',

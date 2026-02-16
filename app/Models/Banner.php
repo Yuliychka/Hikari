@@ -11,6 +11,7 @@ class Banner extends Model
 
     protected $fillable = [
         'type',
+        'category_id',
         'title',
         'subtitle',
         'description',
@@ -20,4 +21,9 @@ class Banner extends Model
         'order',
         'is_active'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

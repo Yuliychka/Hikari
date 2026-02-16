@@ -10,26 +10,28 @@
                 @csrf
                 @if(isset($heroBanner)) @method('PUT') @endif
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Banner Title (Headline)</label>
-                        <input type="text" name="title" class="form-control bg-dark text-white border-secondary" value="{{ old('title', $heroBanner->title ?? '') }}" placeholder="e.g. KATANA COLLECTION">
+                <div class="d-none"> {{-- Text fields moved to global settings --}}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Banner Title (Headline)</label>
+                            <input type="text" name="title" class="form-control bg-dark text-white border-secondary" value="{{ old('title', $heroBanner->title ?? '') }}" placeholder="e.g. KATANA COLLECTION">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" name="subtitle" class="form-control bg-dark text-white border-secondary" value="{{ old('subtitle', $heroBanner->subtitle ?? '') }}" placeholder="e.g. Sharpness meets Art">
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Subtitle</label>
-                        <input type="text" name="subtitle" class="form-control bg-dark text-white border-secondary" value="{{ old('subtitle', $heroBanner->subtitle ?? '') }}" placeholder="e.g. Sharpness meets Art">
+
+                    <div class="mb-3">
+                        <label class="form-label">Description (Main Text)</label>
+                        <textarea name="description" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="e.g. Discover our premium hand-forged katanas...">{{ old('description', $heroBanner->description ?? '') }}</textarea>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Description (Main Text)</label>
-                    <textarea name="description" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="e.g. Discover our premium hand-forged katanas...">{{ old('description', $heroBanner->description ?? '') }}</textarea>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Button Text</label>
-                        <input type="text" name="btn_text" class="form-control bg-dark text-white border-secondary" value="{{ old('btn_text', $heroBanner->btn_text ?? '') }}" placeholder="e.g. SHOP NOW">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Button Text</label>
+                            <input type="text" name="btn_text" class="form-control bg-dark text-white border-secondary" value="{{ old('btn_text', $heroBanner->btn_text ?? '') }}" placeholder="e.g. SHOP NOW">
+                        </div>
                     </div>
                 </div>
 
@@ -42,7 +44,7 @@
                 <div class="mb-3">
                     <label class="form-label text-danger">OR Upload Image File</label>
                     <input type="file" name="image_file" id="imageFile" class="form-control bg-dark text-white border-secondary" onchange="toggleImageInputs()">
-                    <small class="text-secondary">Max size: 5MB | Recommended: 1920x1080px</small>
+                    <small class="text-secondary">Max size: 20MB | Recommended: 1920x1080px</small>
                 </div>
 
                 <script>

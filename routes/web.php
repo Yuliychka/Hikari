@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     // Fetch products
     $newArrivals = \App\Models\Product::latest()->take(4)->get();
-    $bestSellers = \App\Models\Product::inRandomOrder()->take(4)->get();
+    $bestSellers = \App\Models\Product::bestSellers(4)->get();
     $featured = \App\Models\Product::inRandomOrder()->take(8)->get();
     $otakuChoice = \App\Models\Product::inRandomOrder()->first();
 
@@ -30,11 +30,22 @@ Route::get('/', function () {
     $heroCarousel = \App\Models\Setting::where('key', 'hero_carousel')->value('value') ?? '0';
     $heroEffect = \App\Models\Setting::where('key', 'hero_effect')->value('value') ?? 'none';
     $promoBanner = \App\Models\Banner::where('type', 'promo')->where('is_active', true)->first();
-    $categoryBanners = \App\Models\Banner::where('type', 'category')->where('is_active', true)->orderBy('order')->take(3)->get();
+    $categoryBanners = \App\Models\Category::where('is_active', true)->whereNotNull('image_path')->orderBy('order')->take(3)->get();
     $introBanners = \App\Models\Banner::where('type', 'intro')->where('is_active', true)->orderBy('order')->get();
-    $introActive = \App\Models\Setting::where('key', 'intro_active')->value('value') ?? '1'; // Default on
+    $introActive = \App\Models\Setting::where('key', 'intro_active')->value('value') ?? '1';
+    
+    // Hero Text Settings
+    $heroTitle = \App\Models\Setting::where('key', 'hero_title')->value('value') ?? 'HIKARI ANIME STORE';
+    $heroSubtitle = \App\Models\Setting::where('key', 'hero_subtitle')->value('value') ?? 'Premium Manga & Anime Merchandise';
+    $heroDescription = \App\Models\Setting::where('key', 'hero_description')->value('value') ?? 'Discover our exclusive collection of hand-forged katanas, figures, and apparel.';
+    $heroBtnText = \App\Models\Setting::where('key', 'hero_btn_text')->value('value') ?? 'SHOP NOW';
 
-    return view('index', compact('newArrivals', 'bestSellers', 'featured', 'otakuChoice', 'heroBanners', 'heroCarousel', 'heroEffect', 'promoBanner', 'categoryBanners', 'introBanners', 'introActive'));
+    return view('index', compact(
+        'newArrivals', 'bestSellers', 'featured', 'otakuChoice', 
+        'heroBanners', 'heroCarousel', 'heroEffect', 'promoBanner', 
+        'categoryBanners', 'introBanners', 'introActive',
+        'heroTitle', 'heroSubtitle', 'heroDescription', 'heroBtnText'
+    ));
 });
 
 Route::get('/about', function () {
@@ -67,7 +78,14 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
     
     // Product Management
+    Route::post('products/{product}/toggle', [App\Http\Controllers\Admin\AdminProductController::class, 'toggleStatus'])->name('products.toggle');
     Route::resource('products', App\Http\Controllers\Admin\AdminProductController::class);
+    
+    // Category Management
+    Route::resource('categories', App\Http\Controllers\Admin\AdminCategoryController::class);
+    
+    // Review Management
+    Route::post('reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     
     
     // Banner Management - Separated by Type

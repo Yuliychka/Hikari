@@ -27,7 +27,7 @@
                     <label class="form-label text-danger">OR Upload Image File</label>
                     <input type="file" name="image_file" class="form-control bg-dark text-white border-secondary @error('image_file') is-invalid @enderror">
                     @error('image_file') <div class="invalid-feedback">{{ $message }}</div> @enderror>
-                    <small class="text-secondary">Max size: 5MB | Manga-style images work best</small>
+                    <small class="text-secondary">Max size: 20MB | Manga-style images work best</small>
                 </div>
 
                 <div class="row">

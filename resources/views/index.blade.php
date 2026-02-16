@@ -367,20 +367,35 @@
             transition: opacity 0.5s ease;
         }
 
-        /* EMERGENCY VISIBILITY FIXES */
-        .carousel-item.active {
-            opacity: 1 !important;
-            display: block !important;
-            z-index: 1 !important;
-        }
-        .carousel-caption {
-            z-index: 10 !important;
-            opacity: 1 !important; /* Force visible */
-        }
-        /* Ensure content is above overly */
+        /* Restore simple absolute positioning */
         .hero-content {
             z-index: 20 !important;
             position: absolute;
+        }
+
+        /* Custom Anime-themed Carousel Arrows (Minimal Blade Style) */
+        .carousel-control-prev, .carousel-control-next {
+            width: 60px;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            z-index: 30;
+        }
+
+        .carousel-control-prev:hover, .carousel-control-next:hover {
+            opacity: 0.9;
+        }
+
+        .anime-arrow {
+            filter: drop-shadow(0 0 3px rgba(220, 20, 60, 0.4));
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .carousel-control-prev:hover .anime-arrow {
+            transform: scale(1.1) translateX(-3px);
+        }
+
+        .carousel-control-next:hover .anime-arrow {
+            transform: scale(1.1) translateX(3px);
         }
     </style>
     <noscript>
@@ -407,35 +422,49 @@
     <section class="hero position-relative">
         @if($heroCarousel == '1' && $heroBanners->count() > 0)
             <!-- Carousel Mode -->
-            <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false">
+            <div id="heroCarousel" class="carousel slide carousel-fade w-100 h-100" data-bs-ride="carousel" data-bs-interval="false" data-bs-pause="false">
                 <div class="carousel-inner h-100">
                     @foreach($heroBanners as $index => $banner)
-                    <div class="carousel-item h-100 {{ $index == 0 ? 'active' : '' }}">
+                    <div class="carousel-item h-100 {{ $index == 0 ? 'active' : '' }}" @if($index == 0) data-bs-interval="20000" @else data-bs-interval="10000" @endif>
                         <div class="hero-bg-container">
-                            <img src="{{ Str::startsWith($banner->image_path, 'http') ? $banner->image_path : asset('storage/' . $banner->image_path) }}" class="hero-bg m-img d-block w-100 h-100 object-fit-cover" alt="{{ $banner->title }}">
-                            <!-- Reduced overlay opacity for better image quality -->
-                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));"></div>
+                            <div class="hero-bg d-block w-100 h-100" style="background-image: url('{{ Str::startsWith($banner->image_path, 'http') ? $banner->image_path : asset('storage/' . $banner->image_path) }}');"></div>
+                            <!-- Lightened overlay for better image clarity -->
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));"></div>
                         </div>
-                        <div class="hero-content position-absolute top-50 start-50 translate-middle text-center w-100" data-aos="fade-up" data-aos-duration="1500">
-                            <h1 class="japanese-c hero-title glitch" data-text="{{ $banner->title }}">{{ $banner->title }}</h1>
-                            @if($banner->subtitle)<h2 class="japanese-p hero-subtitle">{{ $banner->subtitle }}</h2>@endif
-                            @if($banner->description)<p class="japanese-w hero-description">{{ $banner->description }}</p>@endif
+                        @if($index == 0)
+                        <div class="hero-content position-absolute top-50 start-50 translate-middle text-center w-100" style="margin-top: 25px;" data-aos="fade-up" data-aos-duration="1500">
+                            <h1 class="japanese-c hero-title glitch" data-text="{{ $heroTitle }}">{{ $heroTitle }}</h1>
+                            @if($heroSubtitle)<h2 class="japanese-p hero-subtitle">{{ $heroSubtitle }}</h2>@endif
+                            @if($heroDescription)<p class="japanese-w hero-description">{{ $heroDescription }}</p>@endif
                             
                             <a href="#new-arrivals" class="hero-btn-link">
                                 <button type="button" class="btn btn-outline-danger hero-btn">
-                                    <b>{{ $banner->btn_text ?? 'Shop Now' }}</b>
+                                    <b>{{ $heroBtnText }}</b>
                                 </button>
                             </a>
                         </div>
+                        @endif
                     </div>
                     @endforeach
                 </div>
                 <!-- Controls -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="anime-arrow" aria-hidden="true">
+                        <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M65 25L35 50L65 75" stroke="crimson" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M60 45L40 50L60 55" fill="white"/>
+                        </svg>
+                    </span>
+                    <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="anime-arrow" aria-hidden="true">
+                        <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M35 25L65 50L35 75" stroke="crimson" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M40 45L60 50L40 55" fill="white"/>
+                        </svg>
+                    </span>
+                    <span class="visually-hidden">Next</span>
                 </button>
             </div>
         @else
@@ -443,21 +472,21 @@
             @php $singleBanner = $heroBanners->first(); @endphp
             <div class="hero-bg-container" id="singleHero">
                 @if($singleBanner)
-                    <img src="{{ Str::startsWith($singleBanner->image_path, 'http') ? $singleBanner->image_path : asset('storage/' . $singleBanner->image_path) }}" class="hero-bg m-img" alt="{{ $singleBanner->title }}">
+                    <div class="hero-bg" style="background-image: url('{{ Str::startsWith($singleBanner->image_path, 'http') ? $singleBanner->image_path : asset('storage/' . $singleBanner->image_path) }}');"></div>
                 @else
-                    <img src="{{ asset('images/Q.gif') }}" class="hero-bg m-img" alt="Anime Background">
+                    <div class="hero-bg" style="background-image: url('{{ asset('images/Q.gif') }}');"></div>
                 @endif
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));"></div>
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));"></div>
             </div>
 
-            <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
-                <h1 class="japanese-c hero-title glitch" data-text="{{ $singleBanner ? $singleBanner->title : 'Konnichiwa!' }}">{{ $singleBanner ? $singleBanner->title : 'Konnichiwa!' }}</h1>
-                @if($singleBanner && $singleBanner->subtitle)<h2 class="japanese-p hero-subtitle">{{ $singleBanner->subtitle }}</h2>@endif
-                @if($singleBanner && $singleBanner->description)<p class="japanese-w hero-description">{{ $singleBanner->description }}</p>@endif
+            <div class="hero-content position-absolute top-50 start-50 translate-middle text-center w-100" style="margin-top: 25px;" data-aos="fade-up" data-aos-duration="1500">
+                <h1 class="japanese-c hero-title glitch" data-text="{{ $heroTitle }}">{{ $heroTitle }}</h1>
+                @if($heroSubtitle)<h2 class="japanese-p hero-subtitle">{{ $heroSubtitle }}</h2>@endif
+                @if($heroDescription)<p class="japanese-w hero-description">{{ $heroDescription }}</p>@endif
                 
                 <a href="#new-arrivals" class="hero-btn-link">
                     <button type="button" class="btn btn-outline-danger hero-btn">
-                         <b>{{ $singleBanner->btn_text ?? 'Shop Now' }}</b>
+                         <b>{{ $heroBtnText }}</b>
                     </button>
                 </a>
             </div>
@@ -605,14 +634,20 @@
         <h2 class="section-header" data-aos="zoom-in">Categories</h2>
         <div class="row g-4">
             @if(isset($categoryBanners) && $categoryBanners->count() > 0)
-                @foreach($categoryBanners as $index => $banner)
+                @foreach($categoryBanners as $index => $category)
+                @php
+                    $displayTitle = $category->name;
+                    $displayLink = route('products.index', ['category' => $category->slug]);
+                @endphp
                 <div class="col-md-4" data-aos="flip-left" data-aos-delay="{{ $index * 200 }}">
-                    <div class="anime-card p-0 floating" style="height: 200px; animation-delay: {{ $index }}s;">
-                        <img src="{{ Str::startsWith($banner->image_path, 'http') ? $banner->image_path : asset($banner->image_path) }}" class="w-100 h-100 object-fit-cover" style="opacity: 0.6;">
-                        <div class="position-absolute top-50 start-50 translate-middle text-center">
-                            <h3 class="japanese-p display-4">{{ $banner->title }}</h3>
+                    <a href="{{ $displayLink }}" class="text-decoration-none">
+                        <div class="anime-card p-0 floating" style="height: 200px; animation-delay: {{ $index }}s;">
+                            <img src="{{ Str::startsWith($category->image_path, 'http') ? $category->image_path : asset('storage/' . $category->image_path) }}" class="w-100 h-100 object-fit-cover" style="opacity: 0.6;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center w-100 px-3">
+                                <h3 class="japanese-p display-4 m-0" style="text-shadow: 2px 2px 8px rgba(0,0,0,1);">{{ $displayTitle }}</h3>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 @endforeach
             @else

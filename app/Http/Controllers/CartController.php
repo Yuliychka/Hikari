@@ -31,17 +31,16 @@ class CartController extends Controller
         $cartItem = Cart::where('user_id', $userId)->where('product_id', $id)->first();
 
         if ($cartItem) {
-            $cartItem->quantity += $request->input('quantity', 1);
-            $cartItem->save();
+            $cartItem->delete();
+            return redirect()->back()->with('success', 'Product removed from cart!');
         } else {
             Cart::create([
                 'user_id' => $userId,
                 'product_id' => $id,
                 'quantity' => $request->input('quantity', 1),
             ]);
+            return redirect()->back()->with('success', 'Product added to cart!');
         }
-
-        return redirect()->back()->with('success', 'Product added to cart!');
     }
 
     public function update(Request $request, $id)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,17 +16,20 @@ class AdminCategoryBannerController extends Controller
         return view('admin.category-banners.index', compact('banners'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.category-banners.create');
+        $categories = Category::all();
+        $selectedCategoryId = $request->query('category_id');
+        return view('admin.category-banners.create', compact('categories', 'selectedCategoryId'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
+            'category_id' => 'nullable|exists:categories,id',
             'title' => 'nullable|string|max:255',
             'image_path' => 'nullable|string',
-            'image_file' => 'nullable|image|max:5120',
+            'image_file' => 'nullable|image|max:20480',
             'link' => 'nullable|string',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',
@@ -45,15 +49,17 @@ class AdminCategoryBannerController extends Controller
 
     public function edit(Banner $categoryBanner)
     {
-        return view('admin.category-banners.create', compact('categoryBanner'));
+        $categories = Category::all();
+        return view('admin.category-banners.create', compact('categoryBanner', 'categories'));
     }
 
     public function update(Request $request, Banner $categoryBanner)
     {
         $data = $request->validate([
+            'category_id' => 'nullable|exists:categories,id',
             'title' => 'nullable|string|max:255',
             'image_path' => 'nullable|string',
-            'image_file' => 'nullable|image|max:5120',
+            'image_file' => 'nullable|image|max:20480',
             'link' => 'nullable|string',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',

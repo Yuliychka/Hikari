@@ -16,8 +16,17 @@ class AdminHeroBannerController extends Controller
         $heroBanners = Banner::where('type', 'hero')->orderBy('order')->get();
         $carouselMode = Setting::where('key', 'hero_carousel')->value('value') ?? '0';
         $heroEffect = Setting::where('key', 'hero_effect')->value('value') ?? 'none';
-        $heroEffect = Setting::where('key', 'hero_effect')->value('value') ?? 'none';
-        return view('admin.hero-banners.index', compact('heroBanners', 'carouselMode', 'heroEffect'));
+        
+        // Global Text Settings
+        $heroTitle = Setting::where('key', 'hero_title')->value('value') ?? 'HIKARI ANIME STORE';
+        $heroSubtitle = Setting::where('key', 'hero_subtitle')->value('value') ?? 'Premium Manga & Anime Merchandise';
+        $heroDescription = Setting::where('key', 'hero_description')->value('value') ?? 'Discover our exclusive collection of hand-forged katanas, figures, and apparel.';
+        $heroBtnText = Setting::where('key', 'hero_btn_text')->value('value') ?? 'SHOP NOW';
+
+        return view('admin.hero-banners.index', compact(
+            'heroBanners', 'carouselMode', 'heroEffect', 
+            'heroTitle', 'heroSubtitle', 'heroDescription', 'heroBtnText'
+        ));
     }
 
     public function create()
@@ -33,7 +42,7 @@ class AdminHeroBannerController extends Controller
             'description' => 'nullable|string',
             'btn_text' => 'nullable|string|max:50',
             'image_path' => 'nullable|string',
-            'image_file' => 'nullable|image|max:5120',
+            'image_file' => 'nullable|image|max:20480',
             'link' => 'nullable|string',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',
@@ -86,7 +95,7 @@ class AdminHeroBannerController extends Controller
             'description' => 'nullable|string',
             'btn_text' => 'nullable|string|max:50',
             'image_path' => 'nullable|string',
-            'image_file' => 'nullable|image|max:5120',
+            'image_file' => 'nullable|image|max:20480',
             'link' => 'nullable|string',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',
@@ -132,7 +141,11 @@ class AdminHeroBannerController extends Controller
     {
         $data = $request->validate([
             'hero_carousel' => 'nullable|boolean',
-            'hero_effect' => 'nullable|string|in:none,sakura,lightning'
+            'hero_effect' => 'nullable|string|in:none,sakura,lightning',
+            'hero_title' => 'nullable|string|max:255',
+            'hero_subtitle' => 'nullable|string|max:255',
+            'hero_description' => 'nullable|string',
+            'hero_btn_text' => 'nullable|string|max:50',
         ]);
 
         if($request->has('hero_carousel')) {
@@ -141,6 +154,19 @@ class AdminHeroBannerController extends Controller
         
         if($request->has('hero_effect')) {
              Setting::updateOrCreate(['key' => 'hero_effect'], ['value' => $request->hero_effect]);
+        }
+
+        if($request->has('hero_title')) {
+            Setting::updateOrCreate(['key' => 'hero_title'], ['value' => $request->hero_title]);
+        }
+        if($request->has('hero_subtitle')) {
+            Setting::updateOrCreate(['key' => 'hero_subtitle'], ['value' => $request->hero_subtitle]);
+        }
+        if($request->has('hero_description')) {
+            Setting::updateOrCreate(['key' => 'hero_description'], ['value' => $request->hero_description]);
+        }
+        if($request->has('hero_btn_text')) {
+            Setting::updateOrCreate(['key' => 'hero_btn_text'], ['value' => $request->hero_btn_text]);
         }
         
         return redirect()->back()->with('success', 'Global settings updated successfully.');
