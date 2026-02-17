@@ -33,8 +33,11 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call([
+            HierarchicalCategorySeeder::class,
             ProductSeeder::class,
             BannerSeeder::class,
+            IntroBannerSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

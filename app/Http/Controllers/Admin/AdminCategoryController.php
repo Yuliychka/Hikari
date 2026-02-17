@@ -21,7 +21,13 @@ class AdminCategoryController extends Controller
     {
         $parentCategories = Category::whereNull('parent_id')->orderBy('name')->get(); 
         $selectedParentId = $request->query('parent_id');
-        return view('admin.categories.create', compact('parentCategories', 'selectedParentId'));
+
+        // Fetch Card Assets
+        $cardFrames = \App\Models\CardFrame::all();
+        $cardAttributes = \App\Models\CardAttribute::all();
+        $cardStars = \App\Models\CardStar::all();
+
+        return view('admin.categories.create', compact('parentCategories', 'selectedParentId', 'cardFrames', 'cardAttributes', 'cardStars'));
     }
 
     public function store(Request $request)
@@ -33,6 +39,14 @@ class AdminCategoryController extends Controller
             'image_file' => 'nullable|image|max:10240',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',
+            // Card Assets FKs
+            'card_frame_id' => 'nullable|exists:card_frames,id',
+            'card_attribute_id' => 'nullable|exists:card_attributes,id',
+            'card_star_id' => 'nullable|exists:card_stars,id',
+            'card_level' => 'nullable|integer|min:0|max:12',
+            'card_atk' => 'nullable|string|max:20',
+            'card_def' => 'nullable|string|max:20',
+            'show_card_stats' => 'nullable|boolean',
         ]);
 
         $slug = Str::slug($data['name']);
@@ -48,6 +62,7 @@ class AdminCategoryController extends Controller
             $data['image_path'] = $path;
         }
 
+        $data['show_card_stats'] = $request->has('show_card_stats');
         Category::create($data);
 
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
@@ -56,7 +71,13 @@ class AdminCategoryController extends Controller
     public function edit(Category $category)
     {
         $parentCategories = Category::whereNull('parent_id')->where('id', '!=', $category->id)->orderBy('name')->get();
-        return view('admin.categories.create', compact('category', 'parentCategories'));
+        
+        // Fetch Card Assets
+        $cardFrames = \App\Models\CardFrame::all();
+        $cardAttributes = \App\Models\CardAttribute::all();
+        $cardStars = \App\Models\CardStar::all();
+
+        return view('admin.categories.create', compact('category', 'parentCategories', 'cardFrames', 'cardAttributes', 'cardStars'));
     }
 
     public function update(Request $request, Category $category)
@@ -68,7 +89,17 @@ class AdminCategoryController extends Controller
             'image_file' => 'nullable|image|max:10240',
             'is_active' => 'required|boolean',
             'order' => 'required|integer',
+            // Card Assets FKs
+            'card_frame_id' => 'nullable|exists:card_frames,id',
+            'card_attribute_id' => 'nullable|exists:card_attributes,id',
+            'card_star_id' => 'nullable|exists:card_stars,id',
+            'card_level' => 'nullable|integer|min:0|max:12',
+            'card_atk' => 'nullable|string|max:20',
+            'card_def' => 'nullable|string|max:20',
+            'show_card_stats' => 'nullable|boolean',
         ]);
+
+        $data['show_card_stats'] = $request->has('show_card_stats');
 
         // Prevent circular reference
         if ($data['parent_id'] == $category->id) {

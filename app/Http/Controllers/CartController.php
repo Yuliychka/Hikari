@@ -31,8 +31,10 @@ class CartController extends Controller
         $cartItem = Cart::where('user_id', $userId)->where('product_id', $id)->first();
 
         if ($cartItem) {
-            $cartItem->delete();
-            return redirect()->back()->with('success', 'Product removed from cart!');
+            // Increment quantity if already in cart
+            $cartItem->quantity += $request->input('quantity', 1);
+            $cartItem->save();
+            return redirect()->back()->with('success', 'Cart updated!');
         } else {
             Cart::create([
                 'user_id' => $userId,

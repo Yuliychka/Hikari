@@ -36,8 +36,7 @@
                             @foreach($categories->whereNotNull('parent_id') as $sub)
                                 <option value="{{ $sub->id }}" 
                                         data-parent="{{ $sub->parent_id }}" 
-                                        {{ old('subcategory_id', $product->subcategory_id ?? '') == $sub->id ? 'selected' : '' }}
-                                        style="{{ old('category_id', $product->category_id ?? '') == $sub->parent_id ? '' : 'display:none' }}">
+                                        {{ old('subcategory_id', $product->subcategory_id ?? '') == $sub->id ? 'selected' : '' }}>
                                     {{ $sub->name }}
                                 </option>
                             @endforeach
@@ -167,9 +166,9 @@
             subSelect.appendChild(newOpt);
         });
 
-        // If in Edit mode and no subcategory matches the parent on first load, reset
-        if (categoryId === "") {
-            subSelect.innerHTML = '<option value="">Select Category First</option>';
+        // Show/Hide subcategory container based on whether there are options
+        if (filtered.length === 0 && categoryId !== "") {
+             // Optional: visual clue that no subcategories exist
         }
     }
 

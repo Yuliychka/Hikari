@@ -18,13 +18,17 @@
         top: 20px; /* Floating from top */
         border-radius: 50px;
         margin: 0 auto;
-        z-index: 100000;
+        z-index: 9999;
+        /* Stable, explicit transition to prevent vibration */
+        transition: width 0.4s ease, border-radius 0.4s ease, top 0.4s ease, background 0.4s ease;
     }
 
-    /* Scrolled State - Full Width Bar */
+    /* Scrolled State - Take Full Page but keep content in container */
     .glass-nav.scrolled {
         width: 100% !important;
         max-width: 100% !important;
+        left: 0 !important;
+        transform: translateX(0) !important;
         top: 0 !important;
         border-radius: 0 !important;
         border-left: none !important;
@@ -152,6 +156,25 @@
     .nav-right .nav-icon:not(.sharingan-parent),
     .nav-right .btn-outline-danger {
         transform: translateY(-4px);
+    }
+
+    /* Wishlist Devil Heart Wings Animation */
+    .wishlist-devil-heart .devil-wings {
+        opacity: 0;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    .nav-icon:hover .wishlist-devil-heart .devil-wings {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+    .nav-icon:hover .wishlist-devil-heart .devil-tail {
+        animation: tailWag 0.6s ease-in-out infinite;
+    }
+    @keyframes tailWag {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(10deg); }
     }
 
     /* Custom Tooltip */
@@ -618,7 +641,7 @@
 
 <!-- PC Navbar (Desktop Only) -->
 <nav class="navbar navbar-expand-lg fixed-top glass-nav navbar-dark d-none d-lg-block">
-    <div class="w-100 h-100 px-4">
+    <div class="container h-100 px-lg-4">
         <div class="nav-content-grid">
             <!-- LEFT: Links -->
             <div class="nav-left">
@@ -662,6 +685,33 @@
                             </form>
                         </ul>
                     </div>
+
+                    <!-- Wishlist -->
+                    <!-- Wishlist -->
+                    <a class="nav-icon" href="{{ route('wishlist.index') }}" data-tooltip="Wishlist" style="transform: translateY(-2px);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 32 32" class="wishlist-devil-heart">
+                            <!-- Bat Wings (appear on hover) -->
+                            <g class="devil-wings">
+                                <!-- Left Wing -->
+                                <path d="M4 12 Q2 10, 1 12 Q2 14, 4 13 Q5 11, 6 12 Q7 10, 8 12" fill="currentColor" opacity="0.8"/>
+                                <!-- Right Wing -->
+                                <path d="M28 12 Q30 10, 31 12 Q30 14, 28 13 Q27 11, 26 12 Q25 10, 24 12" fill="currentColor" opacity="0.8"/>
+                            </g>
+                            <!-- Devil Heart Body -->
+                            <path d="M16 27 l-1.8-1.6 C9.3 21 6 18.3 6 14.5 C6 11.4 8.4 9 11.5 9 c2.2 0 4.3 1 5.5 2.6 C18.2 10 20.3 9 22.5 9 C25.6 9 28 11.4 28 14.5 c0 3.8-3.3 6.5-8.2 10.9 L16 27z" stroke="currentColor" stroke-width="1.8" fill="none"/>
+                            <!-- Prominent Left Horn -->
+                            <path d="M11 9 Q9.5 6, 8.5 5 Q9 6, 10 7.5 Q10.5 8.5, 11 9" fill="currentColor" stroke="currentColor" stroke-width="0.8"/>
+                            <!-- Prominent Right Horn -->
+                            <path d="M21 9 Q22.5 6, 23.5 5 Q23 6, 22 7.5 Q21.5 8.5, 21 9" fill="currentColor" stroke="currentColor" stroke-width="0.8"/>
+                            <!-- Visible Devil Tail with arrow tip -->
+                            <g class="devil-tail" transform-origin="16 27">
+                                <path d="M16 27 Q18 29, 20 28.5 Q19.5 29, 19 29.5" stroke="crimson" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                                <path d="M20 28.5 L21 27.5 L20.5 29 L19 29.5 Z" fill="crimson"/>
+                            </g>
+                            <!-- Heart Accent -->
+                            <circle cx="16" cy="16" r="2" fill="crimson" opacity="0.7"/>
+                        </svg>
+                    </a>
 
                     <!-- Cart -->
                     <a class="nav-icon" href="{{ route('cart.index') }}" data-tooltip="Cart">
@@ -773,6 +823,32 @@
             <!-- RIGHT: Basic Icons -->
             <div class="nav-right">
                 <div class="nav-icons" style="gap: 12px;">
+                    <!-- Wishlist -->
+                    <a class="nav-icon text-center text-decoration-none" href="{{ route('wishlist.index') }}" data-tooltip="Wishlist" style="width: auto; height: auto;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 32 32" class="wishlist-devil-heart">
+                            <!-- Bat Wings (appear on hover) -->
+                            <g class="devil-wings">
+                                <!-- Left Wing -->
+                                <path d="M4 12 Q2 10, 1 12 Q2 14, 4 13 Q5 11, 6 12 Q7 10, 8 12" fill="currentColor" opacity="0.8"/>
+                                <!-- Right Wing -->
+                                <path d="M28 12 Q30 10, 31 12 Q30 14, 28 13 Q27 11, 26 12 Q25 10, 24 12" fill="currentColor" opacity="0.8"/>
+                            </g>
+                            <!-- Devil Heart Body -->
+                            <path d="M16 27 l-1.8-1.6 C9.3 21 6 18.3 6 14.5 C6 11.4 8.4 9 11.5 9 c2.2 0 4.3 1 5.5 2.6 C18.2 10 20.3 9 22.5 9 C25.6 9 28 11.4 28 14.5 c0 3.8-3.3 6.5-8.2 10.9 L16 27z" stroke="currentColor" stroke-width="1.8" fill="none"/>
+                            <!-- Prominent Left Horn -->
+                            <path d="M11 9 Q9.5 6, 8.5 5 Q9 6, 10 7.5 Q10.5 8.5, 11 9" fill="currentColor" stroke="currentColor" stroke-width="0.8"/>
+                            <!-- Prominent Right Horn -->
+                            <path d="M21 9 Q22.5 6, 23.5 5 Q23 6, 22 7.5 Q21.5 8.5, 21 9" fill="currentColor" stroke="currentColor" stroke-width="0.8"/>
+                            <!-- Visible Devil Tail with arrow tip -->
+                            <g class="devil-tail" transform-origin="16 27">
+                                <path d="M16 27 Q18 29, 20 28.5 Q19.5 29, 19 29.5" stroke="crimson" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                                <path d="M20 28.5 L21 27.5 L20.5 29 L19 29.5 Z" fill="crimson"/>
+                            </g>
+                            <!-- Heart Accent -->
+                            <circle cx="16" cy="16" r="2" fill="crimson" opacity="0.7"/>
+                        </svg>
+                    </a>
+
                     <!-- Simple Cart -->
                     <a class="nav-icon text-center text-decoration-none" href="{{ route('cart.index') }}" data-tooltip="Cart" style="width: auto; height: auto;">
                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
@@ -900,23 +976,24 @@
 <!-- Collections Overlay -->
 <div id="collectionsOverlay" class="collections-overlay">
     <div class="close-btn" onclick="toggleCollections(event)">&times;</div>
-    <div class="d-flex flex-wrap justify-content-center align-items-center h-100">
-        <a href="{{ route('products.index', ['category' => 'figures']) }}" class="collection-item" style="transition-delay: 0.1s;">
-            Figures
-            <span>Originals & Scale</span>
-        </a>
-        <a href="{{ route('products.index', ['category' => 'apparel']) }}" class="collection-item" style="transition-delay: 0.2s;">
-            Apparel
-            <span>Hoodies & Tees</span>
-        </a>
-        <a href="{{ route('products.index', ['category' => 'accessories']) }}" class="collection-item" style="transition-delay: 0.3s;">
-            Accessories
-            <span>Katana & Masks</span>
-        </a>
-        <a href="{{ route('products.index', ['category' => 'manga']) }}" class="collection-item" style="transition-delay: 0.4s;">
-            Manga
-            <span>Comics & Books</span>
-        </a>
+    <div class="container h-100">
+        <div class="d-flex flex-column justify-content-center h-100">
+            <h2 class="text-center text-white mb-5" style="font-family: 'Kaushan Script', cursive; font-size: 3rem; text-shadow: 0 0 10px crimson;">Our Collections</h2>
+            <div class="row g-4 justify-content-center">
+                @foreach($navbarCategories as $category)
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ route('products.index', ['category_id' => $category->id]) }}" class="collection-item w-100 text-center d-flex flex-column align-items-center justify-content-center" style="transition-delay: {{ $loop->iteration * 0.1 }}s;">
+                        {{ $category->name }}
+                        <!-- Optional: Add random Japanese text or description if available -->
+                        <span>{{ $category->description ?? 'Explore ' . $category->name }}</span>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+            <div class="text-center mt-5">
+                <a href="{{ route('categories.index') }}" class="btn btn-outline-danger btn-lg rounded-0 px-5 fw-bold" style="letter-spacing: 2px;">VIEW ALL CATEGORIES</a>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -685,6 +685,8 @@
         <p class="mb-0 text-secondary">&copy; {{ date('Y') }} Hikari Anime Store. All rights reserved.</p>
     </footer>
 
+    @include('additions.footer')
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

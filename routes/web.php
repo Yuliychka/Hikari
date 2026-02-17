@@ -53,7 +53,8 @@ Route::get('/about', function () {
 })->name('about');
 
 // Product Routes
-Route::get('/index', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/categories', [ProductController::class, 'categories'])->name('categories.index');
 Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('products.show');
 
 // Cart Routes
@@ -103,6 +104,11 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     // Order Management
     Route::get('/orders', [App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('orders.index');
     Route::patch('/orders/{order}/status', [App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+    // Card Assets
+    Route::resource('card-assets', \App\Http\Controllers\Admin\AdminCardAssetController::class)->only(['index', 'store']);
+    Route::post('card-assets/back', [\App\Http\Controllers\Admin\AdminCardAssetController::class, 'storeBack'])->name('card-assets.storeBack');
+    Route::delete('card-assets/{type}/{id}', [\App\Http\Controllers\Admin\AdminCardAssetController::class, 'destroy'])->name('card-assets.destroy');
 
     // Site Settings
     Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
