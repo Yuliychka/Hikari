@@ -1,52 +1,168 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends('layouts.frontend')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+@php
+    $title = 'SQUAD INITIATION - Register';
+@endphp
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@push('styles')
+<style>
+    .auth-container {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: radial-gradient(circle at center, rgba(220, 20, 60, 0.05) 0%, transparent 70%);
+    }
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    .auth-card {
+        background: rgba(0, 0, 0, 0.85);
+        border: 2px solid crimson;
+        box-shadow: 10px 10px 0 crimson;
+        width: 100%;
+        max-width: 500px;
+        padding: 3rem;
+        backdrop-filter: blur(15px);
+        position: relative;
+        overflow: hidden;
+    }
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+    .auth-card::before {
+        content: 'INITIATE';
+        position: absolute;
+        bottom: -20px;
+        left: -20px;
+        font-size: 5rem;
+        font-weight: 900;
+        color: rgba(220, 20, 60, 0.05);
+        z-index: 0;
+        transform: rotate(15deg);
+        pointer-events: none;
+    }
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    .auth-title {
+        font-family: 'Kaushan Script', cursive;
+        color: crimson;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+    .form-label {
+        color: #fff;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+    }
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+    .form-control {
+        background: rgba(0, 0, 0, 0.5) !important;
+        border: 1px solid #333 !important;
+        border-radius: 0 !important;
+        color: #fff !important;
+        padding: 0.8rem 1rem;
+        transition: all 0.3s;
+    }
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+    .form-control:focus {
+        border-color: crimson !important;
+        box-shadow: 0 0 10px rgba(220, 20, 60, 0.3) !important;
+    }
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+    .btn-auth {
+        background: crimson;
+        color: #fff;
+        border: none;
+        border-radius: 0;
+        padding: 1rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        width: 100%;
+        margin-top: 1.5rem;
+        transition: all 0.3s;
+        box-shadow: 4px 4px 0 #fff;
+    }
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    .btn-auth:hover {
+        background: #fff;
+        color: crimson;
+        box-shadow: 4px 4px 0 crimson;
+        transform: translate(-2px, -2px);
+    }
+
+    .auth-links {
+        margin-top: 2rem;
+        text-align: center;
+        font-size: 0.85rem;
+    }
+
+    .auth-links a {
+        color: #aaa;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .auth-links a:hover {
+        color: crimson;
+    }
+
+    .glitch-auth {
+        position: relative;
+    }
+</style>
+@endpush
+
+@section('content')
+<div class="auth-container">
+    <div class="auth-card" data-aos="flip-up">
+        <h2 class="auth-title glitch-auth" data-text="SQUAD INITIATION">SQUAD INITIATION</h2>
+
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
+
+            <!-- Name -->
+            <div class="mb-4">
+                <label for="name" class="form-label">Full Name</label>
+                <input id="name" class="form-control @error('name') is-invalid @enderror" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name">
+                @error('name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Email Address -->
+            <div class="mb-4">
+                <label for="email" class="form-label">Email Address</label>
+                <input id="email" class="form-control @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email') }}" required autocomplete="username">
+                @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input id="password" class="form-control @error('password') is-invalid @enderror" type="password" name="password" required autocomplete="new-password">
+                @error('password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-4">
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <input id="password_confirmation" class="form-control" type="password" name="password_confirmation" required autocomplete="new-password">
+            </div>
+
+            <button type="submit" class="btn-auth">
+                REGISTER TO HIKARI
+            </button>
+
+            <div class="auth-links">
+                <a href="{{ route('login') }}">ALREADY IN THE SQUAD? LOGIN</a>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

@@ -208,6 +208,14 @@
         visibility: visible;
     }
 
+    /* Suppress Tooltip when Search or Profile is Open */
+    .dropdown.active .nav-icon::after,
+    .profile-dropdown.active .nav-icon::after {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transform: translateX(-50%) translateY(10px) !important;
+    }
+
     /* Links */
     .nav-link {
         font-family: 'Poppins', sans-serif;
@@ -302,12 +310,6 @@
         display: block;
     }
 
-    /* Suppress Tooltip when Menu is Open */
-    .profile-dropdown.active .nav-icon::after {
-        opacity: 0 !important;
-        visibility: hidden !important;
-        transform: translateX(-50%) translateY(10px) !important;
-    }
 
     .profile-item {
         color: white;
@@ -665,7 +667,7 @@
                 <div class="nav-icons me-0">
                     <!-- Search -->
                     <div class="dropdown">
-                        <a class="nav-icon sharingan-parent" href="#" role="button" data-bs-toggle="dropdown" data-tooltip="Search">
+                        <a class="nav-icon sharingan-parent" href="#" role="button" data-tooltip="Search" onclick="toggleSearchDropdown(event)">
                              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 100 100" class="sharingan-icon">
                                 <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="6"/>
                                 <circle cx="50" cy="50" r="10" fill="currentColor"/>
@@ -1031,22 +1033,32 @@
         if(toggler) toggler.classList.toggle('collapsed');
     }
 
+    // Toggle Search Dropdown
+    function toggleSearchDropdown(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const parent = event.currentTarget.closest('.dropdown');
+        const menu = parent.querySelector('.dropdown-menu');
+        
+        // Close profile if open
+        document.querySelectorAll('.profile-menu').forEach(m => m.classList.remove('show'));
+        document.querySelectorAll('.profile-dropdown').forEach(p => p.classList.remove('active'));
+        
+        const isShowing = menu.classList.toggle('show');
+        parent.classList.toggle('active', isShowing);
+    }
+
     // Toggle Profile Dropdown
     function toggleProfileDropdown(event) {
+        event.preventDefault();
         event.stopPropagation();
         const icon = event.currentTarget;
         const menu = icon.nextElementSibling;
         const parent = icon.closest('.profile-dropdown');
-        const allMenus = document.querySelectorAll('.profile-menu');
-        const allParents = document.querySelectorAll('.profile-dropdown');
         
-        // Close others
-        allMenus.forEach(m => {
-            if (m !== menu) m.classList.remove('show');
-        });
-        allParents.forEach(p => {
-            if (p !== parent) p.classList.remove('active');
-        });
+        // Close search if open
+        document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+        document.querySelectorAll('.dropdown').forEach(p => p.classList.remove('active'));
         
         const isShowing = menu.classList.toggle('show');
         if (parent) parent.classList.toggle('active', isShowing);
@@ -1054,8 +1066,8 @@
 
     // Close dropdowns on outside click
     document.addEventListener('click', () => {
-        document.querySelectorAll('.profile-menu').forEach(m => m.classList.remove('show'));
-        document.querySelectorAll('.profile-dropdown').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.profile-menu, .dropdown-menu').forEach(m => m.classList.remove('show'));
+        document.querySelectorAll('.profile-dropdown, .dropdown').forEach(p => p.classList.remove('active'));
     });
 
     // Scroll Transformation Logic

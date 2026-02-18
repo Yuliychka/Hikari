@@ -192,59 +192,6 @@
             100% { transform: translateY(0px); }
         }
 
-        /* Product Card Styles */
-        .anime-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(220, 20, 60, 0.3);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            transition: all 0.4s ease;
-            overflow: hidden;
-            position: relative;
-        }
-        .anime-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(220, 20, 60, 0.2), transparent);
-            transition: 0.5s;
-        }
-        .anime-card:hover::before {
-            left: 100%;
-        }
-        .anime-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 0 20px rgba(220, 20, 60, 0.6);
-            border-color: crimson;
-        }
-        .anime-card .card-img-top {
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.6s;
-        }
-        .anime-card:hover .card-img-top {
-            transform: scale(1.1);
-        }
-        .anime-card .card-body {
-            padding: 1.5rem;
-            position: relative;
-            z-index: 2;
-            background: linear-gradient(to top, #000 0%, transparent 100%);
-        }
-        .anime-card .card-title {
-            font-family: 'Kaushan Script', cursive;
-            color: #fff;
-            font-size: 1.5rem;
-        }
-        .anime-card .price {
-            color: crimson;
-            font-weight: bold;
-            font-size: 1.3rem;
-            text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
-        }
         
         /* Section Dividers */
         .section-divider {
@@ -263,86 +210,6 @@
             text-shadow: 2px 2px 4px #000;
         }
 
-        /* MANGA STYLE CARD */
-        .manga-card {
-            background: #fff;
-            color: #000;
-            border: 4px solid #000;
-            box-shadow: 10px 10px 0 #000;
-            transition: transform 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        .manga-card:hover {
-            transform: translate(-5px, -5px);
-            box-shadow: 15px 15px 0 #000;
-        }
-        .manga-card .card-img-top {
-            filter: grayscale(100%) contrast(1.2);
-            transition: filter 0.4s;
-            border-bottom: 4px solid #000;
-        }
-        .manga-card:hover .card-img-top {
-            filter: grayscale(0%) contrast(1);
-        }
-        .manga-card .card-body {
-            background: repeating-linear-gradient(
-                45deg,
-                #fff,
-                #fff 10px,
-                #eee 10px,
-                #eee 20px
-            );
-        }
-        .manga-card .card-title {
-            font-family: 'Kaushan Script', cursive; /* Keeping the script font or maybe a bolder comic font if available */
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #000;
-            text-shadow: 2px 2px 0 #ccc;
-        }
-        .manga-card .price {
-            color: #000; /* Distinct from the crypto/red theme */
-            background: #ffcc00; /* Comic book yellow */
-            padding: 2px 8px;
-            border: 2px solid #000;
-            font-weight: 900;
-            box-shadow: 3px 3px 0 #000;
-            text-shadow: none;
-        }
-        
-        /* BEST SELLER STYLE CARD (Fire/Premium) */
-        .bestseller-card {
-            background: linear-gradient(135deg, #2a0000 0%, #000 100%);
-            border: 2px solid #ff4500;
-            box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
-            transition: all 0.4s ease;
-        }
-        .bestseller-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(255, 69, 0, 0.8), 0 0 10px #ffcc00;
-            border-color: #ffcc00;
-        }
-        .bestseller-card .card-body {
-            background: rgba(0,0,0,0.8);
-        }
-        .bestseller-card .card-title {
-            background: -webkit-linear-gradient(#ffcc00, #ff4500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-        .fire-badge {
-            background: linear-gradient(to bottom, #ffcc00, #ff4500);
-            color: #000;
-            font-weight: bold;
-            border: 2px solid #fff;
-            animation: burn 1s infinite alternate;
-        }
-        @keyframes burn {
-            from { box-shadow: 0 0 5px #ff4500; }
-            to { box-shadow: 0 0 15px #ffcc00, 0 0 5px #fff; }
-        }
     </style>
     <style>
         /* New Robust Fade Classes */
@@ -511,23 +378,11 @@
         <div class="row g-4">
             @if(isset($newArrivals) && count($newArrivals) > 0)
             @foreach($newArrivals as $index => $product)
-            <div class="col-md-3" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
-                <div class="card manga-card h-100">
-                    <span class="position-absolute top-0 start-0 m-2 badge bg-dark text-white border border-dark rounded-0" style="z-index:10; font-family:'Courier New', monospace; font-weight:bold;">NEW CHAPTER</span>
-                    <div class="overflow-hidden">
-                        <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
-                    </div>
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <h5 class="card-title text-truncate">{{ $product->name }}</h5>
-                            <p class="card-text small text-truncate" style="color: #333; font-weight: 600;">{{ $product->description }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="price">${{ $product->price }}</span>
-                            <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-dark rounded-0 fw-bold border-2 border-dark" style="box-shadow: 3px 3px 0 #000;">READ MORE</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-3">
+                @include('partials.product-card', [
+                    'delay' => $index * 100,
+                    'badge' => 'NEW CHAPTER'
+                ])
             </div>
             @endforeach
             @else
@@ -573,23 +428,13 @@
         <div class="row g-4">
             @if(isset($bestSellers) && count($bestSellers) > 0)
             @foreach($bestSellers as $index => $product)
-            <div class="col-md-3" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
-                <div class="card bestseller-card h-100">
-                    <span class="badge position-absolute top-0 start-0 m-2 fire-badge rounded-circle p-2">HOT</span>
-                    <div class="overflow-hidden rounded-top">
-                        <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}">
-                    </div>
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <h5 class="card-title text-truncate">{{ $product->name }}</h5>
-                            <p class="card-text text-white-50 small text-truncate">{{ $product->description }}</p>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="text-warning fw-bold fs-5">${{ $product->price }}</span>
-                            <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-outline-warning rounded-pill px-3">View</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-3">
+                @include('partials.product-card', [
+                    'delay' => $index * 100,
+                    'cardClass' => 'bestseller-card',
+                    'badge' => 'HOT',
+                    'badgeClass' => 'fire-badge rounded-circle p-2'
+                ])
             </div>
             @endforeach
             @else

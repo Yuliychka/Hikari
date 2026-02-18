@@ -31,7 +31,13 @@ class CartController extends Controller
         $cartItem = Cart::where('user_id', $userId)->where('product_id', $id)->first();
 
         if ($cartItem) {
-            // Increment quantity if already in cart
+            // Toggle behavior for AJAX: Remove if exists
+            if ($request->ajax()) {
+                $cartItem->delete();
+                return response()->json(['status' => 'removed', 'message' => 'Removed from vault']);
+            }
+            
+            // Standard behavior: Increment
             $cartItem->quantity += $request->input('quantity', 1);
             $cartItem->save();
             return redirect()->back()->with('success', 'Cart updated!');
@@ -41,7 +47,8 @@ class CartController extends Controller
                 'product_id' => $id,
                 'quantity' => $request->input('quantity', 1),
             ]);
-            return redirect()->back()->with('success', 'Product added to cart!');
+            if ($request->ajax()) return response()->json(['status' => 'added', 'message' => 'Product added to vault']);
+            return redirect()->back()->with('success', 'Product added to vault!');
         }
     }
 
