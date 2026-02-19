@@ -196,9 +196,6 @@
         transform: scale(1.1);
     }
 
-    .navbar .container {
-        max-width: 98% !important;
-    }
 
     .nav-left { 
         display: flex;
@@ -719,7 +716,7 @@
 
 <!-- PC Navbar (Desktop Only) -->
 <nav class="navbar navbar-expand-lg fixed-top glass-nav navbar-dark d-none d-lg-block">
-    <div id="navContainer" class="container-fluid h-100 px-lg-4 transition-all">
+    <div id="navContainer" class="container h-100 px-lg-4 transition-all">
         <div class="nav-content-grid">
             <!-- LEFT: Links -->
             <div class="nav-left">
@@ -1174,16 +1171,8 @@
         const navContainer = document.getElementById('navContainer');
         if (window.scrollY > 50) {
             navs.forEach(nav => nav.classList.add('scrolled'));
-            if(navContainer) {
-                navContainer.classList.remove('container');
-                navContainer.classList.add('container-fluid');
-            }
         } else {
             navs.forEach(nav => nav.classList.remove('scrolled'));
-            if(navContainer) {
-                navContainer.classList.remove('container-fluid');
-                navContainer.classList.add('container');
-            }
         }
     }
     window.addEventListener('scroll', applyNavScroll);

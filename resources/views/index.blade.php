@@ -212,7 +212,7 @@
             text-shadow: 2px 2px 4px #000;
         }
 
-        /* Swiper Custom Styling */
+        .badge { display: none !important; }
         .swiper-button-prev-custom, .swiper-button-next-custom {
             width: 45px;
             height: 45px;
@@ -304,7 +304,7 @@
             border: 2px solid rgba(220, 20, 60, 0.6);
             box-shadow: 5px 5px 0 rgba(220,20,60,0.35), 0 0 25px rgba(220,20,60,0.12);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),
                         box-shadow 0.35s ease, border-color 0.35s ease;
             width: 100%;
@@ -326,7 +326,7 @@
         .new-arrival-card::after {
             content: 'NEW';
             position: absolute;
-            top: 3px; left: 3px;
+            top: 1px; left: 1px;
             font-size: 0.48rem;
             font-weight: 900;
             color: #fff;
@@ -346,7 +346,7 @@
             visibility: visible !important;
         }
         .new-arrival-card .card-action-btn {
-            z-index: 15;
+            z-index: 110 !important;
         }
         .new-arrival-card:hover {
             transform: translateY(-8px);
@@ -429,7 +429,7 @@
             border: 2px solid rgba(220, 20, 60, 0.6);
             box-shadow: 5px 5px 0 rgba(220,20,60,0.35), 0 0 25px rgba(220,20,60,0.12);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),
                         box-shadow 0.35s ease, border-color 0.35s ease;
             width: 100%;
@@ -451,7 +451,7 @@
         .bestseller-anime-card::after {
             content: 'HOT';
             position: absolute;
-            top: 3px; right: 3px;
+            top: 1px; right: 1px;
             font-size: 0.48rem;
             font-weight: 900;
             color: #fff;
@@ -468,8 +468,9 @@
         .bestseller-anime-card:hover .card-action-btn {
             opacity: 1 !important;
             visibility: visible !important;
+            z-index: 110 !important;
         }
-        .bestseller-anime-card .card-action-btn { z-index: 15; }
+        .bestseller-anime-card .card-action-btn { z-index: 110 !important; }
         .bestseller-anime-card:hover {
             transform: translateY(-8px);
             border-color: crimson;
@@ -710,7 +711,7 @@
 
     <section class="container pt-2 pb-5" id="new-arrivals">
         <div class="mb-4" data-aos="fade-right">
-            <h2 class="section-header text-start mb-0" style="font-size: 3.2rem;">New Arrivals</h2>
+            <h2 class="section-header text-center mb-3" style="font-size: 3.2rem;">New Arrivals</h2>
         </div>
         
         <div class="new-arrivals-wrapper">

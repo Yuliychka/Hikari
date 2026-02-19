@@ -71,8 +71,8 @@
         .bestseller-card:hover .card-action-btn,
         .new-arrival-card:hover .card-action-btn,
         .bestseller-anime-card:hover .card-action-btn {
-            opacity: 1;
-            visibility: visible;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         .card-action-btn:hover {
             background: crimson;
