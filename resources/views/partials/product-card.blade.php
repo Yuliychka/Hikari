@@ -34,11 +34,15 @@
     <div class="card-body d-flex flex-column justify-content-between">
         <div>
             @if($product->category)
-                <div class="mb-2">
-                    <small class="text-danger fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">{{ $product->category->name }}</small>
+                <div class="mb-1 d-flex align-items-center" style="overflow: hidden; max-height: 1.2em;">
+                    <small class="text-danger fw-bold text-uppercase text-truncate" style="font-size: 0.65rem; letter-spacing: 1px; flex-shrink: 0; max-width: 50%;">
+                        {{ $product->category->name }}
+                    </small>
                     @if($product->subcategory)
-                        <span class="text-secondary opacity-50 mx-1">/</span>
-                        <small class="text-dark fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">{{ $product->subcategory->name }}</small>
+                        <span class="text-secondary opacity-50 mx-1" style="flex-shrink: 0;">/</span>
+                        <small class="fw-bold text-uppercase text-truncate" style="font-size: 0.65rem; letter-spacing: 1px; color: #888; overflow: hidden; white-space: nowrap; min-width: 0;">
+                            {{ $product->subcategory->name }}
+                        </small>
                     @endif
                 </div>
             @endif
@@ -47,7 +51,7 @@
         </div>
         <div class="mt-auto d-flex justify-content-between align-items-center">
             <span class="price fs-5 fw-bold" style="background: #000; color: #fff; padding: 2px 8px; border: 1px solid crimson; box-shadow: 2px 2px 0 crimson;">${{ number_format($product->price, 2) }}</span>
-            <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-outline-dark border-2 fw-bold rounded-0 hover-crimson">VIEW</a>
+            <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm {{ $btnClass ?? 'btn-outline-dark border-2 hover-crimson' }} fw-bold rounded-0">VIEW</a>
         </div>
     </div>
 </div>

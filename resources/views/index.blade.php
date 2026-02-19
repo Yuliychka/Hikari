@@ -238,9 +238,10 @@
             justify-content: center;
         }
         .newArrivalsSwiper .swiper-slide {
-            height: auto !important; /* Allow slides to be as tall as content */
+            height: auto !important;
             display: flex !important;
-            align-items: stretch !important; /* Force all cards to match the height of the tallest slide */
+            align-items: flex-start !important; /* TOP align — no stretching */
+            justify-content: center !important;
         }
         
         .manga-card, .bestseller-card {
@@ -297,7 +298,254 @@
             margin: -20px -15px -40px -15px !important;
         }
 
+        /* ── NEW ARRIVALS CARD: Anime Vibe ─────────────────── */
+        .new-arrival-card {
+            background: linear-gradient(160deg, #0d0d0d 50%, #1c0003 100%);
+            border: 2px solid rgba(220, 20, 60, 0.6);
+            box-shadow: 5px 5px 0 rgba(220,20,60,0.35), 0 0 25px rgba(220,20,60,0.12);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),
+                        box-shadow 0.35s ease, border-color 0.35s ease;
+            width: 100%;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        /* Corner triangle — visible at rest, fades on hover */
+        .new-arrival-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 50px; height: 50px;
+            background: crimson;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            z-index: 12;
+            transition: opacity 0.25s ease;
+        }
+        /* NEW text on corner */
+        .new-arrival-card::after {
+            content: 'NEW';
+            position: absolute;
+            top: 3px; left: 3px;
+            font-size: 0.48rem;
+            font-weight: 900;
+            color: #fff;
+            z-index: 13;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+            line-height: 1;
+            transition: opacity 0.25s ease;
+        }
+        /* On hover: hide corner, show action btns */
+        .new-arrival-card:hover::before,
+        .new-arrival-card:hover::after {
+            opacity: 0;
+        }
+        .new-arrival-card:hover .card-action-btn {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        .new-arrival-card .card-action-btn {
+            z-index: 15;
+        }
+        .new-arrival-card:hover {
+            transform: translateY(-8px);
+            border-color: crimson;
+            box-shadow: 0 12px 0 rgba(220,20,60,0.6), 0 0 35px rgba(220,20,60,0.4);
+        }
+        .new-arrival-card .card-img-top {
+            filter: grayscale(20%) contrast(1.1);
+            border-bottom: 2px solid rgba(220,20,60,0.5);
+            transition: filter 0.4s ease, transform 0.45s ease;
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
+        .new-arrival-card:hover .card-img-top {
+            filter: grayscale(0%) contrast(1);
+            transform: scale(1.05);
+        }
+        .new-arrival-card .card-body {
+            flex-grow: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            padding: 0.9rem 1rem;
+            background: transparent;
+        }
+        .new-arrival-card .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #fff;
+            font-size: 0.88rem;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(220,20,60,0.5);
+            margin-bottom: 0.15rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .new-arrival-card .card-text {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.72rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .new-arrival-card .price {
+            background: crimson;
+            color: #fff;
+            padding: 3px 10px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            border: none;
+            box-shadow: 2px 2px 0 #fff;
+        }
+        .new-arrival-card .btn-view {
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            padding: 3px 10px;
+            transition: all 0.3s ease;
+        }
+        .new-arrival-card .btn-view:hover {
+            background: crimson;
+            border-color: crimson;
+            color: #fff;
+        }
+        /* hide the badge element — corner ::after is the label */
+        .new-arrival-card .badge { display: none !important; }
+        /* ────────────────────────────────────────────────── */
+
+        /* ── BEST SELLERS CARD: Same family, crimson ─────── */
+        .bestseller-anime-card {
+            background: linear-gradient(160deg, #0d0d0d 50%, #1c0003 100%);
+            border: 2px solid rgba(220, 20, 60, 0.6);
+            box-shadow: 5px 5px 0 rgba(220,20,60,0.35), 0 0 25px rgba(220,20,60,0.12);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),
+                        box-shadow 0.35s ease, border-color 0.35s ease;
+            width: 100%;
+            height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        /* Crimson corner top-right */
+        .bestseller-anime-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 50px; height: 50px;
+            background: crimson;
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+            z-index: 12;
+            transition: opacity 0.25s ease;
+        }
+        .bestseller-anime-card::after {
+            content: 'HOT';
+            position: absolute;
+            top: 3px; right: 3px;
+            font-size: 0.48rem;
+            font-weight: 900;
+            color: #fff;
+            z-index: 13;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+            line-height: 1;
+            transition: opacity 0.25s ease;
+        }
+        .bestseller-anime-card:hover::before,
+        .bestseller-anime-card:hover::after {
+            opacity: 0;
+        }
+        .bestseller-anime-card:hover .card-action-btn {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        .bestseller-anime-card .card-action-btn { z-index: 15; }
+        .bestseller-anime-card:hover {
+            transform: translateY(-8px);
+            border-color: crimson;
+            box-shadow: 0 12px 0 rgba(220,20,60,0.6), 0 0 35px rgba(220,20,60,0.4);
+        }
+        .bestseller-anime-card .card-img-top {
+            filter: grayscale(20%) contrast(1.1);
+            border-bottom: 2px solid rgba(220,20,60,0.5);
+            transition: filter 0.4s ease, transform 0.45s ease;
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
+        .bestseller-anime-card:hover .card-img-top {
+            filter: grayscale(0%) contrast(1);
+            transform: scale(1.05);
+        }
+        .bestseller-anime-card .card-body {
+            flex-grow: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            padding: 0.9rem 1rem;
+            background: transparent;
+        }
+        .bestseller-anime-card .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #fff;
+            font-size: 0.88rem;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(220,20,60,0.5);
+            margin-bottom: 0.15rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .bestseller-anime-card .card-text {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.72rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .bestseller-anime-card .price {
+            background: crimson;
+            color: #fff;
+            padding: 3px 10px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            border: none;
+            box-shadow: 2px 2px 0 #fff;
+        }
+        .bestseller-anime-card .btn-view {
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            padding: 3px 10px;
+            transition: all 0.3s ease;
+        }
+        .bestseller-anime-card .btn-view:hover {
+            background: crimson;
+            border-color: crimson;
+            color: #fff;
+        }
+        .bestseller-anime-card .badge { display: none !important; }
+        /* ────────────────────────────────────────────────── */
+
     </style>
+
     <style>
         /* New Robust Fade Classes */
         .effect-container {
@@ -454,14 +702,14 @@
 
     <!-- Expanding Cards Section -->
     
-    <div class="section-divider"></div>
+    <div class="section-divider" style="margin-top: 1rem; margin-bottom: 1rem;"></div>
 
     <!-- Featured Products -->
     <!-- Featured Products (Renamed to New Arrivals for logic, or keep as Featured) -->
     <!-- Let's use the fetched $newArrivals for a "New Arrivals" section and $featured for the main grid -->
 
-    <section class="container py-5" id="new-arrivals">
-        <div class="mb-5" data-aos="fade-right">
+    <section class="container pt-2 pb-5" id="new-arrivals">
+        <div class="mb-4" data-aos="fade-right">
             <h2 class="section-header text-start mb-0" style="font-size: 3.2rem;">New Arrivals</h2>
         </div>
         
@@ -488,11 +736,13 @@
                 <div class="swiper-wrapper">
                 @if(isset($newArrivals) && count($newArrivals) > 0)
                 @foreach($newArrivals as $index => $product)
-                <div class="swiper-slide h-100">
-                    <div class="pb-4 h-100 w-100">
+                <div class="swiper-slide">
+                    <div class="w-100">
                         @include('partials.product-card', [
-                            'delay' => ($index % 4) * 100,
-                            'badge' => 'NEW CHAPTER'
+                            'delay'     => ($index % 4) * 100,
+                            'badge'     => 'NEW',
+                            'cardClass' => 'new-arrival-card',
+                            'btnClass'  => 'btn-view',
                         ])
                     </div>
                 </div>
@@ -542,14 +792,14 @@
         <div class="row g-4">
             @if(isset($bestSellers) && count($bestSellers) > 0)
             @foreach($bestSellers as $index => $product)
-            <div class="col-md-4 h-100">
+            <div class="col-lg-3 col-md-4 col-sm-6 h-100">
                 <div class="h-100">
-                    @include('partials.product-card', [
-                        'delay' => $index * 100,
-                        'cardClass' => 'manga-card',
-                        'badge' => 'HOT',
-                        'badgeClass' => 'fire-badge rounded-circle p-2'
-                    ])
+                @include('partials.product-card', [
+                    'delay'     => $index * 100,
+                    'cardClass' => 'bestseller-anime-card',
+                    'badge'     => 'HOT',
+                    'btnClass'  => 'btn-view',
+                ])
                 </div>
             </div>
             @endforeach
@@ -888,7 +1138,7 @@
                     },
                     breakpoints: {
                         640: { slidesPerView: 2 },
-                        992: { slidesPerView: 3 }, // Exact match to products grid density
+                        992: { slidesPerView: 4 }, // Exact match to wishlist grid density
                     },
                     on: {
                         init: function() {

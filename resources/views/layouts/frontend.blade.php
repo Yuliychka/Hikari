@@ -68,7 +68,9 @@
             box-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
         }
         .manga-card:hover .card-action-btn,
-        .bestseller-card:hover .card-action-btn {
+        .bestseller-card:hover .card-action-btn,
+        .new-arrival-card:hover .card-action-btn,
+        .bestseller-anime-card:hover .card-action-btn {
             opacity: 1;
             visibility: visible;
         }

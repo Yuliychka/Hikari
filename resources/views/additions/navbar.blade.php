@@ -25,17 +25,31 @@
 
     /* Scrolled State - Take Full Page but keep content in container */
     .glass-nav.scrolled {
-        width: 100% !important;
-        max-width: 100% !important;
-        left: 0 !important;
-        transform: translateX(0) !important;
+        width: 92% !important;
+        max-width: 1520px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
         top: 0 !important;
-        border-radius: 0 !important;
-        border-left: none !important;
-        border-right: none !important;
+        border-radius: 0 0 20px 20px !important;
+        border-left: 2px solid crimson !important;
+        border-right: 2px solid crimson !important;
         border-top: none !important;
         border-bottom: 2px solid crimson;
         box-shadow: 0 2px 10px rgba(220, 20, 60, 0.4);
+    }
+
+    /* Ultra-wide screens — reduce edge space further */
+    @media (min-width: 1600px) {
+        .glass-nav.scrolled {
+            width: 96% !important;
+            max-width: 1900px !important;
+        }
+    }
+    @media (min-width: 2000px) {
+        .glass-nav.scrolled {
+            width: 97% !important;
+            max-width: 2400px !important;
+        }
     }
 
     /* Mobile Responsive Fix - Restoration of Transformation */
@@ -1155,21 +1169,24 @@
     });
 
     // Scroll Transformation Logic
-    window.addEventListener('scroll', function() {
+    function applyNavScroll() {
         const navs = document.querySelectorAll('.glass-nav');
         const navContainer = document.getElementById('navContainer');
         if (window.scrollY > 50) {
             navs.forEach(nav => nav.classList.add('scrolled'));
             if(navContainer) {
-                navContainer.classList.remove('container-fluid');
-                navContainer.classList.add('container');
+                navContainer.classList.remove('container');
+                navContainer.classList.add('container-fluid');
             }
         } else {
             navs.forEach(nav => nav.classList.remove('scrolled'));
             if(navContainer) {
-                navContainer.classList.remove('container');
-                navContainer.classList.add('container-fluid');
+                navContainer.classList.remove('container-fluid');
+                navContainer.classList.add('container');
             }
         }
-    });
+    }
+    window.addEventListener('scroll', applyNavScroll);
+    // Run on page load to apply correct initial state
+    applyNavScroll();
 </script>
