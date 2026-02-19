@@ -8,14 +8,17 @@
                     Your ultimate destination for premium anime merchandise. Figures, apparel, and more directly from Japan.
                 </p>
                 <div class="d-flex gap-3 mt-3">
-                    <a href="{{ \App\Models\Setting::get('instagram_url', '#') }}" target="_blank" class="text-white text-decoration-none">
+                    <a href="{{ \App\Models\Setting::get('facebook_url', '#') }}" target="_blank" class="text-white text-decoration-none hover-crimson" title="Facebook">
+                        <i class="bi bi-facebook fs-5"></i>
+                    </a>
+                    <a href="{{ \App\Models\Setting::get('instagram_url', '#') }}" target="_blank" class="text-white text-decoration-none hover-crimson" title="Instagram">
                         <i class="bi bi-instagram fs-5"></i>
                     </a>
-                    <a href="{{ \App\Models\Setting::get('discord_url', '#') }}" target="_blank" class="text-white text-decoration-none">
+                    <a href="{{ \App\Models\Setting::get('discord_url', '#') }}" target="_blank" class="text-white text-decoration-none hover-crimson" title="Discord">
                         <i class="bi bi-discord fs-5"></i>
                     </a>
-                    <a href="{{ \App\Models\Setting::get('facebook_url', '#') }}" target="_blank" class="text-white text-decoration-none">
-                        <i class="bi bi-facebook fs-5"></i>
+                    <a href="{{ \App\Models\Setting::get('twitter_url', '#') }}" target="_blank" class="text-white text-decoration-none hover-crimson" title="X (Twitter)">
+                        <i class="bi bi-twitter-x fs-5"></i>
                     </a>
                 </div>
             </div>
@@ -35,8 +38,8 @@
                 <h6 class="text-white fw-bold mb-3 text-uppercase" style="letter-spacing: 1px;">Info</h6>
                 <ul class="list-unstyled text-secondary small">
                     <li class="mb-2"><a href="{{ route('about') }}" class="text-decoration-none text-secondary hover-crimson">About Us</a></li>
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-crimson">Shipping Policy</a></li>
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-crimson">Returns</a></li>
+                    <li class="mb-2"><a href="{{ route('policies.shipping') }}" class="text-decoration-none text-secondary hover-crimson">Shipping Policy</a></li>
+                    <li class="mb-2"><a href="{{ route('policies.returns') }}" class="text-decoration-none text-secondary hover-crimson">Returns</a></li>
                 </ul>
             </div>
 

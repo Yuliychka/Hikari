@@ -138,6 +138,21 @@
             border: 2px dashed rgba(220, 20, 60, 0.3);
             background: rgba(220, 20, 60, 0.02);
         }
+
+        .btn-outline-crimson {
+            border: 1px solid crimson;
+            color: crimson;
+            background: transparent;
+            transition: all 0.3s;
+        }
+        .btn-outline-crimson:hover {
+            background: crimson;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+        }
+        .hover-white:hover {
+            color: #fff !important;
+        }
     </style>
 @endpush
 
@@ -154,10 +169,8 @@
         <div class="row g-5">
             <!-- Items List -->
             <div class="col-lg-8" data-aos="fade-right">
-                @php $total = 0; @endphp
                 @foreach($cartItems as $item)
-                    @php $subtotal = $item->product->price * $item->quantity; $total += $subtotal; @endphp
-                    <div class="cart-item-panel">
+                    <div class="cart-item-panel" id="cart-item-{{ $item->id }}">
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <div class="cart-image-wrapper">
@@ -169,30 +182,39 @@
                                 <div class="text-secondary small mb-3">Unit Price: ${{ number_format($item->product->price, 2) }}</div>
                                 
                                 <div class="d-flex align-items-center gap-3">
-                                    <form action="{{ route('cart.update', $item->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <div class="input-group input-group-sm" style="width: 130px;">
-                                            <span class="input-group-text bg-black text-crimson border-crimson rounded-0">QTY</span>
-                                            <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" class="form-control quantity-input" onchange="this.form.submit()">
-                                        </div>
-                                    </form>
+                                    <div class="input-group input-group-sm" style="width: 130px; border: 1px solid crimson;">
+                                        <button class="btn btn-outline-crimson bg-black text-white border-0 qty-btn" data-action="decrease" data-id="{{ $item->id }}">-</button>
+                                        <input type="number" id="qty-{{ $item->id }}" value="{{ $item->quantity }}" min="1" class="form-control bg-black text-white border-0 text-center qty-input" readonly>
+                                        <button class="btn btn-outline-crimson bg-black text-white border-0 qty-btn" data-action="increase" data-id="{{ $item->id }}">+</button>
+                                    </div>
                                     
-                                    <form action="{{ route('cart.remove', $item->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-link text-danger text-decoration-none small p-0 fw-bold">
-                                            <i class="bi bi-x-circle me-1"></i> REMOVE
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-link text-danger text-decoration-none small p-0 fw-bold hover-white ajax-cart-remove" data-id="{{ $item->id }}">
+                                        <i class="bi bi-trash me-1"></i> REMOVE
+                                    </button>
                                 </div>
                             </div>
                             <div class="col-md-auto text-end mt-3 mt-md-0">
-                                <div class="item-price-glow">${{ number_format($subtotal, 2) }}</div>
+                                <div class="item-price-glow" id="subtotal-{{ $item->id }}">${{ number_format($item->product->price * $item->quantity, 2) }}</div>
                             </div>
                         </div>
                     </div>
                 @endforeach
+
+                <!-- Coupon Section -->
+                <div class="cart-item-panel mt-4" style="border-left: 4px solid #fff;">
+                    <form id="coupon-form" action="{{ route('cart.coupon') }}" method="POST" class="row g-3 align-items-center">
+                        @csrf
+                        <div class="col-md-6">
+                            <h6 class="text-uppercase fw-bold mb-0"><i class="bi bi-tag-fill text-crimson me-2"></i> Have a coupon?</h6>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="code" class="form-control bg-black text-white border-crimson rounded-0" placeholder="ENTER CODE">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-crimson w-100 rounded-0 fw-bold">APPLY</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <!-- Summary Sidebar -->
@@ -201,22 +223,30 @@
                     <h4 class="fw-bold mb-4 text-uppercase border-bottom border-crimson pb-2" style="font-family: 'Kaushan Script', cursive;">Vault Summary</h4>
                     
                     <div class="d-flex justify-content-between mb-3 text-secondary">
-                        <span>Subtotal</span>
-                        <span>${{ number_format($total, 2) }}</span>
+                        <span>Cart Subtotal</span>
+                        <span id="cart-subtotal">${{ number_format($subtotal, 2) }}</span>
                     </div>
+
+                    <div id="discount-row" class="d-flex justify-content-between mb-3 text-success fw-bold {{ $discount > 0 ? '' : 'd-none' }}">
+                        <span>Coupon Discount</span>
+                        <span id="cart-discount">-&dollar;{{ number_format($discount, 2) }}</span>
+                    </div>
+
                     <div class="d-flex justify-content-between mb-3 text-secondary">
-                        <span>Shipping</span>
-                        <span class="text-success fw-bold">FREE</span>
+                        <span>Shipping Est.</span>
+                        <span id="cart-shipping" class="{{ $shipping == 0 ? 'text-success fw-bold' : '' }}">
+                            {{ $shipping == 0 ? 'FREE' : '$' . number_format($shipping, 2) }}
+                        </span>
                     </div>
                     
                     <hr class="border-secondary my-4">
                     
                     <div class="d-flex justify-content-between mb-5">
                         <h4 class="fw-bold">TOTAL</h4>
-                        <h4 class="fw-bold text-crimson item-price-glow">${{ number_format($total, 2) }}</h4>
+                        <h4 class="fw-bold text-crimson item-price-glow" id="cart-total">${{ number_format($total, 2) }}</h4>
                     </div>
 
-                    <a href="#" class="btn btn-hikari w-100">
+                    <a href="{{ route('orders.checkout') }}" class="btn btn-hikari w-100">
                         PROCEED TO CHECKOUT <i class="bi bi-arrow-right ms-2"></i>
                     </a>
                     
@@ -239,3 +269,49 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const couponForm = document.getElementById('coupon-form');
+        if (couponForm) {
+            couponForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const code = formData.get('code');
+                
+                try {
+                    const response = await fetch("{{ route('cart.coupon') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ code: code })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        // Update UI
+                        document.getElementById('cart-subtotal').textContent = '$' + data.cart_subtotal;
+                        document.getElementById('cart-discount').textContent = '-$' + data.discount;
+                        document.getElementById('discount-row').classList.remove('d-none');
+                        document.getElementById('cart-shipping').textContent = data.shipping;
+                        if (data.shipping === 'FREE') document.getElementById('cart-shipping').classList.add('text-success', 'fw-bold');
+                        document.getElementById('cart-total').textContent = '$' + data.total;
+                        
+                        showHikariToast(data.message);
+                    } else {
+                        showHikariToast(data.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error applying coupon:', error);
+                    showHikariToast('Failed to connect to the vault.', 'error');
+                }
+            });
+        }
+    });
+</script>
+@endpush

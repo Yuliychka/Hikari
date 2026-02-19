@@ -20,6 +20,7 @@ class SettingController extends Controller
             'facebook_url' => 'nullable|url',
             'instagram_url' => 'nullable|url',
             'discord_url' => 'nullable|url',
+            'twitter_url' => 'nullable|url',
         ]);
 
         foreach ($data as $key => $value) {

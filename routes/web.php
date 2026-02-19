@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // Fetch products
-    $newArrivals = \App\Models\Product::latest()->take(4)->get();
+    $newArrivals = \App\Models\Product::latest()->take(12)->get();
     $bestSellers = \App\Models\Product::bestSellers(4)->get();
     $featured = \App\Models\Product::inRandomOrder()->take(8)->get();
     $otakuChoice = \App\Models\Product::inRandomOrder()->first();
@@ -52,6 +52,18 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+Route::get('/shipping-policy', function () {
+    return view('policies.shipping');
+})->name('policies.shipping');
+
+Route::get('/returns-policy', function () {
+    return view('policies.returns');
+})->name('policies.returns');
+
 // Product Routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/categories', [ProductController::class, 'categories'])->name('categories.index');
@@ -63,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon');
 
     // Wishlist Routes
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -106,6 +119,9 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::get('/orders', [App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('orders.index');
     Route::patch('/orders/{order}/status', [App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
+    // Coupon Management
+    Route::resource('coupons', App\Http\Controllers\Admin\CouponController::class);
+    
     // Card Assets
     Route::resource('card-assets', \App\Http\Controllers\Admin\AdminCardAssetController::class)->only(['index', 'store']);
     Route::post('card-assets/back', [\App\Http\Controllers\Admin\AdminCardAssetController::class, 'storeBack'])->name('card-assets.storeBack');
@@ -117,7 +133,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

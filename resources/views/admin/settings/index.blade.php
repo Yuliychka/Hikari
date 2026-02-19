@@ -34,6 +34,13 @@
                             <input type="url" name="discord_url" class="form-control bg-dark text-white border-crimson" value="{{ $settings['discord_url'] ?? '' }}" placeholder="https://discord.gg/yourserver">
                         </div>
                     </div>
+                    <div class="mb-4">
+                        <label class="form-label text-white-50 small text-uppercase fw-bold">Twitter (X) URL</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-crimson text-white border-0"><i class="fab fa-twitter"></i></span>
+                            <input type="url" name="twitter_url" class="form-control bg-dark text-white border-crimson" value="{{ $settings['twitter_url'] ?? '' }}" placeholder="https://twitter.com/youraccount">
+                        </div>
+                    </div>
 
                     <div class="text-end mt-5">
                         <button type="submit" class="btn btn-danger px-5 py-2 fw-bold rounded-0 transition-all border-2 border-white shadow-lg">

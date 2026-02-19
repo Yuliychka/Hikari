@@ -9,6 +9,7 @@ use App\Models\OrderItem;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
@@ -65,8 +66,9 @@ class OrderController extends Controller
                 ]);
             }
 
-            // Clear Cart
+            // Clear Cart and Coupon
             Cart::where('user_id', $user->id)->delete();
+            Session::forget('coupon');
 
             DB::commit();
 

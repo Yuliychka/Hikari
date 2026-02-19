@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
     <!-- Expanding Cards -->
     <link rel="stylesheet" href="{{ asset('css/Expanding Cards.css') }}">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         html {
             overflow-x: hidden;
@@ -210,6 +212,91 @@
             text-shadow: 2px 2px 4px #000;
         }
 
+        /* Swiper Custom Styling */
+        .swiper-button-prev-custom, .swiper-button-next-custom {
+            width: 45px;
+            height: 45px;
+            background: rgba(220, 20, 60, 0.1);
+            border: 2px solid crimson;
+            color: crimson;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.2rem;
+        }
+        .swiper-button-prev-custom:hover, .swiper-button-next-custom:hover {
+            background: crimson;
+            color: white;
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+            transform: translateY(-3px);
+        }
+        .swiper-slide {
+            height: auto !important;
+            display: flex;
+            justify-content: center;
+        }
+        .newArrivalsSwiper .swiper-slide {
+            height: auto !important; /* Allow slides to be as tall as content */
+            display: flex !important;
+            align-items: stretch !important; /* Force all cards to match the height of the tallest slide */
+        }
+        
+        .manga-card, .bestseller-card {
+            width: 100%;
+            height: 100% !important; /* Card fills the slide */
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        /* Force body to take space and push footer down */
+        .manga-card .card-body, .bestseller-card .card-body {
+            flex-grow: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+        }
+
+        .manga-card .card-body > div, .bestseller-card .card-body > div {
+            flex-grow: 1;
+        }
+        
+        /* Side Arrows for New Arrivals */
+        .new-arrivals-wrapper {
+            position: relative;
+            padding: 0 80px; /* More space for side arrows */
+        }
+        
+        .new-arrivals-wrapper .swiper-button-prev-custom,
+        .new-arrivals-wrapper .swiper-button-next-custom {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: transparent;
+            border: none;
+            width: auto;
+            height: auto;
+            cursor: pointer;
+        }
+        
+        .new-arrivals-wrapper .swiper-button-prev-custom { left: 0px; }
+        .new-arrivals-wrapper .swiper-button-next-custom { right: 0px; }
+        
+        .new-arrivals-wrapper .swiper-button-prev-custom:hover,
+        .new-arrivals-wrapper .swiper-button-next-custom:hover {
+            background: transparent;
+            box-shadow: none;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Prevent shadow clipping */
+        .newArrivalsSwiper {
+            padding: 20px 15px 40px 15px !important;
+            margin: -20px -15px -40px -15px !important;
+        }
+
     </style>
     <style>
         /* New Robust Fade Classes */
@@ -374,23 +461,50 @@
     <!-- Let's use the fetched $newArrivals for a "New Arrivals" section and $featured for the main grid -->
 
     <section class="container py-5" id="new-arrivals">
-        <h2 class="section-header" data-aos="zoom-in">New Arrivals</h2>
-        <div class="row g-4">
-            @if(isset($newArrivals) && count($newArrivals) > 0)
-            @foreach($newArrivals as $index => $product)
-            <div class="col-md-3">
-                @include('partials.product-card', [
-                    'delay' => $index * 100,
-                    'badge' => 'NEW CHAPTER'
-                ])
-            </div>
-            @endforeach
-            @else
-            <div class="col-12 text-center text-white-50">
-                <p>No new arrivals at the moment.</p>
-            </div>
-            @endif
+        <div class="mb-5" data-aos="fade-right">
+            <h2 class="section-header text-start mb-0" style="font-size: 3.2rem;">New Arrivals</h2>
         </div>
+        
+        <div class="new-arrivals-wrapper">
+            <!-- Arrows -->
+            <div class="swiper-button-prev-custom">
+                <span class="anime-arrow">
+                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M65 25L35 50L65 75" stroke="crimson" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M60 45L40 50L60 55" fill="white"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="swiper-button-next-custom">
+                <span class="anime-arrow">
+                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M35 25L65 50L35 75" stroke="crimson" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M40 45L60 50L40 55" fill="white"/>
+                    </svg>
+                </span>
+            </div>
+
+            <div class="swiper newArrivalsSwiper">
+                <div class="swiper-wrapper">
+                @if(isset($newArrivals) && count($newArrivals) > 0)
+                @foreach($newArrivals as $index => $product)
+                <div class="swiper-slide h-100">
+                    <div class="pb-4 h-100 w-100">
+                        @include('partials.product-card', [
+                            'delay' => ($index % 4) * 100,
+                            'badge' => 'NEW CHAPTER'
+                        ])
+                    </div>
+                </div>
+                @endforeach
+                @else
+                <div class="swiper-slide w-100 text-center text-white-50">
+                    <p>No new arrivals at the moment.</p>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
     </section>
 
     <!-- Promotion Banner -->
@@ -428,13 +542,15 @@
         <div class="row g-4">
             @if(isset($bestSellers) && count($bestSellers) > 0)
             @foreach($bestSellers as $index => $product)
-            <div class="col-md-3">
-                @include('partials.product-card', [
-                    'delay' => $index * 100,
-                    'cardClass' => 'bestseller-card',
-                    'badge' => 'HOT',
-                    'badgeClass' => 'fire-badge rounded-circle p-2'
-                ])
+            <div class="col-md-4 h-100">
+                <div class="h-100">
+                    @include('partials.product-card', [
+                        'delay' => $index * 100,
+                        'cardClass' => 'manga-card',
+                        'badge' => 'HOT',
+                        'badgeClass' => 'fire-badge rounded-circle p-2'
+                    ])
+                </div>
             </div>
             @endforeach
             @else
@@ -535,6 +651,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         /**
          * HIKARI INTRO & EFFECTS ENGINE (REWRITE v28)
@@ -748,6 +866,42 @@
                     revealSite();
                 }
             }, 5000);
+
+            // New Arrivals Swiper - Slow Continuous Glide
+            if (document.querySelector('.newArrivalsSwiper')) {
+                new Swiper(".newArrivalsSwiper", {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    speed: 5000,
+                    autoplay: {
+                        delay: 0,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true,
+                    },
+                    observer: true,
+                    observeParents: true,
+                    loop: true,
+                    allowTouchMove: true,
+                    navigation: {
+                        nextEl: ".new-arrivals-wrapper .swiper-button-next-custom",
+                        prevEl: ".new-arrivals-wrapper .swiper-button-prev-custom",
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        992: { slidesPerView: 3 }, // Exact match to products grid density
+                    },
+                    on: {
+                        init: function() {
+                            this.el.addEventListener('mouseenter', () => {
+                                this.autoplay.stop();
+                            });
+                            this.el.addEventListener('mouseleave', () => {
+                                this.autoplay.start();
+                            });
+                        }
+                    }
+                });
+            }
 
             // Start Engine
             init();

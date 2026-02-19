@@ -17,14 +17,14 @@
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <!-- Theme Styles -->
-    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <!-- SwiperJS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #0b0b0b;
-            color: #fff;
+            background-color: #0b0b0b !important;
+            color: #fff !important;
             overflow-x: hidden;
             min-height: 100vh;
             display: flex;
@@ -109,6 +109,7 @@
             opacity: 1;
             transform: translateX(-50%) translateY(0);
             visibility: visible;
+            z-index: 1000;
         }
 
         /* Fixed Aspect Ratio for Product Images */
@@ -163,7 +164,7 @@
             box-shadow: 10px 10px 0 #000 !important;
             transition: transform 0.3s ease, box-shadow 0.3s ease !important;
             position: relative;
-            overflow: hidden;
+            /* overflow: hidden; */ /* Removed to allow tooltips to show */
         }
         .manga-card:hover {
             transform: translate(-5px, -5px) !important;
@@ -187,20 +188,20 @@
             text-shadow: 2px 2px 0 #ccc !important;
         }
         .manga-card .price {
-            color: #000 !important;
-            background: #ffcc00 !important;
+            color: #fff !important;
+            background: #000 !important;
             padding: 2px 8px;
             border: 2px solid #000;
             font-weight: 900;
-            box-shadow: 3px 3px 0 #000;
+            box-shadow: 3px 3px 0 crimson;
         }
-
         /* BEST SELLER STYLE CARD - GLOBAL */
         .bestseller-card {
             background: linear-gradient(135deg, #2a0000 0%, #000 100%) !important;
             border: 2px solid #ff4500 !important;
             box-shadow: 0 0 15px rgba(255, 69, 0, 0.5) !important;
             transition: all 0.4s ease !important;
+            /* overflow: hidden; */
         }
         .bestseller-card:hover {
             transform: scale(1.05) !important;
@@ -255,9 +256,10 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('js/hikari-interactions.js') }}"></script>
     <script>
-        function showHikariToast(message, type = 'info') {
+        window.showHikariToast = function(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = 'hikari-toast';
             const icon = type === 'error' ? 'bi-exclamation-triangle' : 'bi-lightning-fill';
