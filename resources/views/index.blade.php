@@ -4,9 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Hikari Anime Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <!-- AOS Animation CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- CSS for theme -->
@@ -195,6 +200,98 @@
         }
 
         
+        /* Floating Card Actions */
+        .card-action-btn {
+            position: absolute;
+            top: 15px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid crimson;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
+        }
+        .manga-card:hover .card-action-btn,
+        .bestseller-card:hover .card-action-btn,
+        .new-arrival-card:hover .card-action-btn,
+        .bestseller-anime-card:hover .card-action-btn {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        .card-action-btn:hover {
+            background: crimson;
+            color: #fff;
+            box-shadow: 0 0 20px crimson;
+            transform: scale(1.1);
+        }
+        .card-action-btn.active {
+            background: #fff;
+            color: crimson;
+            border-color: #fff;
+        }
+        .card-action-btn.left { left: 15px; }
+        .card-action-btn.right { right: 15px; }
+
+        .card-action-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid crimson;
+            pointer-events: none;
+        }
+        .card-action-btn:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            visibility: visible;
+            z-index: 1000;
+        }
+
+        /* Toast Styling */
+        .hikari-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #000;
+            color: #fff;
+            padding: 12px 25px;
+            border: 2px solid crimson;
+            box-shadow: 5px 5px 0 crimson;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastSlideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes toastSlideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         /* Section Dividers */
         .section-divider {
             height: 5px;
@@ -311,33 +408,27 @@
             display: flex !important;
             flex-direction: column !important;
         }
-        /* Corner triangle — visible at rest, fades on hover */
-        .new-arrival-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 50px; height: 50px;
-            background: crimson;
-            clip-path: polygon(0 0, 100% 0, 0 100%);
-            z-index: 12;
-            transition: opacity 0.25s ease;
-        }
-        /* NEW text on corner */
+        /* Floating Badge (Pill Style) */
         .new-arrival-card::after {
             content: 'NEW';
             position: absolute;
-            top: 1px; left: 1px;
-            font-size: 0.48rem;
-            font-weight: 900;
+            top: 10px; left: 10px;
+            background: crimson;
             color: #fff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
             z-index: 13;
             font-family: 'Poppins', sans-serif;
-            letter-spacing: 0.5px;
-            line-height: 1;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px crimson;
             transition: opacity 0.25s ease;
         }
-        /* On hover: hide corner, show action btns */
-        .new-arrival-card:hover::before,
+        /* Remove triangle */
+        .new-arrival-card::before { display: none; }
+
+        /* On hover: hide tag, show action btns */
         .new-arrival-card:hover::after {
             opacity: 0;
         }
@@ -437,30 +528,25 @@
             display: flex !important;
             flex-direction: column !important;
         }
-        /* Crimson corner top-right */
-        .bestseller-anime-card::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 50px; height: 50px;
-            background: crimson;
-            clip-path: polygon(100% 0, 0 0, 100% 100%);
-            z-index: 12;
-            transition: opacity 0.25s ease;
-        }
+        /* Floating Badge (Pill Style) */
         .bestseller-anime-card::after {
             content: 'HOT';
             position: absolute;
-            top: 1px; right: 1px;
-            font-size: 0.48rem;
-            font-weight: 900;
+            top: 10px; right: 10px;
+            background: crimson;
             color: #fff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
             z-index: 13;
             font-family: 'Poppins', sans-serif;
-            letter-spacing: 0.5px;
-            line-height: 1;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px crimson;
             transition: opacity 0.25s ease;
         }
+        /* Remove triangle */
+        .bestseller-anime-card::before { display: none; }
         .bestseller-anime-card:hover::before,
         .bestseller-anime-card:hover::after {
             opacity: 0;
@@ -711,12 +797,12 @@
 
     <section class="container pt-2 pb-5" id="new-arrivals">
         <div class="mb-4" data-aos="fade-right">
-            <h2 class="section-header text-center mb-3" style="font-size: 3.2rem;">New Arrivals</h2>
+            <h2 class="section-header text-center mb-3">New Arrivals</h2>
         </div>
         
-        <div class="new-arrivals-wrapper">
+        <div class="new-arrivals-wrapper position-relative">
             <!-- Arrows -->
-            <div class="swiper-button-prev-custom">
+            <div class="swiper-button-prev-custom" style="left: -50px;">
                 <span class="anime-arrow">
                     <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M65 25L35 50L65 75" stroke="crimson" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -724,7 +810,7 @@
                     </svg>
                 </span>
             </div>
-            <div class="swiper-button-next-custom">
+            <div class="swiper-button-next-custom" style="right: -50px;">
                 <span class="anime-arrow">
                     <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M35 25L65 50L35 75" stroke="crimson" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -759,19 +845,24 @@
     </section>
 
     <!-- Promotion Banner -->
+    <!-- Promotion Banner -->
+    <!-- Flash Sale Banner -->
+    @if(isset($promoBanner))
     @php
-        $promoBg = isset($promoBanner) && $promoBanner ? 
-            (Str::startsWith($promoBanner->image_path, 'http') ? $promoBanner->image_path : asset($promoBanner->image_path)) : 
+        $saleBg = $promoBanner->banner_image ? 
+            (Str::startsWith($promoBanner->banner_image, 'http') ? $promoBanner->banner_image : asset('storage/' . $promoBanner->banner_image)) : 
             'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1920&auto=format&fit=crop';
-        $promoTitle = isset($promoBanner) && $promoBanner->title ? $promoBanner->title : 'Limited Time Flash Sale!';
     @endphp
-    <div class="container-fluid py-5 my-5" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ $promoBg }}'); background-size: cover; background-position: center; background-attachment: fixed;">
+    <div class="container-fluid py-5 my-5" 
+         style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ $saleBg }}'); background-size: cover; background-position: center; background-attachment: fixed;"
+         id="flash-sale-banner"
+         data-end-date="{{ $promoBanner->end_time }}">
         <div class="container text-center text-white" data-aos="zoom-in">
-            <h2 class="display-4 font-weight-bold" style="font-family: 'Kaushan Script', cursive; text-shadow: 0 0 10px crimson;">{{ $promoTitle }}</h2>
-            <p class="lead mb-4">Get 50% off on selected items. Don't miss out!</p>
-            <div class="d-flex justify-content-center mb-4">
+            <h2 class="display-4 font-weight-bold" style="font-family: 'Kaushan Script', cursive; text-shadow: 0 0 10px crimson;">{{ $promoBanner->title }}</h2>
+            <p class="lead mb-4">Limited Time Offer - Don't Miss Out!</p>
+            <div class="d-flex justify-content-center mb-4" id="flash-countdown">
                 <div class="px-4 py-2 mx-2 bg-dark rounded border border-danger">
-                    <h3 id="hours" class="m-0 text-danger">05</h3>
+                    <h3 id="hours" class="m-0 text-danger">00</h3>
                     <small>Hours</small>
                 </div>
                 <div class="px-4 py-2 mx-2 bg-dark rounded border border-danger">
@@ -783,9 +874,10 @@
                     <small>Secs</small>
                 </div>
             </div>
-            <a href="{{ route('products.index') }}" class="btn btn-danger btn-lg rounded-pill px-5 pulse-btn">Shop Sale Now</a>
+            <a href="{{ route('flash-sales.show', $promoBanner->slug) }}" class="btn btn-danger btn-lg rounded-pill px-5 pulse-btn">Shop Sale Now</a>
         </div>
     </div>
+    @endif
 
     <!-- Best Sellers -->
     <section class="container py-5">
@@ -842,68 +934,74 @@
     <div class="section-divider"></div>
 
     <!-- Categories Section -->
-    <section class="container py-5 mb-5">
+    <section class="container py-5 mb-5" id="categories-section">
         <h2 class="section-header" data-aos="zoom-in">Categories</h2>
-        <div class="row g-4">
-            @if(isset($categoryBanners) && $categoryBanners->count() > 0)
-                @foreach($categoryBanners as $index => $category)
-                @php
-                    $displayTitle = $category->name;
-                    $displayLink = route('products.index', ['category' => $category->slug]);
-                @endphp
-                <div class="col-md-4" data-aos="flip-left" data-aos-delay="{{ $index * 200 }}">
-                    <a href="{{ $displayLink }}" class="text-decoration-none">
-                        <div class="anime-card p-0 floating" style="height: 200px; animation-delay: {{ $index }}s;">
-                            <img src="{{ Str::startsWith($category->image_path, 'http') ? $category->image_path : asset('storage/' . $category->image_path) }}" class="w-100 h-100 object-fit-cover" style="opacity: 0.6;">
-                            <div class="position-absolute top-50 start-50 translate-middle text-center w-100 px-3">
-                                <h3 class="japanese-p display-4 m-0" style="text-shadow: 2px 2px 8px rgba(0,0,0,1);">{{ $displayTitle }}</h3>
-                            </div>
+        
+        <div class="categories-wrapper position-relative">
+            <!-- Arrows -->
+            <div class="swiper-button-prev-categories" style="position: absolute; top: 50%; left: -60px; transform: translateY(-50%); z-index: 20; cursor: pointer; color: crimson;">
+                <i class="fas fa-chevron-left fa-3x"></i>
+            </div>
+            <div class="swiper-button-next-categories" style="position: absolute; top: 50%; right: -60px; transform: translateY(-50%); z-index: 20; cursor: pointer; color: crimson;">
+                 <i class="fas fa-chevron-right fa-3x"></i>
+            </div>
+
+            <div class="swiper categoriesSwiper">
+                <div class="swiper-wrapper">
+                    @if(isset($categoryBanners) && $categoryBanners->count() > 0)
+                        @foreach($categoryBanners as $index => $category)
+                        @php
+                            $displayTitle = $category->name;
+                            $displayLink = route('products.index', ['category' => $category->slug]);
+                        @endphp
+                        <div class="swiper-slide">
+                            <a href="{{ $displayLink }}" class="text-decoration-none">
+                                <div class="anime-card p-0 floating" style="height: 300px; animation-delay: {{ $index % 5 * 0.2 }}s;">
+                                    <img src="{{ Str::startsWith($category->image_path, 'http') ? $category->image_path : asset('storage/' . $category->image_path) }}" class="w-100 h-100 object-fit-cover" style="opacity: 0.6; transition: opacity 0.3s;">
+                                    <div class="position-absolute top-50 start-50 translate-middle text-center w-100 px-3">
+                                        <h3 class="japanese-p display-4 m-0" style="text-shadow: 2px 2px 8px rgba(0,0,0,1);">{{ $displayTitle }}</h3>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </a>
+                        @endforeach
+                    @else
+                        <!-- Fallback Static -->
+                        <div class="swiper-slide"><div class="anime-card p-0" style="height:300px;"><h3 class="m-auto">No Categories</h3></div></div>
+                    @endif
                 </div>
-                @endforeach
-            @else
-                <!-- Fallback Static Categories if no DB data -->
-                <div class="col-md-4" data-aos="flip-left">
-                    <div class="anime-card p-0 floating" style="height: 200px;">
-                        <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1000&auto=format&fit=crop" class="w-100 h-100 object-fit-cover" style="opacity: 0.6;">
-                        <div class="position-absolute top-50 start-50 translate-middle text-center">
-                            <h3 class="japanese-p display-4">Figures</h3>
-                        </div>
-                    </div>
-                </div>
-                 <div class="col-md-4" data-aos="flip-up">
-                    <div class="anime-card p-0 floating" style="height: 200px; animation-delay: 1s;">
-                        <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=1000&auto=format&fit=crop" class="w-100 h-100 object-fit-cover" style="opacity: 0.6;">
-                        <div class="position-absolute top-50 start-50 translate-middle text-center">
-                            <h3 class="japanese-p display-4">Apparel</h3>
-                        </div>
-                    </div>
-                </div>
-                 <div class="col-md-4" data-aos="flip-right">
-                    <div class="anime-card p-0 floating" style="height: 200px; animation-delay: 2s;">
-                        <img src="https://images.unsplash.com/photo-1613376023733-0a73315d9b06?q=80&w=1000&auto=format&fit=crop" class="w-100 h-100 object-fit-cover" style="opacity: 0.6;">
-                        <div class="position-absolute top-50 start-50 translate-middle text-center">
-                            <h3 class="japanese-p display-4">Accessories</h3>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-black py-4 mt-auto text-center border-top border-theme-red">
-        <p class="mb-0 text-secondary">&copy; {{ date('Y') }} Hikari Anime Store. All rights reserved.</p>
-    </footer>
+
 
     @include('additions.footer')
-
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- AOS Animation JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="{{ asset('js/hikari-interactions.js') }}"></script>
+    
+    <script>
+        // Toast Notification Logic
+        window.showHikariToast = function(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'hikari-toast';
+            const icon = type === 'error' ? 'bi-exclamation-triangle' : 'bi-lightning-fill';
+            toast.innerHTML = `<i class="bi ${icon} text-danger"></i> <span>${message}</span>`;
+            document.body.appendChild(toast);
+            
+            // Auto remove
+            setTimeout(() => {
+                toast.style.animation = 'toastSlideIn 0.3s reverse forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
     <script>
         /**
          * HIKARI INTRO & EFFECTS ENGINE (REWRITE v28)
@@ -1153,6 +1251,65 @@
                     }
                 });
             }
+
+            // Categories Swiper
+            if (document.querySelector('.categoriesSwiper')) {
+                new Swiper(".categoriesSwiper", {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    loop: true,
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true,
+                    },
+                    navigation: {
+                        nextEl: ".swiper-button-next-categories",
+                        prevEl: ".swiper-button-prev-categories",
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
+                    }
+                });
+            }
+
+            // Flash Sale Timer Logic
+            function initFlashSaleTimer() {
+                const banner = document.getElementById('flash-sale-banner');
+                if(!banner) return;
+                
+                const endDateStr = banner.dataset.endDate;
+                if(!endDateStr) return;
+                
+                // Parse date safely (assuming Y-m-d H:i:s format from PHP)
+                // We might need to handle timezone, but basic diff works for now
+                const endDate = new Date(endDateStr.replace(/-/g, "/")).getTime(); 
+                
+                const timer = setInterval(() => {
+                    const now = new Date().getTime();
+                    const distance = endDate - now;
+                    
+                    if (distance < 0) {
+                        clearInterval(timer);
+                        document.getElementById('flash-countdown').innerHTML = '<h3 class="text-danger m-0">EXPIRED</h3>';
+                        return;
+                    }
+                    
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    const hEl = document.querySelector('#hours');
+                    const mEl = document.querySelector('#minutes');
+                    const sEl = document.querySelector('#seconds');
+                    
+                    if(hEl) hEl.innerText = hours < 10 ? '0' + hours : hours;
+                    if(mEl) mEl.innerText = minutes < 10 ? '0' + minutes : minutes;
+                    if(sEl) sEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+                }, 1000);
+            }
+            initFlashSaleTimer();
 
             // Start Engine
             init();

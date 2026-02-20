@@ -14,7 +14,7 @@
     <!-- Cart Button -->
     <div class="card-action-btn right ajax-cart {{ $isInCart ? 'active' : '' }}" 
          data-id="{{ $product->id }}" 
-         data-tooltip="{{ $isInCart ? 'Remove from Vault' : 'Add to Vault' }}">
+         data-tooltip="{{ $isInCart ? 'Remove from Cart' : 'Add to Cart' }}">
         <i class="bi {{ $isInCart ? 'bi-cart-check-fill' : 'bi-cart-plus' }}"></i>
     </div>
 

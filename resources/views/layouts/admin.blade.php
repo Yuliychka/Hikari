@@ -447,6 +447,9 @@
             <a class="nav-link {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}" href="{{ route('admin.coupons.index') }}">
                 <span class="nav-text">Coupons</span>
             </a>
+            <a class="nav-link {{ request()->routeIs('admin.flash-sales.*') ? 'active' : '' }}" href="{{ route('admin.flash-sales.index') }}">
+                <span class="nav-text">Flash Sales</span>
+            </a>
             <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
                 <span class="nav-text">Settings</span>
             </a>

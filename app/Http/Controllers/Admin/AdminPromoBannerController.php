@@ -24,6 +24,9 @@ class AdminPromoBannerController extends Controller
     {
         $data = $request->validate([
             'title' => 'nullable|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
+            'description' => 'nullable|string', // Used for End Date/Timer
+            'btn_text' => 'nullable|string|max:50',
             'image_path' => 'nullable|string',
             'image_file' => 'nullable|image|max:20480',
             'link' => 'nullable|string',
@@ -52,6 +55,9 @@ class AdminPromoBannerController extends Controller
     {
         $data = $request->validate([
             'title' => 'nullable|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
+            'description' => 'nullable|string', // Used for End Date/Timer
+            'btn_text' => 'nullable|string|max:50',
             'image_path' => 'nullable|string',
             'image_file' => 'nullable|image|max:20480',
             'link' => 'nullable|string',

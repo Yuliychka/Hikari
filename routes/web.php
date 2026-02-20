@@ -29,8 +29,8 @@ Route::get('/', function () {
     $heroBanners = \App\Models\Banner::where('type', 'hero')->where('is_active', true)->orderBy('order')->get();
     $heroCarousel = \App\Models\Setting::where('key', 'hero_carousel')->value('value') ?? '0';
     $heroEffect = \App\Models\Setting::where('key', 'hero_effect')->value('value') ?? 'none';
-    $promoBanner = \App\Models\Banner::where('type', 'promo')->where('is_active', true)->first();
-    $categoryBanners = \App\Models\Category::where('is_active', true)->whereNotNull('image_path')->orderBy('order')->take(3)->get();
+    $promoBanner = \App\Models\FlashSale::where('is_active', true)->where('end_time', '>', now())->orderBy('created_at', 'desc')->first();
+    $categoryBanners = \App\Models\Category::where('is_active', true)->whereNotNull('image_path')->orderBy('order')->get();
     $introBanners = \App\Models\Banner::where('type', 'intro')->where('is_active', true)->orderBy('order')->get();
     $introActive = \App\Models\Setting::where('key', 'intro_active')->value('value') ?? '1';
     
@@ -86,7 +86,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('orders.checkout');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}', [App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+    Route::get('/flash-sales/{slug}', [App\Http\Controllers\FlashSaleController::class, 'show'])->name('flash-sales.show');
 });
 
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -120,7 +121,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::patch('/orders/{order}/status', [App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
     // Coupon Management
-    Route::resource('coupons', App\Http\Controllers\Admin\CouponController::class);
+    Route::resource('coupons', App\Http\Controllers\Admin\AdminCouponController::class);
+    Route::resource('flash-sales', App\Http\Controllers\Admin\AdminFlashSaleController::class);
     
     // Card Assets
     Route::resource('card-assets', \App\Http\Controllers\Admin\AdminCardAssetController::class)->only(['index', 'store']);
