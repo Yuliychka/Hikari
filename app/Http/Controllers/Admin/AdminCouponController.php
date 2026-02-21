@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
 
-class CouponController extends Controller
+class AdminCouponController extends Controller
 {
     public function index()
     {

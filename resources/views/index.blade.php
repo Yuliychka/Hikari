@@ -309,7 +309,7 @@
             text-shadow: 2px 2px 4px #000;
         }
 
-        .badge { display: none !important; }
+        /* Badge suppression removed to allow partial-based badges */
         .swiper-button-prev-custom, .swiper-button-next-custom {
             width: 45px;
             height: 45px;
@@ -409,28 +409,17 @@
             flex-direction: column !important;
         }
         /* Floating Badge (Pill Style) */
-        .new-arrival-card::after {
-            content: 'NEW';
-            position: absolute;
-            top: 10px; left: 10px;
-            background: crimson;
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 4px;
-            z-index: 13;
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: 1px;
-            box-shadow: 0 0 10px crimson;
-            transition: opacity 0.25s ease;
-        }
+        /* Removed CSS Badge - now handled in product-card partial */
         /* Remove triangle */
         .new-arrival-card::before { display: none; }
 
-        /* On hover: hide tag, show action btns */
-        .new-arrival-card:hover::after {
-            opacity: 0;
+        /* On hover: slightly dim badges to focus on image, but keep visible */
+        .new-arrival-card:hover .badge-row,
+        .bestseller-anime-card:hover .badge-row,
+        .manga-card:hover .badge-row,
+        .bestseller-card:hover .badge-row {
+            opacity: 0.5 !important;
+            visibility: visible !important;
         }
         .new-arrival-card:hover .card-action-btn {
             opacity: 1 !important;
@@ -494,24 +483,9 @@
             border: none;
             box-shadow: 2px 2px 0 #fff;
         }
-        .new-arrival-card .btn-view {
-            background: transparent;
-            color: rgba(255,255,255,0.7);
-            border: 1.5px solid rgba(255,255,255,0.25);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.6rem;
-            letter-spacing: 1px;
-            padding: 3px 10px;
-            transition: all 0.3s ease;
-        }
-        .new-arrival-card .btn-view:hover {
-            background: crimson;
-            border-color: crimson;
-            color: #fff;
-        }
+        /* Standardized Large View Button handled below */
         /* hide the badge element — corner ::after is the label */
-        .new-arrival-card .badge { display: none !important; }
+        /* Badge suppression removed */
         /* ────────────────────────────────────────────────── */
 
         /* ── BEST SELLERS CARD: Same family, crimson ─────── */
@@ -529,22 +503,7 @@
             flex-direction: column !important;
         }
         /* Floating Badge (Pill Style) */
-        .bestseller-anime-card::after {
-            content: 'HOT';
-            position: absolute;
-            top: 10px; right: 10px;
-            background: crimson;
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 4px;
-            z-index: 13;
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: 1px;
-            box-shadow: 0 0 10px crimson;
-            transition: opacity 0.25s ease;
-        }
+        /* Removed CSS HOT badge - now handled in product-card partial */
         /* Remove triangle */
         .bestseller-anime-card::before { display: none; }
         .bestseller-anime-card:hover::before,
@@ -612,24 +571,325 @@
             border: none;
             box-shadow: 2px 2px 0 #fff;
         }
-        .bestseller-anime-card .btn-view {
+        .bestseller-anime-card .btn-view, .new-arrival-card .btn-view {
             background: transparent;
-            color: rgba(255,255,255,0.7);
-            border: 1.5px solid rgba(255,255,255,0.25);
+            color: #666;
+            border: 1.5px solid #555;
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             letter-spacing: 1px;
-            padding: 3px 10px;
-            transition: all 0.3s ease;
+            padding: 6px 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 4px;
         }
-        .bestseller-anime-card .btn-view:hover {
-            background: crimson;
-            border-color: crimson;
-            color: #fff;
+        .bestseller-anime-card .btn-view:hover, .new-arrival-card .btn-view:hover {
+            background: #555;
+            color: crimson;
+            border-color: #555;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
         }
         .bestseller-anime-card .badge { display: none !important; }
         /* ────────────────────────────────────────────────── */
+
+        /* FLASH SALE SECTION */
+        /* FLASH SALE BANNER STYLE (REVERTED) */
+        .flash-sale-banner {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+            border-top: 3px solid crimson;
+            border-bottom: 3px solid crimson;
+            position: relative;
+        }
+        .flash-sale-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(20,0,0,0.6), rgba(0,0,0,0.8));
+        }
+        .timer-box {
+            background: rgba(0,0,0,0.9);
+            border: 2px solid crimson;
+            padding: 20px 30px;
+            margin: 0 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+            min-width: 120px;
+        }
+        .timer-box h3 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: crimson;
+            font-weight: 800;
+        }
+        .timer-box small {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            font-size: 0.8rem;
+        }
+        
+        /* SLEEK NEON BUTTONS - "Hikari" Style */
+        .btn-minecraft {
+            background: transparent;
+            color: #fff !important;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 15px 45px !important;
+            border: 2px solid crimson;
+            border-radius: 4px !important;
+            position: relative;
+            display: inline-block;
+            text-decoration: none;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: rgba(220, 20, 60, 0.05);
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.2);
+        }
+        .btn-minecraft:hover {
+            background: crimson;
+            color: #fff !important;
+            box-shadow: 0 0 25px crimson;
+            transform: translateY(-3px);
+            border-color: #ff4d4d;
+        }
+        .btn-minecraft:active {
+            transform: translateY(1px);
+            box-shadow: 0 0 10px crimson;
+        }
+        /* Remove span skew from previous attempt */
+        .btn-minecraft span {
+            display: inline-block;
+            transform: none !important;
+        }
+        
+        /* FLASH SALE SPLIT LAYOUT */
+        .flash-sale-split {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 40px;
+        }
+        .flash-info-side {
+            flex: 1;
+            text-align: left;
+        }
+        .flash-products-side {
+            flex: 1.2;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        
+        .timer-box {
+            background: #000;
+            border: 3px solid crimson;
+            padding: 15px;
+            margin-right: 15px;
+            border-radius: 4px;
+            box-shadow: 4px 4px 0 crimson;
+            min-width: 90px;
+            text-align: center;
+        }
+        .timer-box h3 {
+            font-size: 2rem;
+            margin: 0;
+            color: #fff;
+            font-weight: 900;
+        }
+        .timer-box small {
+            text-transform: uppercase;
+            color: crimson;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        /* MANGA FRAME CATEGORIES */
+        .manga-frame-card {
+            position: relative;
+            background: #000;
+            border: 4px solid #fff;
+            overflow: hidden;
+            height: 350px;
+            transition: all 0.4s ease;
+            box-shadow: 10px 10px 0 #000;
+        }
+        .manga-frame-card:hover {
+            border-color: crimson;
+            box-shadow: 10px 10px 0 crimson;
+            transform: translate(-5px, -5px);
+        }
+        .manga-frame-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.2);
+            transition: all 0.5s ease;
+            opacity: 0.6;
+        }
+        .manga-frame-card:hover img {
+            filter: grayscale(0%) contrast(1);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .manga-frame-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            color: #000;
+            padding: 10px;
+            transform: skewX(-15deg) translateX(-10px);
+            width: 110%;
+            transition: all 0.3s ease;
+        }
+        .manga-frame-card:hover .manga-frame-overlay {
+            background: crimson;
+             color: #fff;
+        }
+        /* CATEGORIES: MANGA PANEL GRID */
+        .category-panel-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 250px;
+            gap: 15px;
+            padding: 20px;
+        }
+        @media (min-width: 992px) {
+            .category-panel-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .category-panel {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(220, 20, 60, 0.3);
+            background: #000;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 8px;
+        }
+        .category-panel::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(transparent 60%, rgba(0,0,0,0.8));
+            z-index: 1;
+        }
+        .category-panel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: all 0.5s ease;
+            opacity: 0.7;
+        }
+        .category-panel:hover {
+            border-color: crimson;
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 0 30px crimson;
+        }
+        .category-panel:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .category-text {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            z-index: 2;
+            color: #fff;
+            background: rgba(220, 20, 60, 0.85);
+            padding: 5px 15px;
+            transform: skewX(-15deg);
+        }
+        .category-text span, .category-text h3 {
+            display: block;
+            transform: skewX(15deg); /* Counter skew for readability */
+        }
+        .category-text span {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.8);
+        }
+        .category-text h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+        }
+            font-family: 'Black Ops One', cursive;
+            font-size: 1.8rem;
+            margin: 0;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 crimson;
+            transform: skewX(-10deg);
+        }
+        .category-text span {
+            font-size: 0.8rem;
+            color: crimson;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .pulse-btn {
+            animation: pulse-crimson 2s infinite;
+        }
+        @keyframes pulse-crimson {
+            0% { box-shadow: 0 0 0 0 rgba(220, 20, 60, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(220, 20, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 20, 60, 0); }
+        }
+        .flash-sale-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(45deg, rgba(220, 20, 60, 0.03) 0, rgba(220, 20, 60, 0.03) 1px, transparent 1px, transparent 10px);
+            pointer-events: none;
+        }
+        .timer-unit {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid crimson;
+            min-width: 90px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
+            border-radius: 8px;
+        }
+        .timer-val {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1;
+            font-family: 'Black Ops One', cursive;
+            display: block;
+        }
+        .timer-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: crimson;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .flash-sale-card-wrapper {
+            transition: transform 0.3s ease;
+        }
+        .flash-sale-card-wrapper:hover {
+            transform: scale(1.02);
+        }
 
     </style>
 
@@ -727,8 +987,8 @@
                             @if($heroDescription)<p class="japanese-w hero-description">{{ $heroDescription }}</p>@endif
                             
                             <a href="#new-arrivals" class="hero-btn-link">
-                                <button type="button" class="btn btn-outline-danger hero-btn">
-                                    <b>{{ $heroBtnText }}</b>
+                                <button type="button" class="btn-minecraft">
+                                    {{ $heroBtnText }}
                                 </button>
                             </a>
                         </div>
@@ -774,8 +1034,8 @@
                 @if($heroDescription)<p class="japanese-w hero-description">{{ $heroDescription }}</p>@endif
                 
                 <a href="#new-arrivals" class="hero-btn-link">
-                    <button type="button" class="btn btn-outline-danger hero-btn">
-                         <b>{{ $heroBtnText }}</b>
+                    <button type="button" class="btn-minecraft">
+                         <span>{{ $heroBtnText }}</span>
                     </button>
                 </a>
             </div>
@@ -789,6 +1049,7 @@
 
     <!-- Expanding Cards Section -->
     
+
     <div class="section-divider" style="margin-top: 1rem; margin-bottom: 1rem;"></div>
 
     <!-- Featured Products -->
@@ -844,40 +1105,69 @@
     </div>
     </section>
 
-    <!-- Promotion Banner -->
-    <!-- Promotion Banner -->
-    <!-- Flash Sale Banner -->
-    @if(isset($promoBanner))
-    @php
-        $saleBg = $promoBanner->banner_image ? 
-            (Str::startsWith($promoBanner->banner_image, 'http') ? $promoBanner->banner_image : asset('storage/' . $promoBanner->banner_image)) : 
-            'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1920&auto=format&fit=crop';
-    @endphp
-    <div class="container-fluid py-5 my-5" 
-         style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ $saleBg }}'); background-size: cover; background-position: center; background-attachment: fixed;"
-         id="flash-sale-banner"
-         data-end-date="{{ $promoBanner->end_time }}">
-        <div class="container text-center text-white" data-aos="zoom-in">
-            <h2 class="display-4 font-weight-bold" style="font-family: 'Kaushan Script', cursive; text-shadow: 0 0 10px crimson;">{{ $promoBanner->title }}</h2>
-            <p class="lead mb-4">Limited Time Offer - Don't Miss Out!</p>
-            <div class="d-flex justify-content-center mb-4" id="flash-countdown">
-                <div class="px-4 py-2 mx-2 bg-dark rounded border border-danger">
-                    <h3 id="hours" class="m-0 text-danger">00</h3>
-                    <small>Hours</small>
-                </div>
-                <div class="px-4 py-2 mx-2 bg-dark rounded border border-danger">
-                    <h3 id="minutes" class="m-0 text-danger">00</h3>
-                    <small>Mins</small>
-                </div>
-                <div class="px-4 py-2 mx-2 bg-dark rounded border border-danger">
-                    <h3 id="seconds" class="m-0 text-danger">00</h3>
-                    <small>Secs</small>
-                </div>
+    @if(isset($promoBanner) && $promoBanner)
+        @php
+            $promoBg = $promoBanner->image_path ? 
+                (Str::startsWith($promoBanner->image_path, 'http') ? $promoBanner->image_path : asset('storage/' . $promoBanner->image_path)) : 
+                'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=1920&auto=format&fit=crop';
+            $legacyEndDate = $promoBanner->description; 
+            // Correct Link Logic: If we have an active flash sale, link to it. Otherwise use the banner link.
+            $flashLink = (isset($activeFlashSale) && $activeFlashSale) ? route('flash-sales.show', $activeFlashSale->slug) : ($promoBanner->link ?? route('products.index'));
+        @endphp
+        
+        <div class="flash-event-fullwidth py-0" style="margin-top: 150px;">
+            <div class="container-fluid px-0">
+                <center><h2 class="section-header mb-0" data-aos="zoom-in" style="font-size: 4rem; position: relative; top: -110px; z-index: 20; text-shadow: 0 0 30px rgba(220, 20, 60, 0.8);">{{ $promoBanner->title }}</h2></center>
+                
+                <section class="flash-sale-banner py-5" style="background-image: url('{{ $promoBg }}'); margin-top: -80px;" id="flash-sale-banner" data-end-date="{{ (isset($activeFlashSale) && $activeFlashSale) ? $activeFlashSale->end_time : $legacyEndDate }}">
+                    <div class="flash-sale-overlay"></div>
+                    <div class="container position-relative z-1">
+                        <div class="flash-sale-split align-items-center">
+                            <div class="flash-info-side" data-aos="fade-right">
+                                <span class="badge bg-danger mb-4 px-4 py-2 fs-5 rounded-pill text-uppercase pulse-btn">Active Event</span>
+                                <h2 class="display-3 fw-bold mb-2 text-white" style="font-family: 'Kaushan Script', cursive; text-shadow: 0 0 20px crimson;">
+                                    {{ $activeFlashSale->title ?? 'Mega Event' }}
+                                </h2>
+                                
+                                @if(isset($activeFlashSale) && $activeFlashSale->description)
+                                    <p class="lead text-white mb-5 fs-5" style="max-width: 400px; font-family: 'Inter', sans-serif; font-weight: 300; opacity: 0.85; line-height: 1.8; word-wrap: break-word; background: transparent; border: none; padding: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                                        {{ $activeFlashSale->description }}
+                                    </p>
+                                @endif
+                                
+                                <div class="d-flex mb-5 gap-3" id="flash-countdown"></div>
+                                
+                                <a href="{{ $flashLink }}" class="btn-minecraft">
+                                    {{ $promoBanner->btn_text ?? 'See All Deals' }}
+                                </a>
+                            </div>
+                            
+                            <div class="flash-products-side" data-aos="fade-left">
+                                @if(isset($activeFlashSale) && $activeFlashSale->products->count() > 0)
+                                    @foreach($activeFlashSale->products->take(2) as $fProduct)
+                                        <div class="mini-card-flash h-100 p-2" style="background: rgba(220, 20, 60, 0.05); border: 1px solid rgba(220, 20, 60, 0.2); border-radius: 12px; transition: all 0.3s ease;">
+                                            @include('partials.product-card', [
+                                                'product' => $fProduct,
+                                                'cardClass' => 'new-arrival-card',
+                                                'badge' => 'PROMO',
+                                                'badgeClass' => 'bg-danger text-white pulse-btn'
+                                            ])
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="text-center text-white-50 p-5">
+                                        <i class="bi bi-lightning-charge-fill display-1 mb-3"></i>
+                                        <p class="lead">Mega Deals Coming Soon</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <a href="{{ route('flash-sales.show', $promoBanner->slug) }}" class="btn btn-danger btn-lg rounded-pill px-5 pulse-btn">Shop Sale Now</a>
         </div>
-    </div>
     @endif
+
 
     <!-- Best Sellers -->
     <section class="container py-5">
@@ -918,7 +1208,7 @@
                 <h2 class="display-4 fw-bold mb-3" style="font-family: 'Kaushan Script', cursive;">{{ $otakuChoice->name }}</h2>
                 <p class="lead text-white-50 mb-4">{{ $otakuChoice->description }}</p>
                 <p class="h3 text-danger mb-4">${{ $otakuChoice->price }}</p>
-                <a href="{{ route('products.show', $otakuChoice->id) }}" class="btn btn-outline-light btn-lg rounded-pill px-5">Check it Out</a>
+                <a href="{{ route('products.show', $otakuChoice->id) }}" class="btn-minecraft"><span>Check it Out</span></a>
             </div>
         </div>
     </section>
@@ -926,8 +1216,8 @@
 
     <!-- All Products Link -->
     <div class="text-center mt-5 mb-5" data-aos="fade-up">
-        <a href="{{ route('products.index') }}" class="btn btn-outline-danger btn-lg px-5 rounded-pill" style="border-width: 2px;">
-            View Full Collection
+        <a href="{{ route('products.index') }}" class="btn-minecraft">
+            <span>View Full Collection</span>
         </a>
     </div>
 
@@ -937,37 +1227,30 @@
     <section class="container py-5 mb-5" id="categories-section">
         <h2 class="section-header" data-aos="zoom-in">Categories</h2>
         
-        <div class="categories-wrapper position-relative">
-            <!-- Arrows -->
-            <div class="swiper-button-prev-categories" style="position: absolute; top: 50%; left: -60px; transform: translateY(-50%); z-index: 20; cursor: pointer; color: crimson;">
+        <div class="categories-wrapper position-relative" style="padding: 0 20px;">
+            <div class="swiper-button-prev-categories" style="position: absolute; top: 50%; left: -30px; transform: translateY(-50%); z-index: 20; cursor: pointer; color: crimson;">
                 <i class="fas fa-chevron-left fa-3x"></i>
             </div>
-            <div class="swiper-button-next-categories" style="position: absolute; top: 50%; right: -60px; transform: translateY(-50%); z-index: 20; cursor: pointer; color: crimson;">
+            <div class="swiper-button-next-categories" style="position: absolute; top: 50%; right: -30px; transform: translateY(-50%); z-index: 20; cursor: pointer; color: crimson;">
                  <i class="fas fa-chevron-right fa-3x"></i>
             </div>
 
-            <div class="swiper categoriesSwiper">
+            <div class="swiper categoriesSwiper py-4">
                 <div class="swiper-wrapper">
                     @if(isset($categoryBanners) && $categoryBanners->count() > 0)
                         @foreach($categoryBanners as $index => $category)
-                        @php
-                            $displayTitle = $category->name;
-                            $displayLink = route('products.index', ['category' => $category->slug]);
-                        @endphp
-                        <div class="swiper-slide">
-                            <a href="{{ $displayLink }}" class="text-decoration-none">
-                                <div class="anime-card p-0 floating" style="height: 300px; animation-delay: {{ $index % 5 * 0.2 }}s;">
-                                    <img src="{{ Str::startsWith($category->image_path, 'http') ? $category->image_path : asset('storage/' . $category->image_path) }}" class="w-100 h-100 object-fit-cover" style="opacity: 0.6; transition: opacity 0.3s;">
-                                    <div class="position-absolute top-50 start-50 translate-middle text-center w-100 px-3">
-                                        <h3 class="japanese-p display-4 m-0" style="text-shadow: 2px 2px 8px rgba(0,0,0,1);">{{ $displayTitle }}</h3>
+                        <div class="swiper-slide h-auto">
+                             <div class="category-panel w-100" style="height: 320px; border: 1px solid rgba(255,255,255,0.1);">
+                                <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="d-block w-100 h-100">
+                                    <img src="{{ Str::startsWith($category->image_path, 'http') ? $category->image_path : asset('storage/' . $category->image_path) }}" alt="{{ $category->name }}" class="w-100 h-100 object-fit-cover shadow-lg">
+                                    <div class="category-text">
+                                        <span>Explore</span>
+                                        <h3>{{ $category->name }}</h3>
                                     </div>
-                                </div>
-                            </a>
+                                </a>
+                            </div>
                         </div>
                         @endforeach
-                    @else
-                        <!-- Fallback Static -->
-                        <div class="swiper-slide"><div class="anime-card p-0" style="height:300px;"><h3 class="m-auto">No Categories</h3></div></div>
                     @endif
                 </div>
             </div>
@@ -1252,14 +1535,15 @@
                 });
             }
 
-            // Categories Swiper
+            // Categories Swiper - Smooth Continuous Glide
             if (document.querySelector('.categoriesSwiper')) {
                 new Swiper(".categoriesSwiper", {
                     slidesPerView: 1,
                     spaceBetween: 20,
+                    speed: 5000,
                     loop: true,
                     autoplay: {
-                        delay: 3000,
+                        delay: 0,
                         disableOnInteraction: false,
                         pauseOnMouseEnter: true,
                     },
@@ -1269,21 +1553,20 @@
                     },
                     breakpoints: {
                         640: { slidesPerView: 2 },
-                        1024: { slidesPerView: 3 },
+                        1024: { slidesPerView: 4 }, // Updated density
                     }
                 });
             }
 
-            // Flash Sale Timer Logic
+            // Flash Sale Timer Logic (Homepage Split Style)
             function initFlashSaleTimer() {
                 const banner = document.getElementById('flash-sale-banner');
                 if(!banner) return;
                 
+                const countdownEl = document.getElementById('flash-countdown');
                 const endDateStr = banner.dataset.endDate;
-                if(!endDateStr) return;
+                if(!endDateStr || !countdownEl) return;
                 
-                // Parse date safely (assuming Y-m-d H:i:s format from PHP)
-                // We might need to handle timezone, but basic diff works for now
                 const endDate = new Date(endDateStr.replace(/-/g, "/")).getTime(); 
                 
                 const timer = setInterval(() => {
@@ -1292,21 +1575,22 @@
                     
                     if (distance < 0) {
                         clearInterval(timer);
-                        document.getElementById('flash-countdown').innerHTML = '<h3 class="text-danger m-0">EXPIRED</h3>';
+                        countdownEl.innerHTML = '<h3 class="text-danger fw-bold display-4">EVENT ENDED</h3>';
                         return;
                     }
                     
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
                     
-                    const hEl = document.querySelector('#hours');
-                    const mEl = document.querySelector('#minutes');
-                    const sEl = document.querySelector('#seconds');
+                    let html = '';
+                    if (days > 0) html += `<div class="timer-box"><h3>${days}</h3><small>Days</small></div>`;
+                    if (hours > 0) html += `<div class="timer-box"><h3>${hours < 10 ? '0'+hours : hours}</h3><small>Hrs</small></div>`;
+                    if (minutes > 0) html += `<div class="timer-box"><h3>${minutes < 10 ? '0'+minutes : minutes}</h3><small>Min</small></div>`;
+                    if (seconds > 0) html += `<div class="timer-box"><h3>${seconds < 10 ? '0'+seconds : seconds}</h3><small>Sec</small></div>`;
                     
-                    if(hEl) hEl.innerText = hours < 10 ? '0' + hours : hours;
-                    if(mEl) mEl.innerText = minutes < 10 ? '0' + minutes : minutes;
-                    if(sEl) sEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+                    countdownEl.innerHTML = html;
                 }, 1000);
             }
             initFlashSaleTimer();

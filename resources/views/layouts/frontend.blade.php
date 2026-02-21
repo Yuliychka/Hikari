@@ -158,6 +158,8 @@
         /* Custom Cursor */
         body, a, button {
             cursor: url('https://cdn.custom-cursor.com/db/cursor/32/katana_cursor.png'), auto !important;
+        }
+
         /* MANGA STYLE CARD - GLOBAL */
         .manga-card {
             background: #fff !important;

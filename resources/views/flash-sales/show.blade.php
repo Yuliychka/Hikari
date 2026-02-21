@@ -18,6 +18,10 @@
         <!-- Timer -->
         <div class="d-flex justify-content-center gap-3 mt-4" id="fullscreen-countdown" data-end-date="{{ $flashSale->end_time }}">
             <div class="timer-box bg-dark border border-danger p-3 rounded text-center" style="min-width: 100px;">
+                <h2 class="m-0 text-danger fw-bold" id="fs-days">00</h2>
+                <small class="text-uppercase text-secondary">Days</small>
+            </div>
+            <div class="timer-box bg-dark border border-danger p-3 rounded text-center" style="min-width: 100px;">
                 <h2 class="m-0 text-danger fw-bold" id="fs-hours">00</h2>
                 <small class="text-uppercase text-secondary">Hours</small>
             </div>
@@ -66,10 +70,12 @@
                     return;
                 }
                 
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
                 
+                document.getElementById('fs-days').innerText = days < 10 ? '0'+days : days;
                 document.getElementById('fs-hours').innerText = hours < 10 ? '0'+hours : hours;
                 document.getElementById('fs-minutes').innerText = minutes < 10 ? '0'+minutes : minutes;
                 document.getElementById('fs-seconds').innerText = seconds < 10 ? '0'+seconds : seconds;

@@ -29,7 +29,11 @@ Route::get('/', function () {
     $heroBanners = \App\Models\Banner::where('type', 'hero')->where('is_active', true)->orderBy('order')->get();
     $heroCarousel = \App\Models\Setting::where('key', 'hero_carousel')->value('value') ?? '0';
     $heroEffect = \App\Models\Setting::where('key', 'hero_effect')->value('value') ?? 'none';
-    $promoBanner = \App\Models\FlashSale::where('is_active', true)->where('end_time', '>', now())->orderBy('created_at', 'desc')->first();
+    
+    // Fetch both new and old to allow fallback
+    $activeFlashSale = \App\Models\FlashSale::where('is_active', true)->where('end_time', '>', now())->orderBy('created_at', 'desc')->first();
+    $promoBanner = \App\Models\Banner::where('type', 'promo')->where('is_active', true)->first();
+    
     $categoryBanners = \App\Models\Category::where('is_active', true)->whereNotNull('image_path')->orderBy('order')->get();
     $introBanners = \App\Models\Banner::where('type', 'intro')->where('is_active', true)->orderBy('order')->get();
     $introActive = \App\Models\Setting::where('key', 'intro_active')->value('value') ?? '1';
@@ -43,7 +47,7 @@ Route::get('/', function () {
     return view('index', compact(
         'newArrivals', 'bestSellers', 'featured', 'otakuChoice', 
         'heroBanners', 'heroCarousel', 'heroEffect', 'promoBanner', 
-        'categoryBanners', 'introBanners', 'introActive',
+        'categoryBanners', 'introBanners', 'introActive', 'activeFlashSale',
         'heroTitle', 'heroSubtitle', 'heroDescription', 'heroBtnText'
     ));
 });

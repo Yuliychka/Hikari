@@ -58,6 +58,29 @@ class Product extends Model
         return \App\Models\Wishlist::where('user_id', $userId)->where('product_id', $this->id)->exists();
     }
 
+    public function flashSales()
+    {
+        return $this->belongsToMany(FlashSale::class, 'flash_sale_product')->withPivot('discount_percentage');
+    }
+
+    public function getActiveFlashSaleAttribute()
+    {
+        return $this->flashSales()
+            ->where('is_active', true)
+            ->where('end_time', '>', now())
+            ->first();
+    }
+
+    public function getEffectivePriceAttribute()
+    {
+        $flashSale = $this->active_flash_sale;
+        if ($flashSale) {
+            $discount = $flashSale->pivot->discount_percentage;
+            return $this->price * (1 - ($discount / 100));
+        }
+        return $this->price;
+    }
+
     public function scopeBestSellers($query, $limit = 4)
     {
         return $query->withCount('orderItems')

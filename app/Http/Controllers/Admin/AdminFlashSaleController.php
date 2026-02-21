@@ -27,6 +27,7 @@ class AdminFlashSaleController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
             'image_file' => 'nullable|image|max:20480',
             'end_time' => 'required|date',
             'products' => 'required|array',
@@ -41,7 +42,15 @@ class AdminFlashSaleController extends Controller
         }
 
         $flashSale = FlashSale::create($data);
-        $flashSale->products()->sync($request->products);
+        
+        $syncData = [];
+        if ($request->has('products')) {
+            foreach ($request->products as $productId) {
+                $discount = $request->input("discounts.{$productId}", 0);
+                $syncData[$productId] = ['discount_percentage' => $discount];
+            }
+        }
+        $flashSale->products()->sync($syncData);
 
         return redirect()->route('admin.flash-sales.index')->with('success', 'Flash Sale created successfully.');
     }
@@ -56,6 +65,7 @@ class AdminFlashSaleController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
             'image_file' => 'nullable|image|max:20480',
             'end_time' => 'required|date',
             'products' => 'required|array',
@@ -69,7 +79,15 @@ class AdminFlashSaleController extends Controller
         }
 
         $flashSale->update($data);
-        $flashSale->products()->sync($request->products);
+        
+        $syncData = [];
+        if ($request->has('products')) {
+            foreach ($request->products as $productId) {
+                $discount = $request->input("discounts.{$productId}", 0);
+                $syncData[$productId] = ['discount_percentage' => $discount];
+            }
+        }
+        $flashSale->products()->sync($syncData);
 
         return redirect()->route('admin.flash-sales.index')->with('success', 'Flash Sale updated successfully.');
     }

@@ -136,6 +136,67 @@
         }
     }
 
+    /* Scaling for Intermediate Desktop/Tablet Screens */
+    @media (max-width: 1400px) and (min-width: 992px) {
+        .nav-content-grid {
+            gap: 20px !important; 
+        }
+        .nav-link {
+            font-size: 0.8rem !important;
+            padding: 6px 14px !important;
+        }
+        .navbar-nav {
+            gap: 15px !important;
+        }
+        .nav-icons {
+            gap: 15px !important;
+        }
+        .brand-logo {
+            height: 40px !important; 
+        }
+        .nav-icon {
+            width: 45px !important;
+            height: 45px !important;
+        }
+        .nav-icon svg {
+            width: 22px !important;
+            height: 22px !important;
+        }
+        .nav-icon::after {
+            font-size: 0.7rem !important;
+            bottom: -32px !important;
+        }
+        .btn-outline-danger {
+            font-size: 0.8rem !important;
+            padding: 6px 12px !important;
+        }
+    }
+
+    /* Extra Tightening for 1155px and below */
+    @media (max-width: 1155px) and (min-width: 992px) {
+        .nav-content-grid {
+            gap: 8px !important;
+            padding: 0 5px !important;
+        }
+        .navbar-nav {
+            gap: 5px !important;
+        }
+        .nav-icons {
+            gap: 5px !important;
+        }
+        .nav-link {
+            padding: 6px 8px !important;
+            font-size: 0.75rem !important;
+        }
+        .nav-icon {
+            width: 40px !important;
+            height: 40px !important;
+        }
+        .brand-logo {
+            height: 35px !important;
+        }
+    }
+
     /* Flex Layout - Precision Alignment */
     .nav-content-grid {
         display: grid !important;
@@ -143,6 +204,8 @@
         align-items: center;
         width: 100%;
         height: 100%;
+        gap: 20px; /* Base safe gap */
+        padding: 0 !important;
     }
 
     .nav-link {
@@ -201,13 +264,12 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        margin-top: 5px;
     }
     .nav-center {
         display: flex;
         justify-content: center;
         align-items: center;
-        position: relative !important; /* Move away from absolute if using grid */
+        position: relative !important;
         transform: none !important;
         left: 0 !important;
     }
@@ -215,13 +277,12 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        margin-top: 5px;
     }
 
     /* Target right icons except Search/Sharingan */
     .nav-right .nav-icon:not(.sharingan-parent),
     .nav-right .btn-outline-danger {
-        transform: translateY(-4px);
+        transform: none;
     }
 
     /* Wishlist Devil Heart Wings Animation */
@@ -716,12 +777,11 @@
 
 <!-- PC Navbar (Desktop Only) -->
 <nav class="navbar navbar-expand-lg fixed-top glass-nav navbar-dark d-none d-lg-block">
-    <div id="navContainer" class="container h-100 px-lg-4 transition-all">
+    <div id="navContainer" class="container h-100 px-4 transition-all">
         <div class="nav-content-grid">
             <!-- LEFT: Links -->
             <div class="nav-left">
                 <ul class="navbar-nav gap-3 ms-0">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Store</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" onclick="toggleCollections(event)">Collections</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">About Us</a></li>
@@ -764,7 +824,7 @@
 
                     <!-- Wishlist -->
                     <!-- Wishlist -->
-                    <a class="nav-icon" href="{{ route('wishlist.index') }}" data-tooltip="Wishlist" style="transform: translateY(-2px);">
+                    <a class="nav-icon" href="{{ route('wishlist.index') }}" data-tooltip="Wishlist" style="transform: translateY(0px);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 32 32" class="wishlist-devil-heart">
                             <!-- Bat Wings (appear on hover) -->
                             <g class="devil-wings">
@@ -980,10 +1040,6 @@
     <div class="close-btn" onclick="toggleMobileMenu()">&times;</div>
     <div class="d-flex flex-column align-items-center h-100 gap-2" style="padding-top: 40px; overflow-y: auto;">
         <div class="mobile-menu-grid">
-            <a href="/" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.1s;">
-                Home
-                <span>ホーム</span>
-            </a>
             <a href="{{ route('products.index') }}" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.2s;">
                 Store
                 <span>商店</span>

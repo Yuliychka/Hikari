@@ -9,7 +9,7 @@ class FlashSale extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'slug', 'banner_image', 'end_time', 'is_active'];
+    protected $fillable = ['title', 'description', 'slug', 'banner_image', 'end_time', 'is_active'];
 
     protected $casts = [
         'end_time' => 'datetime',
@@ -18,6 +18,6 @@ class FlashSale extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'flash_sale_product');
+        return $this->belongsToMany(Product::class, 'flash_sale_product')->withPivot('discount_percentage');
     }
 }

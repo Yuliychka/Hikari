@@ -173,6 +173,13 @@
                 display: block;
             }
         }
+
+        /* Badge Hover Persistence */
+        .new-arrival-card:hover .badge-row,
+        .manga-card:hover .badge-row {
+            opacity: 0.5 !important;
+            visibility: visible !important;
+        }
         
     </style>
 @endpush
@@ -278,7 +285,9 @@
                 @forelse($products as $product)
                 <div class="col-sm-6 col-md-4 col-lg-4">
                     @include('partials.product-card', [
-                        'delay' => $loop->iteration * 50
+                        'delay'     => $loop->iteration * 50,
+                        'cardClass' => $product->created_at->gt(now()->subDays(7)) ? 'new-arrival-card' : 'manga-card',
+                        'badge'     => $product->created_at->gt(now()->subDays(7)) ? 'NEW' : null
                     ])
                 </div>
                 @empty
