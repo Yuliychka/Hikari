@@ -23,7 +23,6 @@
             min-height: 100vh;
         }
 
-        /* Showroom Container */
         .product-showroom {
             min-height: 100vh;
             padding: 60px 0;
@@ -39,6 +38,8 @@
             border-radius: 24px;
             padding: 60px;
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
         .breadcrumb-showroom {
@@ -120,6 +121,13 @@
         }
 
         /* Typography & Components */
+        .gradient-text-premium {
+            background: linear-gradient(135deg, #ff4d4d, #cc0000, #ff1a1a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(220, 20, 60, 0.3);
+        }
+
         .badge-category {
             background: rgba(220, 20, 60, 0.1);
             color: #ff4d4d;
@@ -135,11 +143,12 @@
 
         .product-name {
             font-weight: 800;
-            font-size: 3.2rem;
+            font-size: 3.5rem;
             margin: 10px 0;
             line-height: 1.1;
             color: #fff;
-            letter-spacing: -1px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .price-badge-showroom {
@@ -222,6 +231,7 @@
 
         .btn-wish-icon:hover {
             background: rgba(255, 255, 255, 0.06);
+            color: crimson;
         }
     </style>
 </head>
@@ -250,7 +260,11 @@
                             <div class="main-image-viewport" data-aos="zoom-in" data-aos-delay="200">
                                 <img src="{{ Str::startsWith($item->image, 'http') ? $item->image : asset('storage/' . $item->image) }}" alt="{{ $item->name }}" id="mainImage">
                                 
-                                @if($item->discount_active)
+                                @if($item->active_flash_sale)
+                                    <div class="position-absolute top-0 end-0 p-4">
+                                        <span class="badge bg-danger rounded-pill px-3 py-2 fw-bold shadow"><i class="bi bi-lightning-charge-fill me-1"></i> FLASH SALE</span>
+                                    </div>
+                                @elseif($item->discount_active)
                                     <div class="position-absolute top-0 end-0 p-4">
                                         <span class="badge bg-danger rounded-pill px-3 py-2 fw-bold shadow">PROMO</span>
                                     </div>
@@ -285,15 +299,17 @@
                                     @endif
                                 </div>
                                 <div class="price-badge-showroom">
-                                    ${{ number_format($item->price, 2) }}
-                                    @if($item->discount_active && $item->old_price)
+                                    ${{ number_format($item->effective_price, 2) }}
+                                    @if($item->active_flash_sale)
+                                        <span class="price-old">${{ number_format($item->price, 2) }}</span>
+                                    @elseif($item->discount_active && $item->old_price)
                                         <span class="price-old">${{ number_format($item->old_price, 2) }}</span>
                                     @endif
                                 </div>
                             </div>
 
                             <!-- Main Headings -->
-                            <h1 class="product-name">{{ $item->name }}</h1>
+                            <h1 class="product-name gradient-text-premium">{{ $item->name }}</h1>
                             <div class="mb-4">
                                 <span class="text-white-50 small font-monospace">REF: {{ $item->sku ?? 'HK-'.$item->id }}</span>
                             </div>
@@ -315,7 +331,7 @@
                             </div>
 
                             <!-- Stock Status -->
-                            <div class="mb-4">
+                            <div class="mb-4 mt-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="badge {{ $item->status && $item->stock_quantity > 0 ? 'bg-success' : 'bg-danger' }} rounded-pill px-3 py-1 bg-opacity-10 text-{{ $item->status && $item->stock_quantity > 0 ? 'success' : 'danger' }} border border-{{ $item->status && $item->stock_quantity > 0 ? 'success' : 'danger' }} border-opacity-25" style="font-size: 0.75rem;">
                                         {{ $item->status && $item->stock_quantity > 0 ? 'READY TO ACQUIRE' : 'ARCHIVED' }}
@@ -378,7 +394,7 @@
                         <div class="premium-glass-card p-3 h-100 border-white border-opacity-10 hover-scale" style="padding: 15px !important; border-radius: 15px !important;">
                             <img src="{{ Str::startsWith($similar->image, 'http') ? $similar->image : asset('storage/' . $similar->image) }}" class="rounded-3 w-100 mb-3 shadow" style="height: 180px; object-fit: cover;">
                             <h6 class="text-white mb-2 fw-bold small text-uppercase">{{ $similar->name }}</h6>
-                            <span class="text-danger fw-bold small">${{ number_format($similar->price, 2) }}</span>
+                            <span class="text-danger fw-bold small">${{ number_format($similar->effective_price, 2) }}</span>
                         </div>
                     </a>
                 </div>
@@ -425,7 +441,7 @@
 
                 <div class="reviews-list">
                     @forelse($item->reviews->where('is_visible', true) as $review)
-                        <div class="premium-glass-card p-4 mb-4 rounded-3 border-white border-opacity-5">
+                        <div class="premium-glass-card p-4 mb-4 rounded-4 border-white border-opacity-5">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
                                     <h6 class="text-white mb-1 fw-bold small text-uppercase">{{ $review->user->name }}</h6>

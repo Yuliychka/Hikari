@@ -45,7 +45,15 @@
     @endphp
 
     @if(count($badgeList) > 0)
-        <div class="badge-row position-absolute d-flex flex-row gap-2" style="top: 15px; left: 15px; z-index: 1000; pointer-events: none;">
+        <!-- Force badge hide on card hover, overriding all localized styles -->
+        <style>
+            .card:hover .badge-row {
+                opacity: 0 !important;
+                visibility: hidden !important;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+        </style>
+        <div class="badge-row position-absolute d-flex flex-row gap-2" style="top: 15px; left: 15px; z-index: 1000; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease;">
             @foreach($badgeList as $label)
                 <span class="badge bg-danger text-white shadow-lg px-2 py-1" 
                       style="font-family: 'Poppins', sans-serif; font-size: 0.7rem; font-weight: 800; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 10px crimson; letter-spacing: 1px; min-width: 60px; text-align: center; display: inline-block !important;">
@@ -87,11 +95,26 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex flex-column">
                     @if($isSale)
-                        <span class="text-secondary text-decoration-line-through mb-n1" style="font-size: 0.75rem;">${{ number_format($product->price, 2) }}</span>
+                        <style>
+                            /* Force the swap specifically for this component */
+                            .card .price-new { display: none !important; }
+                            .card:hover .price-old { display: none !important; }
+                            .card:hover .price-new { display: inline-block !important; }
+                        </style>
+                        <!-- Default view: Old Price -->
+                        <span class="price price-old fs-5 fw-bold text-decoration-line-through" style="background: #000; color: #fff; padding: 2px 8px; border: 1px solid crimson; box-shadow: 2px 2px 0 crimson; transition: none;">
+                            ${{ number_format($product->price, 2) }}
+                        </span>
+                        <!-- Hover view: New Price -->
+                        <span class="price price-new fs-5 fw-bold" style="background: #000; color: #fff; padding: 2px 8px; border: 1px solid crimson; box-shadow: 2px 2px 0 crimson; transition: none;">
+                            ${{ number_format($finalPrice, 2) }}
+                        </span>
+                    @else
+                        <!-- Normal Non-Sale Price -->
+                        <span class="price fs-5 fw-bold" style="background: #000; color: #fff; padding: 2px 8px; border: 1px solid crimson; box-shadow: 2px 2px 0 crimson; transition: none;">
+                            ${{ number_format($finalPrice, 2) }}
+                        </span>
                     @endif
-                    <span class="price fs-5 fw-bold" style="background: #000; color: #fff; padding: 2px 8px; border: 1px solid crimson; box-shadow: 2px 2px 0 crimson; transition: all 0.3s ease;">
-                        ${{ number_format($finalPrice, 2) }}
-                    </span>
                 </div>
             <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm {{ $btnClass ?? 'btn-outline-dark border-2 hover-crimson' }} fw-bold rounded-0">VIEW</a>
         </div>

@@ -9,7 +9,7 @@
 
     <!-- Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Poppins:wght@300;400;600&family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -244,6 +244,19 @@
         .pagination .flex-sm-fill > div:first-child {
             display: none !important;
         }
+
+        /* ── GLOBAL HOVER INTERACTIONS: Badge Hiding & Price Swap ── */
+        /* Hide all badges on card hover */
+        .card:hover .badge-row {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        /* Simple Price Swap (Prevents layout breakage) */
+        .price-new { display: none !important; }
+        .card:hover .price-old { display: none !important; }
+        .card:hover .price-new { display: inline-block !important; }
     </style>
     @stack('styles')
 </head>

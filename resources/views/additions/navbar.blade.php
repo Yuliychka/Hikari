@@ -136,6 +136,23 @@
         }
     }
 
+    /* Ultra-small Mobile Fix (< 410px) */
+    @media (max-width: 410px) {
+        /* Hide navbar top icons to prevent layout breaking */
+        .hide-on-xs {
+            display: none !important;
+        }
+        /* Show the fallback icons inside the mobile menu */
+        .show-only-on-xs {
+            display: flex !important;
+        }
+    }
+    @media (min-width: 411px) {
+        .show-only-on-xs {
+            display: none !important;
+        }
+    }
+
     /* Scaling for Intermediate Desktop/Tablet Screens */
     @media (max-width: 1400px) and (min-width: 992px) {
         .nav-content-grid {
@@ -959,8 +976,8 @@
             <!-- RIGHT: Basic Icons -->
             <div class="nav-right">
                 <div class="nav-icons" style="gap: 12px;">
-                    <!-- Wishlist -->
-                    <a class="nav-icon text-center text-decoration-none" href="{{ route('wishlist.index') }}" data-tooltip="Wishlist" style="width: auto; height: auto;">
+                    <!-- Wishlist (Hide on ultra small) -->
+                    <a class="nav-icon hide-on-xs text-center text-decoration-none" href="{{ route('wishlist.index') }}" data-tooltip="Wishlist" style="width: auto; height: auto;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 32 32" class="wishlist-devil-heart">
                             <!-- Bat Wings (appear on hover) -->
                             <g class="devil-wings">
@@ -985,8 +1002,8 @@
                         </svg>
                     </a>
 
-                    <!-- Simple Cart -->
-                    <a class="nav-icon text-center text-decoration-none" href="{{ route('cart.index') }}" data-tooltip="Cart" style="width: auto; height: auto;">
+                    <!-- Simple Cart (Hide on ultra small) -->
+                    <a class="nav-icon hide-on-xs text-center text-decoration-none" href="{{ route('cart.index') }}" data-tooltip="Cart" style="width: auto; height: auto;">
                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M2 12 L12 7 L22 12" stroke="currentColor" stroke-width="2" fill="none"/>
                           <rect x="4" y="12" width="16" height="8" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -1055,6 +1072,16 @@
             <a href="{{ route('contact') }}" class="collection-item d-flex flex-column align-items-center" style="transition-delay: 0.45s;">
                 Contact Us
                 <span>お問い合わせ</span>
+            </a>
+            
+            <!-- Fallback Icons for ultra small screens -->
+            <a href="{{ route('wishlist.index') }}" class="collection-item flex-column align-items-center show-only-on-xs" style="transition-delay: 0.45s;">
+                Wishlist
+                <span>ウィッシュリスト</span>
+            </a>
+            <a href="{{ route('cart.index') }}" class="collection-item flex-column align-items-center show-only-on-xs" style="transition-delay: 0.45s;">
+                Cart
+                <span>カート</span>
             </a>
 
             @auth

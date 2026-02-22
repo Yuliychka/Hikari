@@ -2,14 +2,21 @@
 
 @php
     $title = 'Shop - Hikari Anime Store';
+    $sloganTitle = \App\Models\Setting::get('store_slogan_title', 'Anime Collection');
+    $sloganSubtitle = \App\Models\Setting::get('store_slogan_subtitle', 'Discover Your Next Obsession');
+    $sloganImage = \App\Models\Setting::get('store_slogan_image', null);
 @endphp
 
 @push('styles')
     <style>
         .page-header {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1578632738981-43c945b69f7a?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+            @if($sloganImage)
+                background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ asset('storage/' . $sloganImage) }}');
+                background-size: cover;
+                background-position: center;
+            @else
+                background: #050505; /* Sleek solid black fallback */
+            @endif
             padding: 5rem 0;
             text-align: center;
             border-bottom: 4px solid crimson;
@@ -173,21 +180,14 @@
                 display: block;
             }
         }
-
-        /* Badge Hover Persistence */
-        .new-arrival-card:hover .badge-row,
-        .manga-card:hover .badge-row {
-            opacity: 0.5 !important;
-            visibility: visible !important;
-        }
         
     </style>
 @endpush
 
 @section('content')
 <header class="page-header">
-    <h1 class="display-3 mt-5" style="font-family: 'Kaushan Script', cursive; color: crimson; text-shadow: 2px 2px 0 #fff;">Anime Collection</h1>
-    <p class="lead text-white-50">Discover Your Next Obsession</p>
+    <h1 class="display-3 mt-5" style="font-family: 'Kaushan Script', cursive; color: crimson; text-shadow: 2px 2px 0 #fff;">{{ $sloganTitle }}</h1>
+    <p class="lead text-white-50">{{ $sloganSubtitle }}</p>
 </header>
 
 <div class="container py-5">
@@ -285,8 +285,9 @@
                 @forelse($products as $product)
                 <div class="col-sm-6 col-md-4 col-lg-4">
                     @include('partials.product-card', [
+                        'product'   => $product,
                         'delay'     => $loop->iteration * 50,
-                        'cardClass' => $product->created_at->gt(now()->subDays(7)) ? 'new-arrival-card' : 'manga-card',
+                        'cardClass' => 'manga-card',
                         'badge'     => $product->created_at->gt(now()->subDays(7)) ? 'NEW' : null
                     ])
                 </div>

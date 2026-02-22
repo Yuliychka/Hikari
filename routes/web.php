@@ -117,6 +117,13 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::post('intro-panels/update-settings', [App\Http\Controllers\Admin\AdminIntroPanelController::class, 'updateSettings'])->name('intro-panels.update-settings');
     Route::resource('promo-banners', App\Http\Controllers\Admin\AdminPromoBannerController::class);
     
+    // Store Slogan
+    Route::get('store-slogan', [App\Http\Controllers\Admin\AdminStoreSloganController::class, 'index'])->name('store-slogan.index');
+    Route::post('store-slogan', [App\Http\Controllers\Admin\AdminStoreSloganController::class, 'update'])->name('store-slogan.update');
+    
+    Route::get('contact-slogan', [App\Http\Controllers\Admin\AdminContactSloganController::class, 'index'])->name('contact-slogan.index');
+    Route::post('contact-slogan', [App\Http\Controllers\Admin\AdminContactSloganController::class, 'update'])->name('contact-slogan.update');
+    
     // Keep old route for backward compatibility (optional)
     Route::resource('banners', App\Http\Controllers\Admin\AdminBannerController::class);
 

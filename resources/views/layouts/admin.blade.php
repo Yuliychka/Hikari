@@ -426,10 +426,10 @@
             </a>
             
             <!-- Collapsible Banners & Media Menu -->
-            <div class="nav-link nav-parent {{ request()->routeIs('admin.hero-banners.*') || request()->routeIs('admin.intro-panels.*') || request()->routeIs('admin.promo-banners.*') ? 'open' : '' }}" onclick="toggleBannerMenu()">
+            <div class="nav-link nav-parent {{ request()->routeIs('admin.hero-banners.*') || request()->routeIs('admin.intro-panels.*') || request()->routeIs('admin.promo-banners.*') || request()->routeIs('admin.store-slogan.*') || request()->routeIs('admin.contact-slogan.*') || request()->routeIs('admin.card-assets.*') ? 'open' : '' }}" onclick="toggleBannerMenu()">
                 <span class="nav-text">Media</span>
             </div>
-            <div class="nav-children {{ request()->routeIs('admin.hero-banners.*') || request()->routeIs('admin.intro-panels.*') || request()->routeIs('admin.promo-banners.*') ? 'open' : '' }}" id="bannerMenu">
+            <div class="nav-children {{ request()->routeIs('admin.hero-banners.*') || request()->routeIs('admin.intro-panels.*') || request()->routeIs('admin.promo-banners.*') || request()->routeIs('admin.store-slogan.*') || request()->routeIs('admin.contact-slogan.*') || request()->routeIs('admin.card-assets.*') ? 'open' : '' }}" id="bannerMenu">
                 <a class="nav-child {{ request()->routeIs('admin.hero-banners.*') ? 'active' : '' }}" href="{{ route('admin.hero-banners.index') }}">
                     Hero Banners
                 </a>
@@ -438,6 +438,15 @@
                 </a>
                 <a class="nav-child {{ request()->routeIs('admin.promo-banners.*') ? 'active' : '' }}" href="{{ route('admin.promo-banners.index') }}">
                     Promo Banners
+                </a>
+                <a class="nav-child {{ request()->routeIs('admin.store-slogan.*') ? 'active' : '' }}" href="{{ route('admin.store-slogan.index') }}">
+                    Store Slogun
+                </a>
+                <a class="nav-child {{ request()->routeIs('admin.contact-slogan.*') ? 'active' : '' }}" href="{{ route('admin.contact-slogan.index') }}">
+                    Contact Slogan
+                </a>
+                <a class="nav-child {{ request()->routeIs('admin.card-assets.*') ? 'active' : '' }}" href="{{ route('admin.card-assets.index') }}">
+                    Card Assets
                 </a>
             </div>
             

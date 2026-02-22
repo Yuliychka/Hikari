@@ -395,32 +395,22 @@
             margin: -20px -15px -40px -15px !important;
         }
 
-        /* ── NEW ARRIVALS CARD: Anime Vibe ─────────────────── */
+        /* ── NEW ARRIVALS CARD: Cyber Glow ─────────────────── */
         .new-arrival-card {
-            background: linear-gradient(160deg, #0d0d0d 50%, #1c0003 100%);
-            border: 2px solid rgba(220, 20, 60, 0.6);
-            box-shadow: 5px 5px 0 rgba(220,20,60,0.35), 0 0 25px rgba(220,20,60,0.12);
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             position: relative;
             overflow: visible;
-            transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),
-                        box-shadow 0.35s ease, border-color 0.35s ease;
+            transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.4s ease, border-color 0.4s ease;
             width: 100%;
             display: flex !important;
             flex-direction: column !important;
         }
-        /* Floating Badge (Pill Style) */
-        /* Removed CSS Badge - now handled in product-card partial */
-        /* Remove triangle */
-        .new-arrival-card::before { display: none; }
-
-        /* On hover: slightly dim badges to focus on image, but keep visible */
-        .new-arrival-card:hover .badge-row,
-        .bestseller-anime-card:hover .badge-row,
-        .manga-card:hover .badge-row,
-        .bestseller-card:hover .badge-row {
-            opacity: 0.5 !important;
-            visibility: visible !important;
-        }
+        /* Card view button reveal on hover */
         .new-arrival-card:hover .card-action-btn {
             opacity: 1 !important;
             visibility: visible !important;
@@ -431,19 +421,19 @@
         .new-arrival-card:hover {
             transform: translateY(-8px);
             border-color: crimson;
-            box-shadow: 0 12px 0 rgba(220,20,60,0.6), 0 0 35px rgba(220,20,60,0.4);
+            box-shadow: 0 15px 35px rgba(220, 20, 60, 0.2), 0 0 15px rgba(220,20,60,0.2) !important;
         }
         .new-arrival-card .card-img-top {
-            filter: grayscale(20%) contrast(1.1);
-            border-bottom: 2px solid rgba(220,20,60,0.5);
-            transition: filter 0.4s ease, transform 0.45s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.6s ease;
             width: 100%;
             aspect-ratio: 2/3;
             object-fit: cover;
             display: block;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
         .new-arrival-card:hover .card-img-top {
-            filter: grayscale(0%) contrast(1);
             transform: scale(1.05);
         }
         .new-arrival-card .card-body {
@@ -461,7 +451,6 @@
             color: #fff;
             font-size: 0.88rem;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(220,20,60,0.5);
             margin-bottom: 0.15rem;
             white-space: nowrap;
             overflow: hidden;
@@ -481,34 +470,26 @@
             font-weight: 900;
             font-size: 0.95rem;
             border: none;
-            box-shadow: 2px 2px 0 #fff;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(220, 20, 60, 0.3);
         }
-        /* Standardized Large View Button handled below */
-        /* hide the badge element — corner ::after is the label */
-        /* Badge suppression removed */
         /* ────────────────────────────────────────────────── */
 
-        /* ── BEST SELLERS CARD: Same family, crimson ─────── */
+        /* ── BEST SELLERS CARD: Cyber Glow ─────── */
         .bestseller-anime-card {
-            background: linear-gradient(160deg, #0d0d0d 50%, #1c0003 100%);
-            border: 2px solid rgba(220, 20, 60, 0.6);
-            box-shadow: 5px 5px 0 rgba(220,20,60,0.35), 0 0 25px rgba(220,20,60,0.12);
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             position: relative;
             overflow: visible;
-            transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),
-                        box-shadow 0.35s ease, border-color 0.35s ease;
+            transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.4s ease, border-color 0.4s ease;
             width: 100%;
             height: 100% !important;
             display: flex !important;
             flex-direction: column !important;
-        }
-        /* Floating Badge (Pill Style) */
-        /* Removed CSS HOT badge - now handled in product-card partial */
-        /* Remove triangle */
-        .bestseller-anime-card::before { display: none; }
-        .bestseller-anime-card:hover::before,
-        .bestseller-anime-card:hover::after {
-            opacity: 0;
         }
         .bestseller-anime-card:hover .card-action-btn {
             opacity: 1 !important;
@@ -519,19 +500,19 @@
         .bestseller-anime-card:hover {
             transform: translateY(-8px);
             border-color: crimson;
-            box-shadow: 0 12px 0 rgba(220,20,60,0.6), 0 0 35px rgba(220,20,60,0.4);
+            box-shadow: 0 15px 35px rgba(220, 20, 60, 0.2), 0 0 15px rgba(220,20,60,0.2) !important;
         }
         .bestseller-anime-card .card-img-top {
-            filter: grayscale(20%) contrast(1.1);
-            border-bottom: 2px solid rgba(220,20,60,0.5);
-            transition: filter 0.4s ease, transform 0.45s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.6s ease;
             width: 100%;
             aspect-ratio: 2/3;
             object-fit: cover;
             display: block;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
         .bestseller-anime-card:hover .card-img-top {
-            filter: grayscale(0%) contrast(1);
             transform: scale(1.05);
         }
         .bestseller-anime-card .card-body {
@@ -549,7 +530,6 @@
             color: #fff;
             font-size: 0.88rem;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(220,20,60,0.5);
             margin-bottom: 0.15rem;
             white-space: nowrap;
             overflow: hidden;
@@ -569,25 +549,26 @@
             font-weight: 900;
             font-size: 0.95rem;
             border: none;
-            box-shadow: 2px 2px 0 #fff;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(220, 20, 60, 0.3);
         }
         .bestseller-anime-card .btn-view, .new-arrival-card .btn-view {
-            background: transparent;
-            color: #666;
-            border: 1.5px solid #555;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             font-weight: 700;
             text-transform: uppercase;
             font-size: 0.7rem;
             letter-spacing: 1px;
             padding: 6px 18px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 4px;
+            border-radius: 8px;
         }
         .bestseller-anime-card .btn-view:hover, .new-arrival-card .btn-view:hover {
-            background: #555;
-            color: crimson;
-            border-color: #555;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+            background: crimson;
+            color: white;
+            border-color: crimson;
+            box-shadow: 0 5px 15px rgba(220, 20, 60, 0.4);
         }
         .bestseller-anime-card .badge { display: none !important; }
         /* ────────────────────────────────────────────────── */
@@ -686,6 +667,106 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
+        }
+        
+        /* Flash Sale Responsiveness */
+        /* Desktop: Show 2, hide 3rd */
+        .flash-item-2 { display: none; }
+        
+        .flash-btn-mobile-wrapper { display: none; }
+        .flash-btn-desktop { display: inline-block !important; }
+        
+        @media (max-width: 1200px) {
+            /* tablet: Show 1 to prevent squishing */
+            .flash-item-1 { display: none; }
+            .flash-item-2 { display: none; }
+        }
+        
+        @media (max-width: 991px) {
+            .flash-sale-split {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .flash-info-side {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            #flash-countdown {
+                justify-content: center;
+            }
+            .flash-products-side {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .flash-item-0, .flash-item-1, .flash-item-2 { display: block !important; }
+            
+            .flash-btn-desktop { display: none !important; }
+            .flash-btn-mobile-wrapper { display: block; margin-top: 20px; }
+        }
+        
+        @media (max-width: 768px) {
+            /* Drop to 2 cards instead of wrapping */
+            .flash-products-side { grid-template-columns: repeat(2, 1fr); }
+            .flash-item-2 { display: none !important; }
+        }
+        
+        @media (max-width: 500px) {
+            /* Drop to 1 card for very small phones, center it and prevent stretching */
+            .flash-products-side { 
+                grid-template-columns: minmax(auto, 280px); 
+                justify-content: center;
+                padding: 0 10px; 
+            }
+            .flash-item-1 { display: none !important; }
+            
+            /* Shrink actual JS timer elements so they fit perfectly */
+            #flash-countdown {
+                gap: 5px !important;
+            }
+            .timer-unit {
+                min-width: 60px !important;
+                padding: 8px 5px !important;
+                border-width: 1px !important;
+            }
+            .timer-val {
+                font-size: 1.4rem !important;
+            }
+            .timer-label {
+                font-size: 0.55rem !important;
+                letter-spacing: 0px !important;
+            }
+        }
+        
+        /* Best Sellers Grid Responsiveness (Squeeze and Hide) */
+        .bestseller-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 1200px) {
+            .bestseller-grid { grid-template-columns: repeat(3, 1fr); }
+            .bs-item-3 { display: none !important; }
+        }
+        
+        @media (max-width: 991px) {
+            .bestseller-grid { grid-template-columns: repeat(2, 1fr); }
+            .bs-item-2 { display: none !important; }
+        }
+        
+        @media (max-width: 500px) {
+            /* Drop to 1 card for very small phones, center it and prevent stretching */
+            .bestseller-grid { 
+                grid-template-columns: minmax(auto, 280px); 
+                justify-content: center;
+                padding: 0 10px; 
+            }
+            .bs-item-1 { display: none !important; }
         }
         
         .timer-box {
@@ -1130,22 +1211,22 @@
                                 </h2>
                                 
                                 @if(isset($activeFlashSale) && $activeFlashSale->description)
-                                    <p class="lead text-white mb-5 fs-5" style="max-width: 400px; font-family: 'Inter', sans-serif; font-weight: 300; opacity: 0.85; line-height: 1.8; word-wrap: break-word; background: transparent; border: none; padding: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                                    <p class="lead text-white mt-4 mb-5" style="max-width: 400px; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.15rem; font-weight: 400; opacity: 0.95; line-height: 1.8; letter-spacing: 0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">
                                         {{ $activeFlashSale->description }}
                                     </p>
                                 @endif
                                 
                                 <div class="d-flex mb-5 gap-3" id="flash-countdown"></div>
                                 
-                                <a href="{{ $flashLink }}" class="btn-minecraft">
+                                <a href="{{ $flashLink }}" class="btn-minecraft flash-btn-desktop">
                                     {{ $promoBanner->btn_text ?? 'See All Deals' }}
                                 </a>
                             </div>
                             
                             <div class="flash-products-side" data-aos="fade-left">
                                 @if(isset($activeFlashSale) && $activeFlashSale->products->count() > 0)
-                                    @foreach($activeFlashSale->products->take(2) as $fProduct)
-                                        <div class="mini-card-flash h-100 p-2" style="background: rgba(220, 20, 60, 0.05); border: 1px solid rgba(220, 20, 60, 0.2); border-radius: 12px; transition: all 0.3s ease;">
+                                    @foreach($activeFlashSale->products->take(3) as $index => $fProduct)
+                                        <div class="mini-card-flash h-100 p-2 flash-item-{{ $index }}" style="min-width: 0; background: rgba(220, 20, 60, 0.05); border: 1px solid rgba(220, 20, 60, 0.2); border-radius: 12px; transition: all 0.3s ease;">
                                             @include('partials.product-card', [
                                                 'product' => $fProduct,
                                                 'cardClass' => 'new-arrival-card',
@@ -1155,11 +1236,18 @@
                                         </div>
                                     @endforeach
                                 @else
-                                    <div class="text-center text-white-50 p-5">
+                                    <div class="text-center text-white-50 p-5 w-100">
                                         <i class="bi bi-lightning-charge-fill display-1 mb-3"></i>
                                         <p class="lead">Mega Deals Coming Soon</p>
                                     </div>
                                 @endif
+                            </div>
+                            
+                            <!-- Mobile-only Button -->
+                            <div class="w-100 text-center flash-btn-mobile-wrapper">
+                                <a href="{{ $flashLink }}" class="btn-minecraft">
+                                    {{ $promoBanner->btn_text ?? 'See All Deals' }}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1172,10 +1260,10 @@
     <!-- Best Sellers -->
     <section class="container py-5">
         <h2 class="section-header" data-aos="zoom-in">Best Sellers</h2>
-        <div class="row g-4">
+        <div class="bestseller-grid mt-4">
             @if(isset($bestSellers) && count($bestSellers) > 0)
-            @foreach($bestSellers as $index => $product)
-            <div class="col-lg-3 col-md-4 col-sm-6 h-100">
+            @foreach($bestSellers->take(4) as $index => $product)
+            <div class="h-100 bs-item-{{ $index }}" style="min-width: 0;">
                 <div class="h-100">
                 @include('partials.product-card', [
                     'delay'     => $index * 100,
@@ -1187,7 +1275,7 @@
             </div>
             @endforeach
             @else
-             <div class="col-12 text-center text-white-50">
+             <div class="text-center text-white-50 w-100" style="grid-column: 1 / -1;">
                 <p>Best sellers coming soon.</p>
             </div>
             @endif
@@ -1585,10 +1673,26 @@
                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
                     
                     let html = '';
-                    if (days > 0) html += `<div class="timer-box"><h3>${days}</h3><small>Days</small></div>`;
-                    if (hours > 0) html += `<div class="timer-box"><h3>${hours < 10 ? '0'+hours : hours}</h3><small>Hrs</small></div>`;
-                    if (minutes > 0) html += `<div class="timer-box"><h3>${minutes < 10 ? '0'+minutes : minutes}</h3><small>Min</small></div>`;
-                    if (seconds > 0) html += `<div class="timer-box"><h3>${seconds < 10 ? '0'+seconds : seconds}</h3><small>Sec</small></div>`;
+                    
+                    if (window.innerWidth <= 500) {
+                        // Tiny Mobile: Single combined box
+                        let combinedTime = '';
+                        if (days > 0) combinedTime += `${days}d `;
+                        combinedTime += `${hours < 10 ? '0'+hours : hours}h `;
+                        combinedTime += `${minutes < 10 ? '0'+minutes : minutes}m `;
+                        combinedTime += `${seconds < 10 ? '0'+seconds : seconds}s`;
+                        
+                        html = `<div class="timer-box" style="padding: 15px 30px; min-width: 250px;">
+                                    <h3 style="font-size: 1.8rem; letter-spacing: 2px;">${combinedTime}</h3>
+                                    <small style="font-size: 0.75rem;">Time Remaining</small>
+                                </div>`;
+                    } else {
+                        // Desktop/Tablet: Split boxes
+                        if (days > 0) html += `<div class="timer-box"><h3>${days}</h3><small>Days</small></div>`;
+                        if (hours > 0) html += `<div class="timer-box"><h3>${hours < 10 ? '0'+hours : hours}</h3><small>Hrs</small></div>`;
+                        if (minutes > 0) html += `<div class="timer-box"><h3>${minutes < 10 ? '0'+minutes : minutes}</h3><small>Min</small></div>`;
+                        if (seconds > 0) html += `<div class="timer-box"><h3>${seconds < 10 ? '0'+seconds : seconds}</h3><small>Sec</small></div>`;
+                    }
                     
                     countdownEl.innerHTML = html;
                 }, 1000);

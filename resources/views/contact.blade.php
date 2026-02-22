@@ -2,14 +2,27 @@
 
 @php
     $title = 'Contact Us - Hikari Anime Store';
+    $sloganTitle = \App\Models\Setting::get('contact_slogan_title', 'Contact Us');
+    $sloganSubtitle = \App\Models\Setting::get('contact_slogan_subtitle', 'Have a Question? Our Team is Ready to Help.');
+    $sloganImage = \App\Models\Setting::get('contact_slogan_image', null);
+    
+    $hqAddress = \App\Models\Setting::get('contact_hq_address', "Akihabara District, 1-2-3 Chiyoda\nTokyo, Japan 101-0021");
+    $emailSupport1 = \App\Models\Setting::get('contact_email_support_1', 'support@hikari-store.jp');
+    $emailSupport2 = \App\Models\Setting::get('contact_email_support_2', 'orders@hikari-store.jp');
+    $phoneLine1 = \App\Models\Setting::get('contact_phone_line_1', '+81 (03) 1234-5678');
+    $phoneLine2 = \App\Models\Setting::get('contact_phone_line_2', 'Mon-Fri: 9AM - 6PM JST');
 @endphp
 
 @push('styles')
     <style>
         .contact-header {
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+            @if($sloganImage)
+                background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('{{ asset('storage/' . $sloganImage) }}');
+                background-size: cover;
+                background-position: center;
+            @else
+                background: #050505; /* Sleek solid black fallback */
+            @endif
             padding: 6rem 0;
             border-bottom: 4px solid crimson;
             text-align: center;
@@ -84,8 +97,8 @@
 @section('content')
 <header class="contact-header">
     <div class="container">
-        <h1 class="display-3 fw-bold" style="font-family: 'Kaushan Script', cursive; color: crimson; text-shadow: 3px 3px 0 #fff;">Contact Us</h1>
-        <p class="lead text-white-50">Have a Question? Our Team is Ready to Help.</p>
+        <h1 class="display-3 fw-bold" style="font-family: 'Kaushan Script', cursive; color: crimson; text-shadow: 3px 3px 0 #fff;">{{ $sloganTitle }}</h1>
+        <p class="lead text-white-50">{{ $sloganSubtitle }}</p>
     </div>
 </header>
 
@@ -98,7 +111,7 @@
                     <i class="bi bi-geo-alt-fill"></i>
                 </div>
                 <h4 class="fw-bold text-uppercase">Headquarters</h4>
-                <p class="text-secondary">Akihabara District, 1-2-3 Chiyoda<br>Tokyo, Japan 101-0021</p>
+                <p class="text-secondary">{!! nl2br(e($hqAddress)) !!}</p>
             </div>
 
             <div class="contact-info-item">
@@ -106,7 +119,12 @@
                     <i class="bi bi-envelope-at-fill"></i>
                 </div>
                 <h4 class="fw-bold text-uppercase">Email Support</h4>
-                <p class="text-secondary">support@hikari-store.jp<br>orders@hikari-store.jp</p>
+                <p class="text-secondary">
+                    {{ $emailSupport1 }}
+                    @if($emailSupport2)
+                        <br>{{ $emailSupport2 }}
+                    @endif
+                </p>
             </div>
 
             <div class="contact-info-item">
@@ -114,7 +132,12 @@
                     <i class="bi bi-telephone-outbound-fill"></i>
                 </div>
                 <h4 class="fw-bold text-uppercase">Phone Line</h4>
-                <p class="text-secondary">+81 (03) 1234-5678<br>Mon-Fri: 9AM - 6PM JST</p>
+                <p class="text-secondary">
+                    {{ $phoneLine1 }}
+                    @if($phoneLine2)
+                        <br>{{ $phoneLine2 }}
+                    @endif
+                </p>
             </div>
 
             <div class="mt-5">
