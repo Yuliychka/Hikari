@@ -143,6 +143,15 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     // Site Settings
     Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
+
+    // User & Role Management
+    Route::get('/users', [App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/create-staff', [App\Http\Controllers\Admin\AdminUserController::class, 'createStaff'])->name('users.create_staff');
+    Route::post('/users/store-staff', [App\Http\Controllers\Admin\AdminUserController::class, 'storeStaff'])->name('users.store_staff');
+    Route::post('/users/{user}/role', [App\Http\Controllers\Admin\AdminUserController::class, 'updateRole'])->name('users.update_role');
+    Route::post('/users/{user}/warning/add', [App\Http\Controllers\Admin\AdminUserController::class, 'addWarning'])->name('users.add_warning');
+    Route::post('/users/{user}/warning/remove', [App\Http\Controllers\Admin\AdminUserController::class, 'removeWarning'])->name('users.remove_warning');
+    Route::delete('/users/{user}', [App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::middleware('auth')->group(function () {

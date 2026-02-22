@@ -930,12 +930,14 @@
                                 </svg>
                             </a>
                             <div class="profile-menu">
-                                <a href="{{ route('profile.edit') }}" class="profile-item">Account Profile</a>
+                                <a href="{{ route('profile.show') }}" class="profile-item">Profile Details</a>
+                                <a href="{{ route('orders.index') }}" class="profile-item">History Order</a>
+                                <a href="{{ route('profile.edit') }}" class="profile-item">Settings</a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <a href="{{ route('logout') }}" class="profile-item" 
                                        onclick="event.preventDefault(); this.closest('form').submit();">
-                                        Logout Session
+                                        Logout
                                     </a>
                                 </form>
                             </div>
@@ -1023,23 +1025,12 @@
                             </svg>
                         </a>
                         <div class="profile-menu">
-                            <a href="{{ route('profile.show') }}" class="profile-item border-bottom border-secondary mb-2">MY FULL PROFILE</a>
-                            
-                            <!-- Section: Edit -->
-                            <div class="px-3 py-1 mb-1 bg-dark-50">
-                                <small class="text-danger-emphasis text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">Account Management</small>
-                            </div>
-                            <a href="{{ route('profile.edit') }}" class="profile-item mb-2 mt-1">EDIT MY IDENTITY</a>
-                            
-                            <!-- Section: History -->
-                            <div class="px-3 py-1 mb-1 mt-2 border-top border-secondary pt-2 bg-dark-50">
-                                <small class="text-danger-emphasis text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">Command History</small>
-                            </div>
-                            <a href="{{ route('orders.index') }}" class="profile-item mb-2 mt-1">ORDER HISTORY</a>
-                            
-                            <form method="POST" action="{{ route('logout') }}" class="border-top border-dark mt-2 pt-2">
+                            <a href="{{ route('profile.show') }}" class="profile-item">Profile Details</a>
+                            <a href="{{ route('orders.index') }}" class="profile-item">History Order</a>
+                            <a href="{{ route('profile.edit') }}" class="profile-item">Settings</a>
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="profile-item w-100 text-start border-0 bg-transparent text-danger">LOGOUT SESSION</button>
+                                <button type="submit" class="profile-item w-100 text-start border-0 bg-transparent text-danger">Logout</button>
                             </form>
                         </div>
                     </div>
@@ -1243,9 +1234,11 @@
     }
 
     // Close dropdowns on outside click
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.profile-menu, .dropdown-menu').forEach(m => m.classList.remove('show'));
-        document.querySelectorAll('.profile-dropdown, .dropdown').forEach(p => p.classList.remove('active'));
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.profile-dropdown') && !event.target.closest('.dropdown')) {
+            document.querySelectorAll('.profile-menu, .dropdown-menu').forEach(m => m.classList.remove('show'));
+            document.querySelectorAll('.profile-dropdown, .dropdown').forEach(p => p.classList.remove('active'));
+        }
     });
 
     // Scroll Transformation Logic

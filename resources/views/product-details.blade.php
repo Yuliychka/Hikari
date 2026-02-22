@@ -16,54 +16,93 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #111;
+            background-color: #080808;
             color: #fff;
             cursor: url('https://cdn.custom-cursor.com/db/cursor/32/katana_cursor.png'), auto !important;
             overflow-x: hidden;
             min-height: 100vh;
         }
 
+        /* Anime Style Background Elements */
+        .kanji-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50vw;
+            color: rgba(220, 20, 60, 0.03);
+            font-weight: 900;
+            z-index: -1;
+            pointer-events: none;
+            user-select: none;
+            line-height: 1;
+        }
+
         .product-showroom {
             min-height: 100vh;
-            padding: 60px 0;
+            padding: 80px 0;
             position: relative;
             z-index: 1;
         }
 
         .premium-glass-card {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 0;
             padding: 60px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(220, 20, 60, 0.1);
             position: relative;
             overflow: hidden;
+        }
+
+        .premium-glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border-top: 3px solid crimson;
+            border-left: 3px solid crimson;
+        }
+
+        .premium-glass-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            border-bottom: 3px solid crimson;
+            border-right: 3px solid crimson;
         }
 
         .breadcrumb-showroom {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 25px;
-            padding-left: 20px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            padding-left: 10px;
+            border-left: 3px solid crimson;
         }
 
         .breadcrumb-showroom a {
             color: #fff;
             text-decoration: none;
             opacity: 0.6;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
         }
 
         .breadcrumb-showroom a:hover {
             opacity: 1;
             color: crimson;
+            text-shadow: 0 0 10px crimson;
         }
 
-        /* Image Display Logic (4:5 Hybrid) */
+        /* Cyber Showcase */
         .image-showcase {
             position: relative;
             width: 100%;
@@ -73,171 +112,237 @@
 
         .main-image-viewport {
             position: relative;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             aspect-ratio: 4 / 5;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .main-image-viewport::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
         }
 
         .main-image-viewport:hover {
+            border-color: crimson;
+            box-shadow: 0 0 40px rgba(220, 20, 60, 0.2);
             transform: scale(1.02);
         }
 
         .main-image-viewport img {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 85%;
+            max-height: 85%;
             object-fit: contain;
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 0 20px rgba(220, 20, 60, 0.2));
+            z-index: 1;
+            transition: transform 0.5s ease;
         }
 
-        /* Refined Thumbnails */
+        .main-image-viewport:hover img {
+            transform: scale(1.05);
+        }
+
         .thumb-nav {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 12px;
+            margin-top: 25px;
         }
 
         .thumb-item {
-            width: 70px;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.03);
+            width: 65px;
+            height: 65px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .thumb-item.active {
             border-color: crimson;
-            background: rgba(220, 20, 60, 0.1);
-            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
+            transform: translateY(-3px);
         }
 
-        /* Typography & Components */
-        .gradient-text-premium {
-            background: linear-gradient(135deg, #ff4d4d, #cc0000, #ff1a1a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(220, 20, 60, 0.3);
+        /* Typography */
+        .artifact-label {
+            font-family: 'Kaushan Script', cursive;
+            color: crimson;
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 5px;
         }
 
-        .badge-category {
-            background: rgba(220, 20, 60, 0.1);
-            color: #ff4d4d;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid rgba(220, 20, 60, 0.2);
-            display: inline-block;
+        .product-name-container {
+            position: relative;
+            margin-bottom: 20px;
         }
 
         .product-name {
-            font-weight: 800;
-            font-size: 3.5rem;
-            margin: 10px 0;
-            line-height: 1.1;
+            font-weight: 900;
+            font-size: 4rem;
+            line-height: 1;
             color: #fff;
-            letter-spacing: 2px;
             text-transform: uppercase;
+            letter-spacing: -2px;
+            position: relative;
+            z-index: 1;
         }
 
-        .price-badge-showroom {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #ff3333;
+        .glitch-effect {
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px crimson; }
+            2% { text-shadow: -2px -2px blue; }
+            4% { text-shadow: 0px 0px crimson; }
+            100% { text-shadow: 2px 2px crimson; }
+        }
+
+        .price-display {
+            font-size: 3rem;
+            font-weight: 900;
+            color: crimson;
             display: flex;
             align-items: baseline;
-            gap: 12px;
+            gap: 15px;
+            font-family: 'Poppins', sans-serif;
         }
 
         .price-old {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: rgba(255, 255, 255, 0.2);
             text-decoration: line-through;
             font-weight: 400;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .stat-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 1px;
-            margin-bottom: 3px;
-            display: block;
-        }
-
-        .stat-value {
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .btn-acquire {
-            background: #cc0000;
-            color: #fff;
-            border: none;
-            padding: 18px;
-            border-radius: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .btn-acquire:hover:not(:disabled) {
-            background: #e60000;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(204, 0, 0, 0.3);
-        }
-
-        .btn-wish-icon {
+        /* JRPG Stats */
+        .jrpg-stats {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .jrpg-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+        }
+
+        .jrpg-stat-row:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .jrpg-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: crimson;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .jrpg-value {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .stock-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+        }
+
+        .stock-bar-fill {
+            height: 100%;
+            background: crimson;
+            box-shadow: 0 0 10px crimson;
+        }
+
+        /* Buttons */
+        .btn-acquire-anime {
+            background: crimson;
+            color: #fff;
+            border: none;
+            padding: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            width: 100%;
+            position: relative;
+            transition: all 0.3s ease;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+        }
+
+        .btn-acquire-anime:hover:not(:disabled) {
+            background: #fff;
+            color: crimson;
+            transform: translateX(10px);
+        }
+
+        .btn-wish-anime {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff;
             width: 100%;
             height: 100%;
-            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             transition: all 0.3s ease;
         }
 
-        .btn-wish-icon:hover {
-            background: rgba(255, 255, 255, 0.06);
+        .btn-wish-anime:hover {
+            border-color: crimson;
             color: crimson;
+            background: rgba(220, 20, 60, 0.1);
         }
+
+        .theme-section-title {
+            font-family: 'Kaushan Script', cursive;
+            color: crimson;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-section-title::after {
+            content: '';
+            height: 2px;
+            flex-grow: 1;
+            background: linear-gradient(to right, crimson, transparent);
+        }
+    </style>
     </style>
 </head>
 
 <body>
     @include('additions.navbar')
+
+    <div class="kanji-watermark">光</div>
 
     <div class="product-showroom">
         <div class="container">
@@ -287,18 +392,15 @@
 
                     <!-- Product Specifications Section -->
                     <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
-                        <div class="ps-lg-4">
-                            <!-- Top Info Bar -->
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    @if($item->category)
-                                        <span class="badge-category me-2">{{ $item->category->name }}</span>
-                                    @endif
-                                    @if($item->subcategory)
-                                        <span class="badge-category">{{ $item->subcategory->name }}</span>
-                                    @endif
-                                </div>
-                                <div class="price-badge-showroom">
+                        <div class="ps-lg-5">
+                            <span class="artifact-label">ARTIFACT ACCESS</span>
+                            
+                            <div class="product-name-container">
+                                <h1 class="product-name glitch-effect">{{ $item->name }}</h1>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div class="price-display">
                                     ${{ number_format($item->effective_price, 2) }}
                                     @if($item->active_flash_sale)
                                         <span class="price-old">${{ number_format($item->price, 2) }}</span>
@@ -306,47 +408,43 @@
                                         <span class="price-old">${{ number_format($item->old_price, 2) }}</span>
                                     @endif
                                 </div>
+                                <div class="font-monospace text-white-50 small">ID: {{ $item->sku ?? 'HK-'.$item->id }}</div>
                             </div>
 
-                            <!-- Main Headings -->
-                            <h1 class="product-name gradient-text-premium">{{ $item->name }}</h1>
-                            <div class="mb-4">
-                                <span class="text-white-50 small font-monospace">REF: {{ $item->sku ?? 'HK-'.$item->id }}</span>
-                            </div>
-
-                            <!-- Dynamic Ratings -->
-                            <div class="mb-4">
-                                @php 
-                                    $avgRating = $item->reviews->avg('rating') ?: 5.0; 
-                                    $reviewCount = $item->reviews->count();
-                                @endphp
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="text-warning">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <i class="bi bi-star{{ $i <= round($avgRating) ? '-fill' : '' }}"></i>
-                                        @endfor
+                            <!-- JRPG Stats Card -->
+                            <div class="jrpg-stats">
+                                <div class="jrpg-stat-row">
+                                    <span class="jrpg-label">Class</span>
+                                    <span class="jrpg-value text-uppercase">{{ $item->category->name }} / {{ $item->subcategory->name ?? 'Core' }}</span>
+                                </div>
+                                <div class="jrpg-stat-row">
+                                    <span class="jrpg-label">Durability</span>
+                                    <span class="jrpg-value">{{ $item->stock_quantity > 0 ? 'Optimal ('.$item->stock_quantity.' Units)' : 'DEPLETED' }}</span>
+                                </div>
+                                <div class="jrpg-stat-row">
+                                    <span class="jrpg-label">Warrior Rank</span>
+                                    <div class="jrpg-value">
+                                        @php 
+                                            $avgRating = $item->reviews->avg('rating') ?: 5.0; 
+                                            $reviewCount = $item->reviews->count();
+                                        @endphp
+                                        <span class="text-warning">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <i class="bi bi-star{{ $i <= round($avgRating) ? '-fill' : '' }}"></i>
+                                            @endfor
+                                        </span>
+                                        <small class="text-white-50 ms-2">({{ $avgRating }})</small>
                                     </div>
-                                    <span class="small text-white-50">({{ $avgRating }} / {{ $reviewCount }} WARRIORS)</span>
+                                </div>
+                                <div class="stock-bar-container">
+                                    <div class="stock-bar-fill" style="width: {{ $item->stock_quantity > 0 ? min(100, $item->stock_quantity * 5) : 0 }}%"></div>
                                 </div>
                             </div>
 
-                            <!-- Stock Status -->
-                            <div class="mb-4 mt-3">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="badge {{ $item->status && $item->stock_quantity > 0 ? 'bg-success' : 'bg-danger' }} rounded-pill px-3 py-1 bg-opacity-10 text-{{ $item->status && $item->stock_quantity > 0 ? 'success' : 'danger' }} border border-{{ $item->status && $item->stock_quantity > 0 ? 'success' : 'danger' }} border-opacity-25" style="font-size: 0.75rem;">
-                                        {{ $item->status && $item->stock_quantity > 0 ? 'READY TO ACQUIRE' : 'ARCHIVED' }}
-                                    </div>
-                                    @if($item->stock_quantity > 0 && $item->stock_quantity < 10)
-                                        <span class="text-danger small fw-bold anim-pulse">ONLY {{ $item->stock_quantity }} LEFT IN STOCK!</span>
-                                    @elseif($item->stock_quantity > 0)
-                                        <span class="text-white-50 small">{{ $item->stock_quantity }} units available</span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <!-- Description -->
+                            <!-- Artifact Chronicle (Description) -->
                             <div class="mb-5">
-                                <p class="text-white-50 fw-light lead mb-0" style="font-size: 1rem; line-height: 1.8;">
+                                <h6 class="jrpg-label mb-3">Artifact Chronicle</h6>
+                                <p class="text-white-50 fw-light lead mb-0" style="font-size: 0.95rem; line-height: 1.8; letter-spacing: 0.5px;">
                                     {{ $item->description ?? 'No detailed chronicle found for this artifact.' }}
                                 </p>
                             </div>
@@ -356,8 +454,8 @@
                                     <form action="{{ route('cart.add', $item->id) }}" method="POST">
                                         @csrf
                                         @php $isInCart = Auth::check() && $item->isInCart(Auth::id()); @endphp
-                                        <button type="submit" class="btn-acquire" {{ ($item->stock_quantity <= 0 || !$item->status) && !$isInCart ? 'disabled' : '' }}>
-                                            <i class="bi {{ $isInCart ? 'bi-check2-circle' : 'bi-shield-check' }} me-2"></i> 
+                                        <button type="submit" class="btn-acquire-anime" {{ ($item->stock_quantity <= 0 || !$item->status) && !$isInCart ? 'disabled' : '' }}>
+                                            <i class="bi {{ $isInCart ? 'bi-check2-circle' : 'bi-lightning-charge' }} me-2"></i> 
                                             {{ $isInCart ? 'VIEW IN CART' : 'ACQUIRE ARTIFACT' }}
                                         </button>
                                     </form>
@@ -366,7 +464,7 @@
                                     <form action="{{ route('wishlist.toggle', $item->id) }}" method="POST">
                                         @csrf
                                         @php $isInWishlist = Auth::check() && $item->isInWishlist(Auth::id()); @endphp
-                                        <button type="submit" class="btn btn-wish-icon">
+                                        <button type="submit" class="btn btn-wish-anime">
                                             <i class="bi {{ $isInWishlist ? 'bi-heart-fill text-danger' : 'bi-heart' }}"></i>
                                         </button>
                                     </form>
@@ -383,10 +481,7 @@
         <!-- Similar Treasures -->
         <div class="row mt-5" data-aos="fade-up">
             <div class="col-12 mb-4">
-                <div class="d-flex align-items-center gap-3">
-                    <h2 class="h4 fw-bold text-white mb-0 text-uppercase letter-spacing-1">Synchronized Treasures</h2>
-                    <div class="flex-grow-1 h-px bg-white opacity-10"></div>
-                </div>
+                <h2 class="theme-section-title">Synchronized Treasures</h2>
             </div>
             @forelse($similarProducts as $similar)
                 <div class="col-md-3">
@@ -407,7 +502,7 @@
         <div class="row mt-5 pt-5" data-aos="fade-up">
             <div class="col-lg-8 mx-auto">
                 <div class="d-flex justify-content-between align-items-center mb-5">
-                    <h3 class="h4 fw-bold text-white mb-0 text-uppercase letter-spacing-1">Warrior Feedback</h3>
+                    <h3 class="theme-section-title mb-0">Warrior Feedback</h3>
                     @if($hasPurchased)
                         <button class="btn btn-outline-danger btn-sm px-4 rounded-3 fw-bold" data-bs-toggle="collapse" data-bs-target="#reviewForm">
                             LEAVE FEEDBACK

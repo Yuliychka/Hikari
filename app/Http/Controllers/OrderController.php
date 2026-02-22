@@ -85,7 +85,10 @@ class OrderController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        $orders = Order::where('user_id', Auth::id())->latest()->get();
+        $orders = Order::where('user_id', Auth::id())
+            ->with('items.product')
+            ->latest()
+            ->get();
         return view('orders.index', compact('orders'));
     }
 

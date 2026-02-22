@@ -459,6 +459,9 @@
             <a class="nav-link {{ request()->routeIs('admin.flash-sales.*') ? 'active' : '' }}" href="{{ route('admin.flash-sales.index') }}">
                 <span class="nav-text">Flash Sales</span>
             </a>
+            <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                <span class="nav-text">Member Management</span>
+            </a>
             <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
                 <span class="nav-text">Settings</span>
             </a>
